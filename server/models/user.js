@@ -46,7 +46,10 @@ const UserSchema = new Schema({
     required: [true, "Password is required"],
     minlength: [8, "Password should consist of 8 character"]
   },
-  balance: Number
+  balance: {
+    type: Number,
+    default: 0
+  }
 });
 
 UserSchema.pre("save", function(next) {
