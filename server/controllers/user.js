@@ -73,7 +73,7 @@ class UserController {
 
   static updateProfile(req,res,next){
     let obj = {}
-    let exclude = ['phonenumber', 'password', '_id', '__v', 'createdAt', 'updatedAt']
+    let exclude = ['phonenumber', 'password', 'balance', '_id', '__v', 'createdAt', 'updatedAt']
 
     User.schema.eachPath(path => {
       if (!exclude.includes(path)) {

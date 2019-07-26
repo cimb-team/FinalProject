@@ -157,13 +157,16 @@ Get current user bid history
     - `{ token }`
   - decoded
     - `{ id: _id }`
+  - body
+    - `{ balance: 100000 }`
 - response
-  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 1000, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
+  - `200`: `{ _id: ObjectId(''), name: 'alvinchristian', email: 'alvian@mail.com', phonenumber: '082113741934', balance: 200000 }`
     }`
 - error:
   - `400 bad request`
 ```
 Token is decoded via JWT to get UserId.
+Increment current user balance
 ```
 
 # Product Routes
