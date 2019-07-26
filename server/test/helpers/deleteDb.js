@@ -6,9 +6,11 @@ module.exports = {
     if (process.env.NODE_ENV === "test") {
       User.deleteMany({})
         .then(() => {
+          console.log('================================================')
           console.log("User cleared");
         })
         .catch(err => {
+          console.log('-----------------------------------------------')
           console.log(err);
         });
     }

@@ -75,97 +75,7 @@ class UserController {
       .catch(next);
   }
 
-  static updateProfile(req, res, next) {
-    let obj = {};
-    let exclude = [
-      "phonenumber",
-      "password",
-      'balance',
-      "_id",
-      "__v",
-      "createdAt",
-      "updatedAt"
-    ];
-
-    User.schema.eachPath(path => {
-      if (!exclude.includes(path)) {
-        if (req.body[path])
-          obj[path] = req.body[path];
-      }
-    });
-
-    User.findByIdAndUpdate(req.decoded.id, obj)
-      .then(row => {
-        res.status(201).json(row);
-      })
-      .catch(next);
-  }
-
-  static changePassword(req, res, next) {
-    User.findById(req.decoded.id)
-      .then(result => {
-        if (result) {
-          let check = register.checkPassword(
-            req.body.oldPassword,
-            result.password
-          );
-          if (check === true) {
-            result.password = req.body.newPassword;
-            result
-              .save()
-              .then(row => {
-                res.status(201).json(row);
-              })
-              .catch(next);
-          } else {
-            throw {
-              name: `ValidationError`,
-              message: `Wrong password`
-            };
-          }
-        } else {
-          throw {
-            name: `ValidationError`,
-            message: `Wrong password`
-          };
-        }
-      })
-      .catch(next);
-  }
-
-  static changePhoneNumber(req, res, next) {
-    User.findById(req.decoded.id)
-      .then(result => {
-        if (result) {
-          let check = register.checkPassword(
-            req.body.password,
-            result.password
-          );
-          if (check === true) {
-            result.phonenumber = req.body.phonenumber;
-            result
-              .save()
-              .then(row => {
-                res.status(201).json(row);
-              })
-              .catch(next);
-          } else {
-            throw {
-              name: `ValidationError`,
-              message: `Wrong password`
-            };
-          }
-        } else {
-          throw {
-            name: `ValidationError`,
-            message: `Wrong password`
-          };
-        }
-      })
-      .catch(next);
-  }
-
-  /**
+/**
    * PATCH /topup
    */
   static topup(req, res, next) {
@@ -177,7 +87,7 @@ class UserController {
       .then(result => {
         let { _id, name, phonenumber, email, balance, image } = result;
         let user = { _id, name, email, phonenumber, balance, image };
-        res.status(200).json(user);
+        res.status(201).json(user);
       })
       .catch(next);
   }
@@ -189,11 +99,103 @@ class UserController {
     Bid.find({
       "bids.bidderId": req.decoded.id
     })
-      .then(row => {
-        res.json(row);
+      .then(rows => {
+        res.json(rows);
       })
       .catch(next);
   }
+
+  // static updateProfile(req, res, next) {
+  //   let obj = {};
+  //   let exclude = [
+  //     "phonenumber",
+  //     "password",
+  //     'balance',
+  //     "_id",
+  //     "__v",
+  //     "createdAt",
+  //     "updatedAt"
+  //   ];
+
+  //   User.schema.eachPath(path => {
+  //     if (!exclude.includes(path)) {
+  //       if (req.body[path])
+  //         obj[path] = req.body[path];
+  //     }
+  //   });
+
+  //   User.findByIdAndUpdate(req.decoded.id, obj)
+  //     .then(row => {
+  //       res.status(201).json(row);
+  //     })
+  //     .catch(next);
+  // }
+
+  // static changePassword(req, res, next) {
+  //   User.findById(req.decoded.id)
+  //     .then(result => {
+  //       if (result) {
+  //         let check = register.checkPassword(
+  //           req.body.oldPassword,
+  //           result.password
+  //         );
+  //         if (check === true) {
+  //           result.password = req.body.newPassword;
+  //           result
+  //             .save()
+  //             .then(row => {
+  //               res.status(201).json(row);
+  //             })
+  //             .catch(next);
+  //         } else {
+  //           throw {
+  //             name: `ValidationError`,
+  //             message: `Wrong password`
+  //           };
+  //         }
+  //       } else {
+  //         throw {
+  //           name: `ValidationError`,
+  //           message: `Wrong password`
+  //         };
+  //       }
+  //     })
+  //     .catch(next);
+  // }
+
+  // static changePhoneNumber(req, res, next) {
+  //   User.findById(req.decoded.id)
+  //     .then(result => {
+  //       if (result) {
+  //         let check = register.checkPassword(
+  //           req.body.password,
+  //           result.password
+  //         );
+  //         if (check === true) {
+  //           result.phonenumber = req.body.phonenumber;
+  //           result
+  //             .save()
+  //             .then(row => {
+  //               res.status(201).json(row);
+  //             })
+  //             .catch(next);
+  //         } else {
+  //           throw {
+  //             name: `ValidationError`,
+  //             message: `Wrong password`
+  //           };
+  //         }
+  //       } else {
+  //         throw {
+  //           name: `ValidationError`,
+  //           message: `Wrong password`
+  //         };
+  //       }
+  //     })
+  //     .catch(next);
+  // }
+
+  
 }
 
 module.exports = UserController;
