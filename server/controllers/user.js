@@ -35,13 +35,12 @@ class UserController {
         if (result) {
           let check = register.checkPassword(password, result.password);
           if (check === true) {
+            delete result.password
             let token = jwt.sign({
               id: result._id,
               email: result.email
             });
-            let { _id, name, email, balance, history } = result;
-            let user = { _id, name, email, balance, history };
-            res.status(200).json({ user, token });
+            res.status(200).json({ token });
           } else {
             throw {
               name: `ValidationError`,
@@ -72,6 +71,83 @@ class UserController {
       .catch(next);
   }
 
+  static updateProfile(req,res,next){
+    let obj = {}
+    let exclude = ['phonenumber', 'password', '_id', '__v', 'createdAt', 'updatedAt']
+
+    User.schema.eachPath(path => {
+      if (!exclude.includes(path)) {
+        if (req.body[path])
+          obj[path] = req.body[path]
+      }
+    })
+
+    User.findByIdAndUpdate(req.decoded.id, obj)
+    .then(row =>{
+      res.status(201).json(row)
+    })
+    .catch(next)
+  }
+
+  static changePassword(req,res,next){
+    User.findById(req.decoded.id)
+      .then(result => {
+        if (result) {
+          let check = register.checkPassword(req.body.oldPassword, result.password);
+          if (check === true) {
+            result.password = req.body.newPassword
+            result.save()
+            .then(row =>{
+              res.status(201).json(row);
+            })
+            .catch(next)
+          }
+          else {
+            throw {
+              name: `ValidationError`,
+              message: `Wrong password`
+            };
+          }
+        }
+        else {
+          throw {
+            name: `ValidationError`,
+            message: `Wrong password`
+          };
+        }
+      })
+      .catch(next);
+  }
+
+  static changePhoneNumber(req,res,next){
+    User.findById(req.decoded.id)
+      .then(result => {
+        if (result) {
+          let check = register.checkPassword(req.body.password, result.password);
+          if (check === true) {
+            result.phonenumber = req.body.phonenumber
+            result.save()
+            .then(row =>{
+              res.status(201).json(row);
+            })
+            .catch(next)
+          }
+          else {
+            throw {
+              name: `ValidationError`,
+              message: `Wrong password`
+            };
+          }
+        }
+        else {
+          throw {
+            name: `ValidationError`,
+            message: `Wrong password`
+          };
+        }
+      })
+      .catch(next);
+  }
   /**
    * POST /topup
    */
@@ -81,7 +157,7 @@ class UserController {
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {
         let { _id, name, email, balance, history } = result;
-        res.status(200).json({ _id, name, email, balance, history });
+        res.status(201).json({ _id, name, email, balance, history });
       })
       .catch(next);
   }

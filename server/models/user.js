@@ -39,11 +39,14 @@ const UserSchema = new Schema({
   phonenumber: {
     type: String
   },
-  image: String,
+  imageURL: {
+    type: String,
+    default: 'https://via.placeholder.com/150'
+  },
   password: {
     type: String,
     required: [true, "Password is required"],
-    min: [8, 'Minimal password 6 characters']
+    min: [6, 'Minimal password 6 characters']
   },
   balance: {
     type: Number,
@@ -53,7 +56,6 @@ const UserSchema = new Schema({
 
 UserSchema.pre("save", function(next) {
   this.password = bcrypt.hashPassword(this.password);
-  this.image = "";
   next();
 });
 

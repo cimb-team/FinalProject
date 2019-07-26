@@ -10,7 +10,9 @@ routes.post("/signin", UserController.signin);
 
 routes.use(Authentication);
 routes.get("/user", UserController.findOne);
-
+routes.patch('/updateprofile', UserController.updateProfile)
+routes.patch('/changepass', UserController.changePassword)
+routes.patch('/changephone', UserController.changePhoneNumber)
 /**
  * AUTH
  */
