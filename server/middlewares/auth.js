@@ -1,57 +1,57 @@
-const jwt = require('../helpers/jwt.js')
-const User = require('../models/user.js')
-const Product = require("../models/product.js")
+const jwt = require("../helpers/jwt.js");
+const User = require("../models/user.js");
+const Product = require("../models/product.js");
 
 module.exports = {
-  Authentication: function (req, res, next){
-    let token = req.headers.token
-    let decoded = null
+  Authentication: function(req, res, next) {
+    let token = req.headers.token;
+    let decoded = null;
     try {
-        decoded = jwt.verify(token)
+      decoded = jwt.verify(token);
     } catch {
-        throw {
-            code: 400
-        }
+      next({
+        code: 400
+      });
     }
     User.findOne({
-        email: decoded.email})
-    .then((user) => {
-        if (user){
-            req.decoded = decoded
-            next()
-        } else {
-            throw {
-                code: 400
-            }
-        }
+      email: decoded.email
     })
-    .catch(next)  
-},
-  Authorization: function (req, res, next){
-    Product.findById(req.params.id)
-    .then((result) => {
-        if (result.UserId.toString() == req.decoded.id){
-            next()
+      .then(user => {
+        if (user) {
+          req.decoded = decoded;
+          next();
         } else {
-            throw {
-                code: 401
-            }
+          next({
+            code: 400
+          });
         }
-    })
-    .catch(next)
+      })
+      .catch(next);
   },
-  BidAuthorization: function (req, res, next){
+  Authorization: function(req, res, next) {
     Product.findById(req.params.id)
-    .then((result) => {
-        if (result.status == 'false'){
-            next()
+      .then(result => {
+        if (result) {
+          next();
         } else {
-            throw {
-                code: 400
-            }
+          next({
+            code: 401
+          });
         }
-    })
-    .catch(next)
+      })
+      .catch(next);
+  },
+  BidAuthorization: function(req, res, next) {
+    Product.findById(req.params.id)
+      .then(result => {
+        if (result.status == "open") {
+          next();
+        } else {
+          next({
+            code: 400
+          });
+        }
+      })
+      .catch(next);
   }
-}
-
+};

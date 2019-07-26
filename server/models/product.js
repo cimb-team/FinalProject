@@ -9,14 +9,14 @@ const ApiSchema = new Schema(
     details: String,
     initialPrice: Number,
     closedDate: Date,
-    userId: { type: Schema.Types.ObjectId, ref: "User" }
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    bid: { type: Schema.Types.ObjectId, ref: "Bid" }
   },
   {
     timestamps: true
-  } 
+  }
 );
 // auah
-
 
 const Api = mongoose.model("Api", ApiSchema);
 

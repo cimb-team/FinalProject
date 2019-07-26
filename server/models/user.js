@@ -40,7 +40,7 @@ const UserSchema = new Schema({
     type: String,
     required: [true, "Phone Number is required"]
   },
-  imageURL: {
+  image: {
     type: String,
     default: "https://via.placeholder.com/150"
   },
@@ -57,8 +57,6 @@ const UserSchema = new Schema({
 
 UserSchema.pre("save", function(next) {
   this.password = bcrypt.hashPassword(this.password);
-  this.image =
-    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
   next();
 });
 

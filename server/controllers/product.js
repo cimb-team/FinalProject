@@ -8,7 +8,7 @@ class ProductController {
   static create(req, res, next) {
     Product.create({
       title: req.body.title,
-      status: "false",
+      status: "open",
       images: req.body.newImages,
       category: req.body.category,
       details: req.body.details,
@@ -23,18 +23,29 @@ class ProductController {
           bidPrices: [],
           dateIssued: [],
           productId: product._id
-        }).then(bid => {
-          res.status(201).json({ ...product._doc, bid });
-        });
+        })
+          .then(bid => {
+            Product.findByIdAndUpdate(
+              product._id,
+              { bid: bid._id },
+              { new: true }
+            )
+              .then(final => {
+                res.status(201).json({ ...product._doc, bid });
+              })
+              .catch(next);
+          })
+          .catch(next);
       })
       .catch(next);
   }
 
   /**
-   * GET /products/user
+   * GET /product/user
    **/
   static findByUserId(req, res, next) {
     Product.find({ userId: req.decoded.id })
+      .populate("bid")
       .then(result => {
         res.status(200).json(result);
       })
@@ -48,10 +59,9 @@ class ProductController {
     Product.findOne({
       _id: req.params.id
     })
+      .populate("bid")
       .then(result => {
-        Bid.findOne({ productId: result._id }).then(bid => {
-          res.status(200).json({ ...result, bid });
-        });
+        res.status(200).json(result);
       })
       .catch(next);
   }
@@ -60,30 +70,34 @@ class ProductController {
    * GET /product
    */
   static findAll(req, res, next) {
-    Product.find({ status: "false" })
+    Product.find({ status: "open" })
+      .populate("bid")
       .then(result => {
-        if (result.length >= 1) {
+        console.log(result.length);
+        if (result.length > 0) {
           let sorted = result.sort((a, b) => {
             return b.createdAt - a.createdAt;
           });
-          if (req.query) {
-            let { sortby } = req.query;
-            sortby = sortby.toLowerCase();
+
+          if (req.query.sortby) {
+            let sortby = req.query.sortby.toLowerCase();
             switch (sortby) {
               case "highestprice":
                 sorted = result.sort((a, b) => {
                   return a.currentPrice - b.currentPrice;
                 });
-                break;
+                res.status(200).json(sorted);
               case "lowestprice":
                 sorted = result.sort((a, b) => {
                   return b.currentPrice - a.currentPrice;
                 });
-                break;
+                res.status(200).json(sorted);
               default:
+                res.status(200).json(sorted);
             }
+          } else {
+            res.status(200).json(sorted);
           }
-          res.status(200).json(sorted);
         } else {
           res.status(200).json(result);
         }
@@ -96,6 +110,7 @@ class ProductController {
    */
   static deleteOne(req, res, next) {
     let id = req.params.id;
+    console.log("sampai di controller");
     Product.deleteOne({
       _id: id
     })
@@ -106,57 +121,31 @@ class ProductController {
   }
 
   static addBid(req, res, next) {
-    let detailProduct
-    Bid.findOneAndUpdate({
-      productId: req.params.id
-    },
-    {
-      $push : { 
-        bids: {
-          bidderId: req.decoded.id,
-          price: req.body.price,
-          dateIssued: new Date()
+    let detailProduct;
+    Bid.findOneAndUpdate(
+      {
+        productId: req.params.id
+      },
+      {
+        $push: {
+          bids: {
+            bidderId: req.decoded.id,
+            price: req.body.price,
+            dateIssued: new Date()
+          }
         }
-      }
-    }, { new: true }
+      },
+      { new: true }
     )
-    .then(row =>{
-      detailProduct = row
-      return Product.findByIdAndUpdate(req.params.id, {
-        currentPrice: req.body.price
+      .then(row => {
+        detailProduct = row;
+        return Product.findByIdAndUpdate(req.params.id, {
+          currentPrice: req.body.price
+        });
       })
-    })
-    .then(row2 =>[
-      res.status(201).json(detailProduct)
-    ])
-    .catch(next)
+      .then(row2 => [res.status(201).json(detailProduct)])
+      .catch(next);
   }
-
-  //  INI NANTI DI LAKUKAN PAKE CRONJOB
-  //   static bidClosed(req, res, next) {
-  //     let id = req.params.id;
-  //     let closeProduct = {
-  //       status: "true"
-  //     };
-  //     Product.findByIdAndUpdate(id, { $set: closeProduct }, { new: true })
-  //       .then(result => {
-  //         res.status(201).json(result);
-  //       })
-  //       .catch(next);
-  //   }
-
-  //  BUAT SKEMA SENDIRI SUPAYA DETAIL BIDDING LEBIH LENGKAP UNTUK DI LIST DETAIL BID
-  //   static addBid(req, res, next) {
-  //     let id = req.params.id;
-  //     let addBid = {
-  //       bidPrices: req.body.bid
-  //     };
-  //     Product.findByIdAndUpdate(id, { $push: addBid }, { new: true })
-  //       .then(result => {
-  //         res.status(201).json(result);
-  //       })
-  //       .catch(next);
-  //   }
 }
 
 module.exports = ProductController;
