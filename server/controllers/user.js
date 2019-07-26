@@ -17,8 +17,8 @@ class UserController {
       balance: 0
     })
       .then(result => {
-        let { _id, name, email, balance } = result;
-        res.status(201).json({ _id, name, email, balance });
+        let { _id, name, email, phonenumber, balance } = result;
+        res.status(201).json({ _id, name, email, phonenumber, balance });
       })
       .catch(next);
   }

@@ -12,25 +12,26 @@ describe("User sign up and signin", () => {
     deleteUser();
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Success (201)", done => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "orvin", email: "orvin@mail.com", password: "orvin123" })
+        .send({ name: "orvin", email: "orvin@mail.com", password: "orvin123", phonenumber: '08973531523' })
         .then(res => {
+          console.log(res.body)
           expect(res).to.have.status(201);
           expect(res.body).to.be.an("object");
           expect(res.body).to.have.property("_id");
           expect(res.body).to.have.property("name");
           expect(res.body).to.have.property("email");
           expect(res.body).to.have.property("password");
-          expect(res.body).to.have.property("history");
+          expect(res.body).to.have.property("phonenumber");
           expect(res.body).to.have.property("balance");
           expect(res.body.balance).to.equal(0);
           expect(res.body.name).to.equal("orvin");
           expect(res.body.email).to.equal("orvin@mail.com");
           expect(res.body.password).to.not.equal("orvin123");
-          expect(res.body.history.length).to.equal(0);
+          expect(res.body.phonenumber).to.equal('08973531523');
           done();
         })
         .catch(err => {
@@ -39,11 +40,11 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Failed (400, invalid email)", done => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "orvin", email: "orvinmail.com", password: "orvin123" })
+        .send({ name: "orvin", email: "orvinmail.com", password: "orvin123", phonenumber: '08973531523' })
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal("User validation failed: email: orvinmail.com invalid email format!");
@@ -56,7 +57,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Failed (400, email already exist)", done => {
       chai
         .request(app)
         .post("/signup")
@@ -73,7 +74,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Failed (400, without password)", done => {
       chai
         .request(app)
         .post("/signup")
@@ -90,7 +91,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Failed (400, without email)", done => {
       chai
         .request(app)
         .post("/signup")
@@ -107,7 +108,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("should send an object with 201 status code", done => {
+    it("Register Failed (400, without name)", done => {
       chai
         .request(app)
         .post("/signup")
@@ -123,8 +124,25 @@ describe("User sign up and signin", () => {
         });
     });
   });
+  describe("POST /signup", () => {
+    it("Register Failed (400, invalid email)", done => {
+      chai
+        .request(app)
+        .post("/signup")
+        .send({ name: "orvin", email: "orvin3@mail.com", password: "orvin123", phonenumber: '08210' })
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal("User validation failed: phonenumber: Minimal 8 digits");
+          expect(res.body.name).to.equal("ValidationError");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
   describe("POST /signin", () => {
-    it("should send token with 200 status code", done => {
+    it("Login success (200)", done => {
       chai
         .request(app)
         .post("/signin")
@@ -141,7 +159,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signin", () => {
-    it("should send token with 400 status code", done => {
+    it("Login failed (400, password less than 8)", done => {
       chai
         .request(app)
         .post("/signin")
@@ -157,7 +175,23 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signin", () => {
-    it("should send token with 400 status code", done => {
+    it("Login failed (400, invalid email)", done => {
+      chai
+        .request(app)
+        .post("/signin")
+        .send({ email: "orvinmail.com", password: "orvin123" })
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal("Invalid email or password");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("POST /signin", () => {
+    it("Login failed (400, without email)", done => {
       chai
         .request(app)
         .post("/signin")
@@ -173,7 +207,7 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signin", () => {
-    it("should send token with 400 status code", done => {
+    it("Login failed (400, without password)", done => {
       chai
         .request(app)
         .post("/signin")

@@ -37,7 +37,8 @@ const UserSchema = new Schema({
     ]
   },
   phonenumber: {
-    type: String
+    type: String,
+    minlength: [8, 'Minimal 8 digits']
   },
   image: {
     type: String,
