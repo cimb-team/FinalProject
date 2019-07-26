@@ -10,7 +10,8 @@ let DB_PATH;
 if (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "development") {
   DB_PATH = "mongodb://localhost/final-project-" + process.env.NODE_ENV;
 } else {
-  DB_PATH = process.env.MONGODB_URL + process.env.NODE_ENV;
+  DB_PATH =
+    process.env.MONGODB_URL + process.env.NODE_ENV + "?retryWrites=true";
 }
 mongoose
   .connect(DB_PATH, { useNewUrlParser: true })

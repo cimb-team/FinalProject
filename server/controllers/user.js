@@ -16,8 +16,8 @@ class UserController {
       balance: 0
     })
       .then(result => {
-        let { _id, name, email, balance } = result;
-        res.status(201).json({ _id, name, email, balance });
+        let { _id, name, email } = result;
+        res.status(201).json({ _id, name, email });
       })
       .catch(next);
   }
@@ -38,9 +38,9 @@ class UserController {
               id: result._id,
               email: result.email
             });
-            let { _id, name, email, balance, history } = result;
-            let user = { _id, name, email, balance, history };
-            res.status(200).json({ user, token });
+            let { _id, name, phonenumber, email, balance, image } = result;
+            let user = { _id, name, email, phonenumber, balance, image };
+            res.status(200).json({ ...user, token });
           } else {
             throw {
               name: `ValidationError`,
@@ -58,7 +58,7 @@ class UserController {
   }
 
   /**
-   * POST /user
+   * GET /user
    */
   static findOne(req, res, next) {
     let { email } = req.decoded;
@@ -66,17 +66,21 @@ class UserController {
       email
     })
       .then(result => {
-        res.status(200).json(result);
+        let { _id, name, phonenumber, email, balance, image } = result;
+        let user = { _id, name, email, phonenumber, balance, image };
+        res.status(200).json(user);
       })
       .catch(next);
   }
 
   /**
-   * POST /topup
+   * PATCH /topup
    */
   static topup(req, res, next) {
     let { id } = req.decoded;
     let { balance } = req.body;
+    balance = Number(balance);
+    console.log(balance);
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {
         let { _id, name, email, balance, history } = result;

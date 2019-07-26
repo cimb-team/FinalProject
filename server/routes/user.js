@@ -2,6 +2,8 @@ const routes = require("express").Router();
 const UserController = require("../controllers/user.js");
 const { Authentication } = require("../middlewares/auth.js");
 
+//  /
+
 /**
  * AUTH
  */
@@ -17,7 +19,7 @@ routes.get("/user", UserController.findOne);
 routes.patch("/topup", UserController.topup);
 routes.get("/user/history", UserController.findBidByBidderId);
 
-/**m
+/**
  * HISTORY DIDAPAT DARI PRODUCTS, NANTI BUAT ROUTES BARU DI PRODUCT
  */
 // routes.patch("/:productId", UserController.addProduct);

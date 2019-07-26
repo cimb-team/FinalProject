@@ -15,7 +15,7 @@ const UserSchema = new Schema({
           let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
           return input.match(mailformat);
         },
-        message: props => `${props.value} invalid email format!`
+        message: "Invalid email format!"
       },
       {
         validator: function(value) {
@@ -25,31 +25,34 @@ const UserSchema = new Schema({
           })
             .then(data => {
               if (data.length !== 0) {
-                throw "";
+                return false;
               }
             })
             .catch(err => {
-              throw err;
+              return true;
             });
         },
-        message: props => `This email ${props.value} already used!`
+        message: "This email already used!"
       }
     ]
   },
   phonenumber: {
-    type: String
+    type: String,
+    required: [true, "Phone Number is required"]
   },
   image: String,
   password: {
     type: String,
-    required: [true, "Password is required"]
+    required: [true, "Password is required"],
+    minlength: [8, "Password should consist of 8 character"]
   },
   balance: Number
 });
 
 UserSchema.pre("save", function(next) {
   this.password = bcrypt.hashPassword(this.password);
-  this.image = "";
+  this.image =
+    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
   next();
 });
 

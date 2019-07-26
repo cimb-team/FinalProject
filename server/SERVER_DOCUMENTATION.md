@@ -1,5 +1,8 @@
 ## USER AUTH
 1. post "/signup"
+
+
+
 2. post "/signin"
 3. get "/user"
 
