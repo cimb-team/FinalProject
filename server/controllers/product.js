@@ -110,7 +110,6 @@ class ProductController {
    */
   static deleteOne(req, res, next) {
     let id = req.params.id;
-    console.log("sampai di controller");
     Product.deleteOne({
       _id: id
     })
@@ -120,8 +119,10 @@ class ProductController {
       .catch(next);
   }
 
+  /**
+   * PATCH /product/:id/addbid
+   */
   static addBid(req, res, next) {
-    let detailProduct;
     Bid.findOneAndUpdate(
       {
         productId: req.params.id
@@ -138,12 +139,8 @@ class ProductController {
       { new: true }
     )
       .then(row => {
-        detailProduct = row;
-        return Product.findByIdAndUpdate(req.params.id, {
-          currentPrice: req.body.price
-        });
+        res.status(201).json(row);
       })
-      .then(row2 => [res.status(201).json(detailProduct)])
       .catch(next);
   }
 }

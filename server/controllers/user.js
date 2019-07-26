@@ -192,28 +192,6 @@ class UserController {
       })
       .catch(next);
   }
-
-  static addBid(req, res, next) {
-    Bid.findOneAndUpdate(
-      {
-        productId: req.params.id
-      },
-      {
-        $push: {
-          bids: {
-            bidderId: req.decoded.id,
-            price: req.body.price,
-            dateIssued: new Date()
-          }
-        }
-      },
-      { new: true }
-    )
-      .then(row => {
-        res.status(201).json(row);
-      })
-      .catch(next);
-  }
 }
 
 module.exports = UserController;
