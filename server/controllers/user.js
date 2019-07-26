@@ -1,108 +1,91 @@
-const User = require("../models/user.js")
-const register = require('../helpers/bcrypt.js');
-const jwt = require('../helpers/jwt.js');
+const User = require("../models/user.js");
+const register = require("../helpers/bcrypt.js");
+const jwt = require("../helpers/jwt.js");
 
-class UserController{
-    static signup(req,res,next){
-        let newUser = {
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-            balance: 0,
-            history: [],
+class UserController {
+  /**
+   * POST /signup
+   */
+  static signup(req, res, next) {
+    let { name, email, password, phonenumber } = req.body;
+    User.create({
+      name,
+      email,
+      password,
+      phonenumber,
+      balance: 0
+    })
+      .then(result => {
+        let { _id, name, email, balance } = result;
+        res.status(201).json({ _id, name, email, balance });
+      })
+      .catch(next);
+  }
+
+  /**
+   * POST /signin
+   */
+  static signin(req, res, next) {
+    let { email, password } = req.body;
+    User.findOne({
+      email
+    })
+      .then(result => {
+        if (result) {
+          let check = register.checkPassword(password, result.password);
+          if (check === true) {
+            let token = jwt.sign({
+              id: result._id,
+              email: result.email
+            });
+            let { _id, name, email, balance, history } = result;
+            let user = { _id, name, email, balance, history };
+            res.status(200).json({ user, token });
+          } else {
+            throw {
+              name: `ValidationError`,
+              message: `Invalid email or password`
+            };
+          }
+        } else {
+          throw {
+            name: `ValidationError`,
+            message: `Invalid email or password`
+          };
         }
-        User.create(newUser)
-        .then((result) => {
-            res.status(201).json(result)
-        })
-        .catch(next)
-    }
-    static signin(req,res,next){
-        let email = req.body.email
-        let password = req.body.password
-        User.findOne({
-            email: email
-        })
-        .then((result) => {
-            if (result){
-                let check = register.checkPassword(password, result.password)
-                if (check == true){
-                    let userSign = {
-                        id: result._id,
-                        email: result.email
-                    }
-                    let signed = jwt.sign(userSign)
-                    let token = {
-                        token: signed
-                    }
-                    res.status(200).json(token)
-                } else {
-                    throw {
-                        name: `ValidationError`,
-                        message: `Invalid email or password`
-                    }
-                }
-            } else {
-                throw {
-                    name: `ValidationError`,
-                    message: `Invalid email or password`
-                }
-            }
-        })
-        .catch(next)
-    }
-    static findOne(req,res,next){
-        let email = req.decoded.email
-        User.findOne({
-            email: email
-        })
-        .then((result) => {
-            res.status(200).json(result)
-        })
-        .catch(next)
-    }
-    static topup(req,res,next){
-        let id = req.decoded.id
-        let balance = req.body.balance
-        User.findByIdAndUpdate(id, { $inc: {balance: balance} }, { new: true })
-        .then(result => {
-          res.status(200).json(result);
-        })
-        .catch(next);
-    }
-    static readHistory(req,res,next){
-        let id = req.decoded.id
-        User.findOne({
-            _id: id
-        })
-        .populate('history')
-        .then((result) => {
-            res.status(200).json(result)
-        })
-        .catch(next)
-    }
-    static addProduct(req,res,next){
-        let id = req.decoded.id
-        let productId = req.params.productId
-        User.findOneAndUpdate(
-            {_id: id},
-            {$push: 
-                {history: productId}
-            },
-                {new: true}
-            )
-        .populate('history')
-        .then((result) => {
-            if(result.history[result.history.length-1]._id.toString() == productId){
-                res.status(200).json(result)
-            } else {
-                throw {
-                    code: 404
-                }
-            }
-        })
-        .catch(next)
-    }
+      })
+      .catch(next);
+  }
+
+  /**
+   * POST /user
+   */
+  static findOne(req, res, next) {
+    let { email } = req.decoded;
+    User.findOne({
+      email
+    })
+      .then(result => {
+        res.status(200).json(result);
+      })
+      .catch(next);
+  }
+
+  /**
+   * POST /topup
+   */
+  static topup(req, res, next) {
+    let { id } = req.decoded;
+    let { balance } = req.body;
+    User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
+      .then(result => {
+        let { _id, name, email, balance, history } = result;
+        res.status(200).json({ _id, name, email, balance, history });
+      })
+      .catch(next);
+  }
+
+  static findBidByBidderId(req, res, next) {}
 }
 
-module.exports = UserController
+module.exports = UserController;
