@@ -42,9 +42,13 @@ const UserSchema = new Schema({
   image: String,
   password: {
     type: String,
-    required: [true, "Password is required"]
+    required: [true, "Password is required"],
+    min: [8, 'Minimal password 6 characters']
   },
-  balance: Number
+  balance: {
+    type: Number,
+    default: 0
+  }
 });
 
 UserSchema.pre("save", function(next) {

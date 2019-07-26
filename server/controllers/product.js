@@ -13,7 +13,7 @@ class ProductController {
       details: req.body.details,
       initialPrice: req.body.initialPrice,
       currentPrice: req.body.initialPrice,
-      UserId: req.decoded.id
+      userId: req.decoded.id
     })
       .then(product => {
         Bid.create({
@@ -33,7 +33,7 @@ class ProductController {
    * GET /products/user
    **/
   static findByUserId(req, res, next) {
-    Product.find({ UserId: req.decoded.id })
+    Product.find({ userId: req.decoded.id })
       .then(result => {
         res.status(200).json(result);
       })

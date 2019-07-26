@@ -1,4 +1,5 @@
 const User = require("../models/user.js");
+const Bid = require('../models/bid')
 const register = require("../helpers/bcrypt.js");
 const jwt = require("../helpers/jwt.js");
 
@@ -85,7 +86,36 @@ class UserController {
       .catch(next);
   }
 
-  static findBidByBidderId(req, res, next) {}
+  static findBidByBidderId(req, res, next) {
+    Bid.findOne({
+      bids: req.params.id,
+      'bids.bidderId': req.decoded.id
+    })
+    .then(row =>{
+      res.json(row)
+    })
+    .catch(next)
+  }
+  
+  static addBid(req, res, next) {
+    Bid.findOneAndUpdate({
+      'bids.bidderId': req.decoded.id
+    },
+    {
+      $push : { 
+        bids: {
+          bidderId: req.decoded.id,
+          price: req.body.price,
+          dateIssued: new Date()
+        }
+      }
+    }, { new: true }
+    )
+    .then(row =>{
+      res.status(201).json(row)
+    })
+    .catch(next)
+  }
 }
 
 module.exports = UserController;

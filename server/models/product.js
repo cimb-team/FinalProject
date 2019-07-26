@@ -9,7 +9,7 @@ const ApiSchema = new Schema(
     details: String,
     initialPrice: Number,
     closedDate: Date,
-    UserId: { type: Schema.Types.ObjectId, ref: "User" }
+    userId: { type: Schema.Types.ObjectId, ref: "User" }
   },
   {
     timestamps: true
