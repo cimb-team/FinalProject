@@ -14,13 +14,13 @@
 5. delete "/product/:id"
 
 ## Documentation
-DEPLOY: http://ecommerce.orvinsavero.com/
+DEPLOY: http://link-deploy.com/
 ## Signup 
 - route:
   - `POST /signup`
 - request:
   - body:
-    - `{ name: 'alvin' , email: 'alvin@mail.com', password: 'alvinaja' }`
+    - `{ name: 'alvin' , email: 'alvin@mail.com', password: 'alvinaja', phonenumber: '082113741934' }`
 - response:
   - `201`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', balance: 0 }`
 - error:
@@ -36,7 +36,7 @@ DEPLOY: http://ecommerce.orvinsavero.com/
   - body
     - `{ email: 'alvin@mail.com', password: 'alvinaja' }`
 - response:
-  - `201`: `{ token: '...', access: '...' }`
+  - `200`: `{ token: '...'}`
 - error:
   - `404 not found`
 ```

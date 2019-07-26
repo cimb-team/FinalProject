@@ -163,32 +163,11 @@ class UserController {
   }
 
   static findBidByBidderId(req, res, next) {
-    Bid.findOne({
-      bids: req.params.id,
+    Bid.find({
       'bids.bidderId': req.decoded.id
     })
-    .then(row =>{
-      res.json(row)
-    })
-    .catch(next)
-  }
-  
-  static addBid(req, res, next) {
-    Bid.findOneAndUpdate({
-      'bids.bidderId': req.decoded.id
-    },
-    {
-      $push : { 
-        bids: {
-          bidderId: req.decoded.id,
-          price: req.body.price,
-          dateIssued: new Date()
-        }
-      }
-    }, { new: true }
-    )
-    .then(row =>{
-      res.status(201).json(row)
+    .then(rows =>{
+      res.json(rows)
     })
     .catch(next)
   }

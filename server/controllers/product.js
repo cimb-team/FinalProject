@@ -1,5 +1,6 @@
 const Product = require("../models/product.js");
 const Bid = require("../models/bid");
+
 class ProductController {
   /**
    * POST /products
@@ -102,6 +103,33 @@ class ProductController {
         res.status(201).json(result);
       })
       .catch(next);
+  }
+
+  static addBid(req, res, next) {
+    let detailProduct
+    Bid.findOneAndUpdate({
+      productId: req.params.id
+    },
+    {
+      $push : { 
+        bids: {
+          bidderId: req.decoded.id,
+          price: req.body.price,
+          dateIssued: new Date()
+        }
+      }
+    }, { new: true }
+    )
+    .then(row =>{
+      detailProduct = row
+      return Product.findByIdAndUpdate(req.params.id, {
+        currentPrice: req.body.price
+      })
+    })
+    .then(row2 =>[
+      res.status(201).json(detailProduct)
+    ])
+    .catch(next)
   }
 
   //  INI NANTI DI LAKUKAN PAKE CRONJOB
