@@ -39,7 +39,7 @@ const UserSchema = new Schema({
   phonenumber: {
     type: String
   },
-  imageURL: {
+  image: {
     type: String,
     default: 'https://via.placeholder.com/150'
   },

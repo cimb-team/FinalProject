@@ -15,6 +15,9 @@
 
 ## Documentation
 DEPLOY: http://link-deploy.com/
+
+# User Routes
+
 ## Signup 
 - route:
   - `POST /signup`
@@ -22,7 +25,7 @@ DEPLOY: http://link-deploy.com/
   - body:
     - `{ name: 'alvin' , email: 'alvin@mail.com', password: 'alvinaja', phonenumber: '082113741934' }`
 - response:
-  - `201`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', balance: 0 }`
+  - `201`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', phonenumber: '082113741934', balance: 0 }`
 - error:
   - `Validation Error`
 ```
@@ -43,6 +46,127 @@ DEPLOY: http://link-deploy.com/
 ```
 Token is generated from JWT package.
 ```
+
+## Get user info currently logged in
+- route:
+  - `GET /user`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+- response
+  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', phonenumber: '082113741934', balance: 0 }`
+    }`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+```
+
+## Update Profile
+- route:
+  - `PATCH /updateprofile`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+  - body:
+    - `{ name: 'alvinchristian' , email: 'alvian@mail.com', balance: 100000 }`
+- response
+  - `200`: `{ _id: ObjectId(''), name: 'alvinchristian', email: 'alvian@mail.com', phonenumber: '082113741934', balance: 100000 }`
+    }`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+Update current user except phonenumber and password field
+```
+
+## Change Password
+- route:
+  - `PATCH /changepass`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+  - body:
+    - `{ oldPassword: 'alvinaja', newPassword: 'alvindoang' }`
+- response
+  - `200`: `{ _id: ObjectId(''), name: 'alvinchristian', email: 'alvian@mail.com', phonenumber: '082113741934', balance: 100000 }`
+    }`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+Update current user password with newPassword, if oldPassword same as in database
+```
+
+## Change Phone Number
+- route:
+  - `PATCH /changephonenumber`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+  - body:
+    - `{ phonenumber: '08217472833' }`
+- response
+  - `200`: `{ _id: ObjectId(''), name: 'alvinchristian', email: 'alvian@mail.com', phonenumber: '082113741934', balance: 100000 }`
+    }`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+Update current user password with newPassword, if oldPassword same as in database
+```
+
+## Bid History
+- route:
+  - `PATCH /user/history`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+- response
+  - `200`: `[{
+      bids: [{
+        bidderId: ObjectId('User'),
+        price: Number,
+        dateIssued: Date,
+      }],
+      winnerId: ObjectId('User'),
+      productId: ObjectId('Api')
+    }]`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+Get current user bid history
+```
+
+## Topup Balance
+- route:
+  - `POST /topup`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+- response
+  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 1000, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
+    }`
+- error:
+  - `400 bad request`
+```
+Token is decoded via JWT to get UserId.
+```
+
+# Product Routes
 
 ## Create Product
 - route:
@@ -155,131 +279,31 @@ Token is generated from JWT package.
 - Get product detail by id
 ```
 
-## Update Product
+## Add Bid to Product
 - route:
   - `PATCH /product/:id`
 - request
   - headers
-    - `{ token, access }`
+    - `{ token }`
   - decoded
     - `{ id: _id }`
   - body
-    - `{ name, quantity, price, description, image, category }`
+    - `{ price }`
 - response
   - `200`: `{
         _id,
-        name,
-        quantity,
-        price,
-        description,
-        image,
+        userId,
+        title,
+        images,
         category,
-        created_at,
-        UserId
+        details,
+        initialPrice,
+        currentPrice,
+        createdAt,
+        updatedAt,
     }`
 - error:
   - `401 not authorized`
 ```
-- User can not update Product that does not belongs to his/her (except changing a product quantity when adding to cart with access), it is authorized in middleware.
-- Multer is used to convert form data into object, then it is uploaded to google cloud storage.
-```
-
-## Delete Product
-- route:
-  - `DELETE /product/:id`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ "n" : 1, "ok": 1, "deletedCount": 1 }`
-- error:
-  - `401 not authorized`
-```
-User can not delete Product that does not belongs to his/her, it is authorized in middleware.
-```
-
-## Add Product to Cart
-- route:
-  - `PATCH /cart/:id`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ _id: ObjectId(''), name:, 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', mondey: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
-    }`
-- error:
-  - `401 not authorized`
-```
-- Token is decoded via JWT to get UserId.
-- User can only update Product to his/her cart.
-```
-## Delete Product in Cart
-- route:
-  - `PATCH /cart/remove/:id`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ _id: ObjectId('') }`
-- error:
-  - `401 not authorized`
-```
-- Token is decoded via JWT to get UserId.
-- User can only delete Product from his/her cart.
-```
-## Clear Cart
-- route:
-  - `PATCH /cart/`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 0, cart: [], history: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ]`
-    }`
-- error:
-  - `401 not authorized`
-```
-- Token is decoded via JWT to get UserId.
-- User can only clear Product from his/her cart.
-```
-## Read Product
-- route:
-  - `GET /cart`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
-    }`
-- error:
-  - `500 internal server error`
-```
-- Token is decoded via JWT to get UserId.
-- User can only read Product from his/her cart.
-```
-## Topup 
-- route:
-  - `POST /topup`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 1000, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
-    }`
-- error:
-  - `400 bad request`
-```
-Token is decoded via JWT to get UserId.
+- And perform update on database 'Bid' by push new bid to field 'bids' and 
 ```

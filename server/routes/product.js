@@ -14,8 +14,8 @@ routes.post(
 routes.get("/user", ProductController.findByUserId);
 routes.get("/:id", ProductController.findById);
 routes.get("/", ProductController.findAll);
-routes.delete("/:id", Authorization, ProductController.deleteOne);
 routes.patch('/:id/addbid', ProductController.addBid)
+routes.delete("/:id", Authorization, ProductController.deleteOne);
 
 /**
  * DI HANDLE PAKE CRON JOB YANG DILAKUKAN TIAP JAM 12 MALAM TIAP HARI
