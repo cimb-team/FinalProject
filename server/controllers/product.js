@@ -4,9 +4,11 @@ const Bid = require("../models/bid");
 class ProductController {
   /**
    * POST /products
-   * */
+   * */  
   static create(req, res, next) {
+    let product
     Product.create({
+      userId: req.decoded.id,
       title: req.body.title,
       status: "false",
       images: [req.body.newImages],
@@ -14,18 +16,17 @@ class ProductController {
       details: req.body.details,
       initialPrice: req.body.initialPrice,
       currentPrice: req.body.initialPrice,
-      userId: req.decoded.id
     })
-      .then(product => {
-        Bid.create({
-          bidderId: [],
+      .then(result => {
+        product = result
+        return Bid.create({
+          bids: [],
           winnerId: null,
-          bidPrices: [],
-          dateIssued: [],
           productId: product._id
-        }).then(bid => {
-          res.status(201).json({ ...product, bid });
-        });
+        })
+      })
+      .then(bid => {
+        res.status(201).json({ ...product, bid });
       })
       .catch(next);
   }

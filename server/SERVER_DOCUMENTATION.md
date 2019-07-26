@@ -29,6 +29,7 @@ DEPLOY: http://link-deploy.com/
 - Email is unique, so it is not allowed to have same email in database.
 - Password is hashed with bcryptjs.
 ```
+
 ## Signin
 - route:
   - `POST /signin`
@@ -42,6 +43,7 @@ DEPLOY: http://link-deploy.com/
 ```
 Token is generated from JWT package.
 ```
+
 ## Create Product
 - route:
   - `POST /product`
@@ -51,28 +53,83 @@ Token is generated from JWT package.
   - decoded
     - `{ id: _id }`
   - body
-    - `{ name, quantity, price, description, image, category }`
+    - `{ title, images, category, details, initialPrice, currentPrice }`
 - response
   - `201`: `{
         _id,
-        name,
-        quantity,
-        price,
-        description,
-        image,
+        userId,
+        title,
+        images,
         category,
-        created_at,
-        UserId
+        details,
+        initialPrice,
+        currentPrice,
+        createdAt,
+        updatedAt,
     }`
 - error:
   - `Validation Error`
 ```
-- Token is decoded via JWT to get UserId.
+- Token is decoded via JWT to get userId.
 - Multer is used to convert form data into object, then it is uploaded to google cloud storage.
 ```
-## Read Product
+
+## All Products
 - route:
   - `GET /product`
+- request
+  - headers
+    - `{ token }`
+- response
+  - `200`: `[{
+        _id,
+        userId,
+        title,
+        images,
+        category,
+        details,
+        initialPrice,
+        currentPrice,
+        createdAt,
+        updatedAt,
+    }]`
+- error:
+  - `500 internal server error`
+```
+- Token is decoded via JWT to get userId.
+```
+
+## My Products
+- route:
+  - `GET /product/user`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+- response
+  - `200`: `[{
+        _id,
+        userId,
+        title,
+        images,
+        category,
+        details,
+        initialPrice,
+        currentPrice,
+        createdAt,
+        updatedAt,
+    }]`
+- error:
+  - `500 internal server error`
+```
+- Token is decoded via JWT to get userId.
+- Query is used to find specific userId.
+```
+
+## Detail Product
+- route:
+  - `GET /product/:id`
 - request
   - headers
     - `{ token }`
@@ -81,36 +138,23 @@ Token is generated from JWT package.
 - response
   - `200`: `{
         _id,
-        name,
-        quantity,
-        price,
-        description,
-        image,
+        userId,
+        title,
+        images,
         category,
-        created_at,
-        UserId
+        details,
+        initialPrice,
+        currentPrice,
+        createdAt,
+        updatedAt,
     }`
 - error:
   - `500 internal server error`
 ```
-- Token is decoded via JWT to get UserId.
-- Query is used to find specific UserId.
+- Token is decoded via JWT to get userId.
+- Get product detail by id
 ```
-## Delete Product
-- route:
-  - `DELETE /product/:id`
-- request
-  - headers
-    - `{ token }`
-  - decoded
-    - `{ id: _id }`
-- response
-  - `200`: `{ "n" : 1, "ok": 1, "deletedCount": 1 }`
-- error:
-  - `401 not authorized`
-```
-User can not delete Product that does not belongs to his/her, it is authorized in middleware.
-```
+
 ## Update Product
 - route:
   - `PATCH /product/:id`
@@ -139,6 +183,23 @@ User can not delete Product that does not belongs to his/her, it is authorized i
 - User can not update Product that does not belongs to his/her (except changing a product quantity when adding to cart with access), it is authorized in middleware.
 - Multer is used to convert form data into object, then it is uploaded to google cloud storage.
 ```
+
+## Delete Product
+- route:
+  - `DELETE /product/:id`
+- request
+  - headers
+    - `{ token }`
+  - decoded
+    - `{ id: _id }`
+- response
+  - `200`: `{ "n" : 1, "ok": 1, "deletedCount": 1 }`
+- error:
+  - `401 not authorized`
+```
+User can not delete Product that does not belongs to his/her, it is authorized in middleware.
+```
+
 ## Add Product to Cart
 - route:
   - `PATCH /cart/:id`
