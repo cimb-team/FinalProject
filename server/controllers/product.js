@@ -8,11 +8,11 @@ class ProductController {
     Product.create({
       title: req.body.title,
       status: "false",
-      images: [req.body.newImages],
+      images: req.body.newImages,
       category: req.body.category,
       details: req.body.details,
       initialPrice: req.body.initialPrice,
-      currentPrice: req.body.initialPrice,
+      closedDate: new Date(req.body.closedDate),
       userId: req.decoded.id
     })
       .then(product => {
@@ -23,7 +23,7 @@ class ProductController {
           dateIssued: [],
           productId: product._id
         }).then(bid => {
-          res.status(201).json({ ...product, bid });
+          res.status(201).json({ ...product._doc, bid });
         });
       })
       .catch(next);

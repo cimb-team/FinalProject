@@ -18,6 +18,7 @@ routes.get("/user", UserController.findOne);
  */
 routes.patch("/topup", UserController.topup);
 routes.get("/user/history", UserController.findBidByBidderId);
+routes.patch("/addBid/:id", UserController.addBid);
 
 /**
  * HISTORY DIDAPAT DARI PRODUCTS, NANTI BUAT ROUTES BARU DI PRODUCT

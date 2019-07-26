@@ -1,5 +1,5 @@
 const User = require("../models/user.js");
-const Bid = require('../models/bid')
+const Bid = require("../models/bid");
 const register = require("../helpers/bcrypt.js");
 const jwt = require("../helpers/jwt.js");
 
@@ -84,41 +84,46 @@ class UserController {
     console.log(balance);
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {
-        let { _id, name, email, balance, history } = result;
-        res.status(200).json({ _id, name, email, balance, history });
+        let { _id, name, phonenumber, email, balance, image } = result;
+        let user = { _id, name, email, phonenumber, balance, image };
+        res.status(200).json(user);
       })
       .catch(next);
   }
 
+  /**
+   * /user/history
+   */
   static findBidByBidderId(req, res, next) {
-    Bid.findOne({
-      bids: req.params.id,
-      'bids.bidderId': req.decoded.id
+    Bid.find({
+      "bids.bidderId": req.decoded.id
     })
-    .then(row =>{
-      res.json(row)
-    })
-    .catch(next)
+      .then(row => {
+        res.json(row);
+      })
+      .catch(next);
   }
-  
+
   static addBid(req, res, next) {
-    Bid.findOneAndUpdate({
-      'bids.bidderId': req.decoded.id
-    },
-    {
-      $push : { 
-        bids: {
-          bidderId: req.decoded.id,
-          price: req.body.price,
-          dateIssued: new Date()
+    Bid.findOneAndUpdate(
+      {
+        productId: req.params.id
+      },
+      {
+        $push: {
+          bids: {
+            bidderId: req.decoded.id,
+            price: req.body.price,
+            dateIssued: new Date()
+          }
         }
-      }
-    }, { new: true }
+      },
+      { new: true }
     )
-    .then(row =>{
-      res.status(201).json(row)
-    })
-    .catch(next)
+      .then(row => {
+        res.status(201).json(row);
+      })
+      .catch(next);
   }
 }
 

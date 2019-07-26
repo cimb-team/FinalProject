@@ -35,6 +35,7 @@ const sendUploadToGCS = (req, res, next) => {
               req.body.newImages = [];
             }
             req.body.newImages.push(getPublicUrl(gcsname));
+            console.log(req.body.newImages);
             resolve();
           });
         })
@@ -57,7 +58,7 @@ const Multer = require("multer"),
   multer = Multer({
     storage: Multer.MemoryStorage,
     limits: {
-      fileSize: 5 * 1024 * 1024
+      fileSize: 500 * 1024 * 1024
     }
   });
 
