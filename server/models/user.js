@@ -15,7 +15,7 @@ const UserSchema = new Schema({
           let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
           return input.match(mailformat);
         },
-        message: props => `${props.value} invalid email format!`
+        message: "Invalid email format!"
       },
       {
         validator: function(value) {
@@ -25,29 +25,30 @@ const UserSchema = new Schema({
           })
             .then(data => {
               if (data.length !== 0) {
-                throw "";
+                return false;
               }
             })
             .catch(err => {
-              throw err;
+              return true;
             });
         },
-        message: props => `This email ${props.value} already used!`
+        message: "This email already used!"
       }
     ]
   },
   phonenumber: {
     type: String,
-    minlength: [8, 'Minimal 8 digits']
+    minlength: [8, 'Minimal 8 digits'],
+    required: [true, "Phone Number is required"]
   },
   image: {
     type: String,
-    default: 'https://via.placeholder.com/150'
+    default: "https://via.placeholder.com/150"
   },
   password: {
     type: String,
     required: [true, "Password is required"],
-    min: [6, 'Minimal password 6 characters']
+    minlength: [8, "Password should consist of 8 character"]
   },
   balance: {
     type: Number,

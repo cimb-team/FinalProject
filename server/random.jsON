@@ -1,0 +1,60 @@
+{
+  "errors": {
+    "name": {
+      "message": "Name is required",
+      "name": "ValidatorError",
+      "properties": {
+        "message": "Name is required",
+        "type": "required",
+        "path": "name",
+        "value": ""
+      },
+      "kind": "required",
+      "path": "name",
+      "value": ""
+    },
+    "email": {
+      "message": "[email] invalid email format!",
+      "name": "ValidatorError",
+      "properties": {
+        "message": "[email] invalid email format!",
+        "type": "user defined",
+        "path": "email",
+        "value": "[email]"
+      },
+      "kind": "user defined",
+      "path": "email",
+      "value": "[email]"
+    },
+    "password": {
+      "message": "Password should consist of 8 character",
+      "name": "ValidatorError",
+      "properties": {
+        "message": "Password should consist of 8 character",
+        "type": "minlength",
+        "minlength": 8,
+        "path": "password",
+        "value": "12345"
+      },
+      "kind": "minlength",
+      "path": "password",
+      "value": "12345"
+    },
+    "phonenumber": {
+      "message": "Phone Number is required",
+      "name": "ValidatorError",
+      "properties": {
+        "message": "Phone Number is required",
+        "type": "required",
+        "path": "phonenumber",
+        "value": ""
+      },
+      "kind": "required",
+      "path": "phonenumber",
+      "value": ""
+    }
+  },
+  "_message": "User validation failed",
+  "message": "User validation failed: name: Name is required, email: [email] invalid email format!, password: Password should consist of 8 character, phonenumber: Phone Number is required",
+  "name": "ValidationError"
+}

@@ -1,5 +1,5 @@
 const User = require("../models/user.js");
-const Bid = require('../models/bid')
+const Bid = require("../models/bid");
 const register = require("../helpers/bcrypt.js");
 const jwt = require("../helpers/jwt.js");
 
@@ -35,12 +35,14 @@ class UserController {
         if (result) {
           let check = register.checkPassword(password, result.password);
           if (check === true) {
-            delete result.password
+            delete result.password;
             let token = jwt.sign({
               id: result._id,
               email: result.email
             });
-            res.status(200).json({ token });
+            let { _id, name, phonenumber, email, balance, image } = result;
+            let user = { _id, name, email, phonenumber, balance, image };
+            res.status(200).json({ ...user, token });
           } else {
             throw {
               name: `ValidationError`,
@@ -58,7 +60,7 @@ class UserController {
   }
 
   /**
-   * POST /user
+   * GET /user
    */
   static findOne(req, res, next) {
     let { email } = req.decoded;
@@ -66,50 +68,62 @@ class UserController {
       email
     })
       .then(result => {
-        res.status(200).json(result);
+        let { _id, name, phonenumber, email, balance, image } = result;
+        let user = { _id, name, email, phonenumber, balance, image };
+        res.status(200).json(user);
       })
       .catch(next);
   }
 
-  static updateProfile(req,res,next){
-    let obj = {}
-    let exclude = ['phonenumber', 'password', 'balance', '_id', '__v', 'createdAt', 'updatedAt']
+  static updateProfile(req, res, next) {
+    let obj = {};
+    let exclude = [
+      "phonenumber",
+      "password",
+      'balance',
+      "_id",
+      "__v",
+      "createdAt",
+      "updatedAt"
+    ];
 
     User.schema.eachPath(path => {
       if (!exclude.includes(path)) {
         if (req.body[path])
-          obj[path] = req.body[path]
+          obj[path] = req.body[path];
       }
-    })
+    });
 
     User.findByIdAndUpdate(req.decoded.id, obj)
-    .then(row =>{
-      res.status(201).json(row)
-    })
-    .catch(next)
+      .then(row => {
+        res.status(201).json(row);
+      })
+      .catch(next);
   }
 
-  static changePassword(req,res,next){
+  static changePassword(req, res, next) {
     User.findById(req.decoded.id)
       .then(result => {
         if (result) {
-          let check = register.checkPassword(req.body.oldPassword, result.password);
+          let check = register.checkPassword(
+            req.body.oldPassword,
+            result.password
+          );
           if (check === true) {
-            result.password = req.body.newPassword
-            result.save()
-            .then(row =>{
-              res.status(201).json(row);
-            })
-            .catch(next)
-          }
-          else {
+            result.password = req.body.newPassword;
+            result
+              .save()
+              .then(row => {
+                res.status(201).json(row);
+              })
+              .catch(next);
+          } else {
             throw {
               name: `ValidationError`,
               message: `Wrong password`
             };
           }
-        }
-        else {
+        } else {
           throw {
             name: `ValidationError`,
             message: `Wrong password`
@@ -119,27 +133,29 @@ class UserController {
       .catch(next);
   }
 
-  static changePhoneNumber(req,res,next){
+  static changePhoneNumber(req, res, next) {
     User.findById(req.decoded.id)
       .then(result => {
         if (result) {
-          let check = register.checkPassword(req.body.password, result.password);
+          let check = register.checkPassword(
+            req.body.password,
+            result.password
+          );
           if (check === true) {
-            result.phonenumber = req.body.phonenumber
-            result.save()
-            .then(row =>{
-              res.status(201).json(row);
-            })
-            .catch(next)
-          }
-          else {
+            result.phonenumber = req.body.phonenumber;
+            result
+              .save()
+              .then(row => {
+                res.status(201).json(row);
+              })
+              .catch(next);
+          } else {
             throw {
               name: `ValidationError`,
               message: `Wrong password`
             };
           }
-        }
-        else {
+        } else {
           throw {
             name: `ValidationError`,
             message: `Wrong password`
@@ -148,28 +164,35 @@ class UserController {
       })
       .catch(next);
   }
+
   /**
-   * POST /topup
+   * PATCH /topup
    */
   static topup(req, res, next) {
     let { id } = req.decoded;
     let { balance } = req.body;
+    balance = Number(balance);
+    console.log(balance);
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {
-        let { _id, name, email, balance, history } = result;
-        res.status(201).json({ _id, name, email, balance, history });
+        let { _id, name, phonenumber, email, balance, image } = result;
+        let user = { _id, name, email, phonenumber, balance, image };
+        res.status(200).json(user);
       })
       .catch(next);
   }
 
+  /**
+   * /user/history
+   */
   static findBidByBidderId(req, res, next) {
     Bid.find({
-      'bids.bidderId': req.decoded.id
+      "bids.bidderId": req.decoded.id
     })
-    .then(rows =>{
-      res.json(rows)
-    })
-    .catch(next)
+      .then(row => {
+        res.json(row);
+      })
+      .catch(next);
   }
 }
 

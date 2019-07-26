@@ -2,7 +2,7 @@ const routes = require("express").Router();
 const { Authentication, Authorization } = require("../middlewares/auth.js");
 const ProductController = require("../controllers/product.js");
 const image = require("../middlewares/upload.js");
-
+const Product = require("../models/product");
 // => /products
 routes.use(Authentication);
 routes.post(
@@ -14,8 +14,8 @@ routes.post(
 routes.get("/user", ProductController.findByUserId);
 routes.get("/:id", ProductController.findById);
 routes.get("/", ProductController.findAll);
-routes.patch('/:id/addbid', ProductController.addBid)
 routes.delete("/:id", Authorization, ProductController.deleteOne);
+routes.patch("/:id/addbid", ProductController.addBid);
 
 /**
  * DI HANDLE PAKE CRON JOB YANG DILAKUKAN TIAP JAM 12 MALAM TIAP HARI

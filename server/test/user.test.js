@@ -61,7 +61,7 @@ describe("User sign up and signin", () => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "orvin", email: "orvin@mail.com", password: "orvin123" })
+        .send({ name: "orvin", email: "orvin@mail.com", password: "orvin123", phonenumber: '08973531523' })
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal("User validation failed: email: Validator failed for path `email` with value `orvin@mail.com`");
@@ -78,7 +78,7 @@ describe("User sign up and signin", () => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "orvin", email: "orvin1@mail.com", password: "" })
+        .send({ name: "orvin", email: "orvin1@mail.com", password: "", phonenumber: '08973531523' })
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal("User validation failed: password: Password is required");
@@ -95,7 +95,7 @@ describe("User sign up and signin", () => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "orvin", email: "", password: "orvin123" })
+        .send({ name: "orvin", email: "", password: "orvin123", phonenumber: '08973531523' })
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal("User validation failed: email: Email is required");
@@ -112,7 +112,7 @@ describe("User sign up and signin", () => {
       chai
         .request(app)
         .post("/signup")
-        .send({ name: "", email: "orvin3@mail.com", password: "orvin123" })
+        .send({ name: "", email: "orvin3@mail.com", password: "orvin123", phonenumber: '08973531523' })
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal("User validation failed: name: Name is required");
@@ -125,7 +125,24 @@ describe("User sign up and signin", () => {
     });
   });
   describe("POST /signup", () => {
-    it("Register Failed (400, invalid email)", done => {
+    it("Register Failed (400, without phone number)", done => {
+      chai
+        .request(app)
+        .post("/signup")
+        .send({ name: "orvin", email: "orvin3@mail.com", password: "orvin123", phonenumber: '' })
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal("User validation failed: phonenumber: Phone Number is required");
+          expect(res.body.name).to.equal("ValidationError");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("POST /signup", () => {
+    it("Register Failed (400, phone number < 8 digits)", done => {
       chai
         .request(app)
         .post("/signup")
