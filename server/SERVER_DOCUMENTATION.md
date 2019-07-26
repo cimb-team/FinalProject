@@ -17,15 +17,15 @@
 5. delete "/product/:id"
 
 ## Documentation
-DEPLOY: http://ecommerce.orvinsavero.com/
+DEPLOY: http://link-deploy.com/
 ## Signup 
 - route:
   - `POST /signup`
 - request:
   - body:
-    - `{ name: 'dimitri' , email: 'dimitri@mail.com', password: 'secret' }`
+    - `{ name: 'alvin' , email: 'alvin@mail.com', password: 'alvinaja', phonenumber: '082113741934' }`
 - response:
-  - `201`: `{ _id: ObjectId(''), name: 'dimitri', email: 'dimitri@mail.com', password: 'HashedPassword', money: 0, cart: [], history: [] }`
+  - `201`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', balance: 0 }`
 - error:
   - `Validation Error`
 ```
@@ -37,9 +37,9 @@ DEPLOY: http://ecommerce.orvinsavero.com/
   - `POST /signin`
 - request:
   - body
-    - `{ email: 'dimitri@mail.com', password: 'secret' }`
+    - `{ email: 'alvin@mail.com', password: 'alvinaja' }`
 - response:
-  - `201`: `{ token: '...', access: '...' }`
+  - `200`: `{ token: '...'}`
 - error:
   - `404 not found`
 ```
@@ -151,7 +151,7 @@ User can not delete Product that does not belongs to his/her, it is authorized i
   - decoded
     - `{ id: _id }`
 - response
-  - `200`: `{ _id: ObjectId(''), name:, 'dimitri', email: 'dimitri@mail.com', password: 'HashedPassword', mondey: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
+  - `200`: `{ _id: ObjectId(''), name:, 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', mondey: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
     }`
 - error:
   - `401 not authorized`
@@ -184,7 +184,7 @@ User can not delete Product that does not belongs to his/her, it is authorized i
   - decoded
     - `{ id: _id }`
 - response
-  - `200`: `{ _id: ObjectId(''), name: 'dimitri', email: 'dimitri@mail.com', password: 'HashedPassword', money: 0, cart: [], history: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ]`
+  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 0, cart: [], history: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ]`
     }`
 - error:
   - `401 not authorized`
@@ -201,7 +201,7 @@ User can not delete Product that does not belongs to his/her, it is authorized i
   - decoded
     - `{ id: _id }`
 - response
-  - `200`: `{ _id: ObjectId(''), name: 'dimitri', email: 'dimitri@mail.com', password: 'HashedPassword', money: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
+  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 0, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
     }`
 - error:
   - `500 internal server error`
@@ -218,7 +218,7 @@ User can not delete Product that does not belongs to his/her, it is authorized i
   - decoded
     - `{ id: _id }`
 - response
-  - `200`: `{ _id: ObjectId(''), name: 'dimitri', email: 'dimitri@mail.com', password: 'HashedPassword', money: 1000, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
+  - `200`: `{ _id: ObjectId(''), name: 'alvin', email: 'alvin@mail.com', password: 'HashedPassword', money: 1000, cart: [ { _id, name, quantity, price, description, image, category, created_at, UserId } ], history: []`
     }`
 - error:
   - `400 bad request`

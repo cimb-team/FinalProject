@@ -35,6 +35,7 @@ class UserController {
         if (result) {
           let check = register.checkPassword(password, result.password);
           if (check === true) {
+            delete result.password;
             let token = jwt.sign({
               id: result._id,
               email: result.email
@@ -70,6 +71,94 @@ class UserController {
         let { _id, name, phonenumber, email, balance, image } = result;
         let user = { _id, name, email, phonenumber, balance, image };
         res.status(200).json(user);
+      })
+      .catch(next);
+  }
+
+  static updateProfile(req, res, next) {
+    let obj = {};
+    let exclude = [
+      "phonenumber",
+      "password",
+      "_id",
+      "__v",
+      "createdAt",
+      "updatedAt"
+    ];
+
+    User.schema.eachPath(path => {
+      if (!exclude.includes(path)) {
+        if (req.body[path]) obj[path] = req.body[path];
+      }
+    });
+
+    User.findByIdAndUpdate(req.decoded.id, obj)
+      .then(row => {
+        res.status(201).json(row);
+      })
+      .catch(next);
+  }
+
+  static changePassword(req, res, next) {
+    User.findById(req.decoded.id)
+      .then(result => {
+        if (result) {
+          let check = register.checkPassword(
+            req.body.oldPassword,
+            result.password
+          );
+          if (check === true) {
+            result.password = req.body.newPassword;
+            result
+              .save()
+              .then(row => {
+                res.status(201).json(row);
+              })
+              .catch(next);
+          } else {
+            throw {
+              name: `ValidationError`,
+              message: `Wrong password`
+            };
+          }
+        } else {
+          throw {
+            name: `ValidationError`,
+            message: `Wrong password`
+          };
+        }
+      })
+      .catch(next);
+  }
+
+  static changePhoneNumber(req, res, next) {
+    User.findById(req.decoded.id)
+      .then(result => {
+        if (result) {
+          let check = register.checkPassword(
+            req.body.password,
+            result.password
+          );
+          if (check === true) {
+            result.phonenumber = req.body.phonenumber;
+            result
+              .save()
+              .then(row => {
+                res.status(201).json(row);
+              })
+              .catch(next);
+          } else {
+            throw {
+              name: `ValidationError`,
+              message: `Wrong password`
+            };
+          }
+        } else {
+          throw {
+            name: `ValidationError`,
+            message: `Wrong password`
+          };
+        }
       })
       .catch(next);
   }

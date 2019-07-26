@@ -40,7 +40,10 @@ const UserSchema = new Schema({
     type: String,
     required: [true, "Phone Number is required"]
   },
-  image: String,
+  imageURL: {
+    type: String,
+    default: "https://via.placeholder.com/150"
+  },
   password: {
     type: String,
     required: [true, "Password is required"],
