@@ -38,6 +38,31 @@ const MyProductNav = createStackNavigator({
   }
 });
 
+const MyprofileNav = createStackNavigator({
+  MyProfile: {
+    screen: Profile,
+    navigationOptions: {
+      header: null,
+      headerStyle: {
+        backgroundColor: "white"
+      },
+    }
+  },
+  // ProductDetail: {
+  //   screen: ProductDetail,
+  //   navigationOptions: {
+  //     headerTitle: 'Product Detail',
+  //     headerStyle: {
+  //       backgroundColor: "white",
+  //     },
+  //     headerTintColor: 'black',
+  //     headerTitleStyle: {
+  //       color: 'black'
+  //     }
+  //   }
+  // }
+});
+
 const MainNavigator = createBottomTabNavigator(
   {
     Products: {
@@ -68,7 +93,7 @@ const MainNavigator = createBottomTabNavigator(
       }
     },
     Profile: {
-      screen: Profile,
+      screen: MyprofileNav,
       navigationOptions: {
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor }) => (
@@ -79,7 +104,7 @@ const MainNavigator = createBottomTabNavigator(
   },
 
   {
-    initialRouteName: "Products",
+    initialRouteName: "Profile",
     tabBarOptions: {
       activeTintColor: 'lightblue',
       inactiveTintColor: 'white',
