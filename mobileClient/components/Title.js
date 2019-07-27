@@ -20,7 +20,7 @@ export default function Title(props) {
       marginVertical: 10,
       padding: 10,
       backgroundColor: "#f5f5f5",
-      borderRadius: 20,
+      borderRadius: 10,
       margin: 10
     }}
   >

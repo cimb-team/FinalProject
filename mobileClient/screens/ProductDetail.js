@@ -61,7 +61,7 @@ export default function ProductDetail(props) {
             }}
             source={{
               uri:
-                "https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
             }}
           />
         </View>
