@@ -8,24 +8,159 @@ import {
   Image,
   Platform,
   ScrollView,
-  TouchableHighlight
+  TextInput,
+  TouchableHighlight,
+  StatusBar
 } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Title from "../components/Title";
 export default function MyProduct(props) {
   return (
-      <SafeAreaView style={styles.container}>
-      <Title
-      title="My Product"
-      style={styles.text}
-    />
-      </SafeAreaView>
+    <SafeAreaView style={styles.container}>
+
+      <View style={styles.flex} opacity={1}>
+        <TextInput style={styles.search} />
+        <Ionicons name="ios-add-circle" color="black" size={28} />
+        <Ionicons name="ios-albums" color="black" size={28} />
+        <Ionicons name="ios-person" color="black" size={28} />
+      </View>
+      <ScrollView>
+      <View
+        style={{
+          marginVertical: 10,
+          borderRadius: 20,
+          margin: 10
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: 25,
+            fontWeight: "bold",
+            color: "black"
+          }}
+        >
+          My Products
+        </Text>
+      </View>
+
+      <View style={styles.flexCard}>
+      <TouchableHighlight          onPress={() =>
+        props.navigation.navigate("ProductDetail", {
+          id: 'asd'
+        })
+      }>
+        <View style={styles.card}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Image
+              style={{
+                width: 450,
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              source={{
+                uri:
+                  "https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              }}
+            />
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "700", marginBottom: 5 }}
+            >
+              Smoke 24/7
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "400",
+                paddingHorizontal: 60
+              }}
+            >
+              Clouds come floating into my life, no longer to carry rain or
+              usher storm, but to add color to my sunset sky.
+            </Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+        <View style={styles.card}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Image
+              style={{
+                width: 450,
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              source={{
+                uri:
+                  "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
+              }}
+            />
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              padding: 10
+            }}
+          >
+            <Text
+              style={{ color: "white", fontWeight: "700", marginBottom: 5 }}
+            >
+              Red Blood
+            </Text>
+            <Text
+              style={{
+                color: "black",
+                fontWeight: "400",
+                paddingHorizontal: 60
+              }}
+            >
+              The bond that links your true family is not one of blood, but of
+              respect and joy in each other's life.
+            </Text>
+          </View>
+        </View>
+      </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "white",
   },
   text: {
     textAlign: "center",
@@ -33,4 +168,30 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold"
   },
+  card: {
+    marginVertical: 10,
+    backgroundColor: "#f5f5f5",
+    margin: 10,
+    width: '100%'
+  },
+  search: {
+    height: 35,
+    borderColor: "gray",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 0.5,
+    width: 250
+  },
+  flex: {
+    justifyContent: "space-between",
+    padding: 15,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  flexCard: {
+    alignItems: "center",
+    justifyContent: 'center',
+    margin: 5
+  }
 });

@@ -11,28 +11,32 @@ import Products from "../screens/Products";
 import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
 import Profile from "../screens/Profile";
+import ProductDetail from "../screens/ProductDetail";
 
-// const StackNavigator = createStackNavigator({
-//   Movie: {
-//     screen: Movie,
-//     navigationOptions: {
-//       header: null,
-//       headerTitle: "Movie",
-//       headerStyle: {
-//         backgroundColor: "white"
-//       }
-//     }
-//   },
-//   MovieDetail: {
-//     screen: MovieDetail,
-//     navigationOptions: {
-//       headerTitle: "Movie Detail",
-//       headerStyle: {
-//         backgroundColor: "white"
-//       }
-//     }
-//   }
-// });
+const MyProductNav = createStackNavigator({
+  MyProduct: {
+    screen: MyProduct,
+    navigationOptions: {
+      header: null,
+      headerStyle: {
+        backgroundColor: "black"
+      },
+    }
+  },
+  ProductDetail: {
+    screen: ProductDetail,
+    navigationOptions: {
+      headerTitle: 'Product Detail',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  }
+});
 
 const MainNavigator = createBottomTabNavigator(
   {
@@ -46,7 +50,7 @@ const MainNavigator = createBottomTabNavigator(
       },
     },
     MyProduct: {
-      screen: MyProduct,
+      screen: MyProductNav,
       navigationOptions: {
         tabBarLabel: "MyProduct",
         tabBarIcon: ({ tintColor }) => (

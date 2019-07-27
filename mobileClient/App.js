@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Navigation from "./navigations/Navigation";
+import { AppLoading } from 'expo';
+
 export default function App() {
   return (
     <Navigation />
