@@ -12,7 +12,41 @@ import {
   TouchableHighlight
 } from "react-native";
 import Title from "../components/Title";
+// import {Permissions, Constants} from 'expo';
+import { Permissions } from 'expo';
+import * as ImagePicker from 'expo-image-picker'
+// import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 export default function History(props) {
+  const [image, setImage] = useState(false)
+  useEffect(() => {
+  }, []);
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      
+      setImage(result.uri);
+      console.log(image)
+    }
+  };
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      } else {
+        _pickImage()
+      }
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Title title="History" style={styles.text} />
@@ -41,7 +75,7 @@ export default function History(props) {
                 height: 120,
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: 10
+                borderRadius: 5
               }}
               source={{
                 uri: "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
@@ -108,7 +142,7 @@ export default function History(props) {
         backgroundColor: "#f5f5f5",
         margin: 10,
         width: "95%",
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 10,flexDirection: "row", flexWrap: "wrap" }}>
       <TextInput style={styles.search} />
       <View
@@ -116,7 +150,7 @@ export default function History(props) {
         padding: 10,
         backgroundColor: "#3399ff",
         width: 100,
-        borderRadius: 10,
+        borderRadius: 5,
         marginLeft: 10
       }}
     >
@@ -133,6 +167,14 @@ export default function History(props) {
       </Text>
     </View>
       </View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button
+        title="Pick an image from camera roll"
+        onPress={getPermissionAsync}
+      />
+      {image &&
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+    </View>
     </SafeAreaView>
   );
 }
@@ -152,7 +194,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderColor: "gray",
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 10,
     borderWidth: 0.5,
     width: 250
@@ -162,7 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     margin: 10,
     width: "95%",
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 10
   }
 });
+
