@@ -11,35 +11,38 @@ import Products from "../screens/Products";
 import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
 import Profile from "../screens/Profile";
+import ProductDetails from "../screens/ProductDetails"
 
-// const StackNavigator = createStackNavigator({
-//   Movie: {
-//     screen: Movie,
-//     navigationOptions: {
-//       header: null,
-//       headerTitle: "Movie",
-//       headerStyle: {
-//         backgroundColor: "white"
-//       }
-//     }
-//   },
-//   MovieDetail: {
-//     screen: MovieDetail,
-//     navigationOptions: {
-//       headerTitle: "Movie Detail",
-//       headerStyle: {
-//         backgroundColor: "white"
-//       }
-//     }
-//   }
-// });
+const HomeStack = createStackNavigator({
+  ProductDetails: {
+    screen: ProductDetails,
+    navigationOptions: {
+      header: null,
+      headerTitle: "Product Details",
+      headerStyle: {
+        backgroundColor: "white"
+      }
+    }
+  },
+  ProductList: {
+    screen: Products,
+    navigationOptions: {
+      header: null,
+      headerTitle: "Product",
+      headerStyle: {
+        backgroundColor: "white"
+      }
+    }
+  },
+  
+});
 
 const MainNavigator = createBottomTabNavigator(
   {
-    Products: {
-      screen: Products,
+    Home: {
+      screen: HomeStack,
       navigationOptions: {
-        tabBarLabel: "Products",
+        tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="ios-albums" color={tintColor} size={24} />
         )
@@ -75,7 +78,7 @@ const MainNavigator = createBottomTabNavigator(
   },
 
   {
-    initialRouteName: "Products",
+    initialRouteName: "Home",
     tabBarOptions: {
       activeTintColor: 'lightblue',
       inactiveTintColor: 'white',
