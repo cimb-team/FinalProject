@@ -83,7 +83,7 @@ const MainNavigator = createBottomTabNavigator(
         fontSize: 14,
       },
       style: {
-        backgroundColor: 'red',
+        backgroundColor: '#1F1F1F',
       },
     }
   }
