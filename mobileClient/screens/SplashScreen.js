@@ -8,6 +8,7 @@ import {
   View,
   Animated,
 } from 'react-native';
+import axios from '../axios'
 
 const styles = StyleSheet.create({
   container: {
@@ -19,19 +20,32 @@ const styles = StyleSheet.create({
 
 export default function SplashScreen({navigation}) {
   // buat ntar loading screen
-  
-  // async function getUserInfo(){
-  //   const user = await axios({
-  //     method: 'get',
-  //     url: '/user',
-  //     header: localStorage.getItem('token')
-  //   })
-  //   navigation.navigate(user ? 'App' : 'Auth');
-  // }
 
-  // useEffect(()=>{
-  //   getUserInfo()
-  // },[])
+  function getUserInfo(){
+    AsyncStorage.getItem('@NusantaraArt:token')
+    .then(token =>{
+      console.log(token)
+      if(!token)
+        throw 'Token is null'
+      return axios({
+        method: 'get',
+        url: '/user',
+        headers: {
+          token
+        }
+      })
+    })
+    .then(({data})=>{
+      navigation.navigate('App');
+    })
+    .catch(err =>{
+      navigation.navigate('Auth');
+    })
+  }
+
+  useEffect(()=>{
+    getUserInfo()
+  },[])
 
   return (
     <View style={styles.container}>
