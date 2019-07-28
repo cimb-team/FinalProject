@@ -57,9 +57,15 @@ export default class CreateProduct extends Component {
       type : this.state.imageMentah.type
     })
     
-
+    const imageFilenameBeforeSplit = this.state.image.split('/')
+   const imageFilename = imageFilenameBeforeSplit[imageFilenameBeforeSplit.length - 1]
+    
     const data = new FormData()
-    data.append('images', this.state.title)
+    data.append('images', {
+      uri : this.state.image,
+      type : 'image/jpeg',
+      name : imageFilename
+    })
     data.append('title', this.state.title)
     data.append('category', this.state.category)
     data.append('details', this.state.details)
@@ -77,7 +83,7 @@ export default class CreateProduct extends Component {
       data,
       headers : {
         "token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkM2QyNGM4NzllM2FjNTc0MDM5ZDQzYSIsImVtYWlsIjoiZGVkeUBnbWFpbC5jb20iLCJpYXQiOjE1NjQyODgyMzB9.m3vrB894isZsiJ4fqxh1fdJepAzFIdAOzxZ_qVdaoqk',
-        "content": "multipart/form-data"
+        "content-type": "multipart/form-data"
       }
     })
     .then(({data})=>{
@@ -93,11 +99,6 @@ export default class CreateProduct extends Component {
       
       
     })
-    
-    
-   
-    
-    
   }
 
   getPermissionAsync = async () => {
@@ -158,7 +159,7 @@ export default class CreateProduct extends Component {
                       <Input placeholder="Category" onChangeText={(text) => this.setState({category : text})} />
                     </Item>
                     <Item>
-                      <Input placeholder="Initial Prize" onChangeText={(text) => this.setState({initialPrize : text})} />
+                      <Input placeholder="Initial Prize" keyboardType='numeric' onChangeText={(text) => this.setState({initialPrize : text})} />
                     </Item>
                     <Item>
                       <Content>
