@@ -5,8 +5,9 @@ import {
   Image,
   StyleSheet,
   Dimensions,
+  Platform,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
@@ -25,7 +26,6 @@ import {
   Body,
   Right
 } from "native-base";
-import { View, ScrollView, Image, StyleSheet, Dimensions, Platform, Text, AsyncStorage } from 'react-native';
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { getProfile } from "../store/action";
