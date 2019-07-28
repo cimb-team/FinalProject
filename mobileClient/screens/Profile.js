@@ -5,7 +5,8 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  Text
+  Text,
+  TouchableHighlight
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
@@ -134,6 +135,8 @@ function ProfilePage(props) {
           justifyContent: "space-around"
         }}
       >
+
+
         <View
           style={{
             width: "45%",
@@ -143,14 +146,26 @@ function ProfilePage(props) {
             alignItems: "center"
           }}
         >
+
           <Card style={{ width: "100%" }}>
+          <TouchableHighlight
+          onPress={() =>
+            props.navigation.navigate("History", {
+              id: 'sdf'
+            })
+          }
+        >
             <CardItem>
+
               <Body style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome name="history" size={45} color="black" />
                 <Text style={{ fontSize: 10 }}>Bid History</Text>
               </Body>
+          
             </CardItem>
+            </TouchableHighlight>
           </Card>
+
         </View>
 
         <View
@@ -162,13 +177,22 @@ function ProfilePage(props) {
             alignItems: "center"
           }}
         >
+      
           <Card style={{ width: "100%" }}>
+          <TouchableHighlight
+          onPress={() =>
+            props.navigation.navigate("Topup", {
+              id: 'sdf'
+            })
+          }
+        >
             <CardItem>
               <Body style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome name="money" size={45} color="black" />
                 <Text style={{ fontSize: 10 }}>TopUp Balance</Text>
               </Body>
             </CardItem>
+            </TouchableHighlight>
           </Card>
         </View>
       </View>

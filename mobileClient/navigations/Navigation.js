@@ -10,6 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Products from "../screens/Products";
 import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
+import Topup from "../screens/Topup";
 import Profile from "../screens/Profile";
 import ProductDetail from "../screens/ProductDetail";
 
@@ -63,8 +64,8 @@ const ProductsNav = createStackNavigator({
   }
 });
 
-const MyprofileNav = createStackNavigator({
-  MyProfile: {
+const ProfileNav = createStackNavigator({
+  Profile: {
     screen: Profile,
     navigationOptions: {
       header: null,
@@ -73,20 +74,58 @@ const MyprofileNav = createStackNavigator({
       },
     }
   },
-  // ProductDetail: {
-  //   screen: ProductDetail,
-  //   navigationOptions: {
-  //     headerTitle: 'Product Detail',
-  //     headerStyle: {
-  //       backgroundColor: "white",
-  //     },
-  //     headerTintColor: 'black',
-  //     headerTitleStyle: {
-  //       color: 'black'
-  //     }
-  //   }
-  // }
+  History: {
+    screen: History,
+    navigationOptions: {
+      headerTitle: 'History',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
+  Topup: {
+    screen: Topup,
+    navigationOptions: {
+      headerTitle: 'Topup',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
 });
+
+// const MyprofileNav = createStackNavigator({
+//   MyProfile: {
+//     screen: Profile,
+//     navigationOptions: {
+//       header: null,
+//       headerStyle: {
+//         backgroundColor: "white"
+//       },
+//     }
+//   },
+//   // ProductDetail: {
+//   //   screen: ProductDetail,
+//   //   navigationOptions: {
+//   //     headerTitle: 'Product Detail',
+//   //     headerStyle: {
+//   //       backgroundColor: "white",
+//   //     },
+//   //     headerTintColor: 'black',
+//   //     headerTitleStyle: {
+//   //       color: 'black'
+//   //     }
+//   //   }
+//   // }
+// });
 
 const MainNavigator = createBottomTabNavigator(
   {
@@ -108,17 +147,17 @@ const MainNavigator = createBottomTabNavigator(
         )
       }
     },
-    History: {
+    MyHistory: {
       screen: History,
       navigationOptions: {
-        tabBarLabel: "History",
+        tabBarLabel: "MyHistory",
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="ios-book" color={tintColor} size={24} />
         )
       }
     },
     Profile: {
-      screen: MyprofileNav,
+      screen: ProfileNav,
       navigationOptions: {
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor }) => (
