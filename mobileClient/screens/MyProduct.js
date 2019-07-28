@@ -24,7 +24,7 @@ function MyProduct(props) {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-    <TopBar></TopBar>
+    <TopBar navigation={props.navigation}></TopBar>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{

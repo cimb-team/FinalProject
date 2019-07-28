@@ -1,14 +1,42 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { Root } from 'native-base'
+import { StyleSheet, View } from 'react-native';
 import Navigation from "./navigations/Navigation";
-import { AppLoading } from "expo";
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
+import { MaterialIcons } from '@expo/vector-icons';
+import {AsyncStorage} from 'react-native';
 import { Provider } from "react-redux";
 import store from "./store";
+
 export default function App() {
+  const [fontLoaded, setfontLoaded] = useState(false)
+  
+  async function loadAllFont () {
+    await Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      ...MaterialIcons.font,
+    })
+    setfontLoaded(true)
+  }
+
+  useEffect(() =>{
+    loadAllFont()
+  },[])
+
   return (
-    <Provider store={store}>
-      <Navigation />
-    </Provider>
+    <Root>
+      {
+        fontLoaded
+        ? (
+            <Provider store={store}>
+              <Navigation />
+            </Provider>
+          )
+        : ( <AppLoading/> )
+      }
+    </Root>
   );
 }
 

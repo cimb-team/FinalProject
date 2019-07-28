@@ -82,6 +82,8 @@ class UserController {
   static topup(req, res, next) {
     let { id } = req.decoded;
     let { balance } = req.body;
+    console.log(req.body)
+    console.log('======')
     balance = Number(balance);
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {

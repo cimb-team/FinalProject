@@ -1,8 +1,8 @@
 import {
+  createSwitchNavigator,
   createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator
 } from "react-navigation";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -10,8 +10,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Products from "../screens/Products";
 import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
+import Topup from "../screens/Topup";
 import Profile from "../screens/Profile";
 import ProductDetail from "../screens/ProductDetail";
+import SplashScreen from "../screens/SplashScreen";
+import Signup from "../screens/Signup";
+import Signin from "../screens/Signin";
+import Create from "../screens/CreateProduct";
+import { fromTop, fadeIn } from 'react-navigation-transitions';
 
 const MyProductNav = createStackNavigator({
   MyProduct: {
@@ -27,6 +33,19 @@ const MyProductNav = createStackNavigator({
     screen: ProductDetail,
     navigationOptions: {
       headerTitle: 'Product Detail',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
+  Create: {
+    screen: Create,
+    navigationOptions: {
+      headerTitle: 'Create Product',
       headerStyle: {
         backgroundColor: "white",
       },
@@ -63,8 +82,8 @@ const ProductsNav = createStackNavigator({
   }
 });
 
-const MyprofileNav = createStackNavigator({
-  MyProfile: {
+const ProfileNav = createStackNavigator({
+  Profile: {
     screen: Profile,
     navigationOptions: {
       header: null,
@@ -73,20 +92,58 @@ const MyprofileNav = createStackNavigator({
       },
     }
   },
-  // ProductDetail: {
-  //   screen: ProductDetail,
-  //   navigationOptions: {
-  //     headerTitle: 'Product Detail',
-  //     headerStyle: {
-  //       backgroundColor: "white",
-  //     },
-  //     headerTintColor: 'black',
-  //     headerTitleStyle: {
-  //       color: 'black'
-  //     }
-  //   }
-  // }
+  History: {
+    screen: History,
+    navigationOptions: {
+      headerTitle: 'History',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
+  Topup: {
+    screen: Topup,
+    navigationOptions: {
+      headerTitle: 'Topup',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
 });
+
+// const MyprofileNav = createStackNavigator({
+//   MyProfile: {
+//     screen: Profile,
+//     navigationOptions: {
+//       header: null,
+//       headerStyle: {
+//         backgroundColor: "white"
+//       },
+//     }
+//   },
+//   // ProductDetail: {
+//   //   screen: ProductDetail,
+//   //   navigationOptions: {
+//   //     headerTitle: 'Product Detail',
+//   //     headerStyle: {
+//   //       backgroundColor: "white",
+//   //     },
+//   //     headerTintColor: 'black',
+//   //     headerTitleStyle: {
+//   //       color: 'black'
+//   //     }
+//   //   }
+//   // }
+// });
 
 const MainNavigator = createBottomTabNavigator(
   {
@@ -108,17 +165,8 @@ const MainNavigator = createBottomTabNavigator(
         )
       }
     },
-    History: {
-      screen: History,
-      navigationOptions: {
-        tabBarLabel: "History",
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-book" color={tintColor} size={24} />
-        )
-      }
-    },
     Profile: {
-      screen: MyprofileNav,
+      screen: ProfileNav,
       navigationOptions: {
         tabBarLabel: "Profile",
         tabBarIcon: ({ tintColor }) => (
@@ -143,4 +191,42 @@ const MainNavigator = createBottomTabNavigator(
   }
 );
 
-export default createAppContainer(MainNavigator);
+const Auth = createBottomTabNavigator({
+  Signup: { 
+    screen: Signup,
+    navigationOptions: {
+      tabBarLabel: "Signup",
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name="ios-person" color={tintColor} size={24} />
+      )
+    }
+  },
+  Signin: { 
+    screen: Signin,
+    navigationOptions: {
+      tabBarLabel: "Signin",
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name="ios-log-in" color={tintColor} size={24} />
+      )
+    }
+  },
+},{
+    initialRouteName: 'Signup',
+    activeColor: '#f0edf6',
+    inactiveColor: '#3e2465',
+    barStyle: { backgroundColor: '#694fad' },
+    // transitionConfig: () => fromTop(1000),
+  })
+
+export default createAppContainer(
+  createSwitchNavigator(
+  {
+    Splash: SplashScreen,
+    Auth: Auth,
+    App: MainNavigator,
+  },
+  {
+    initialRouteName: 'Splash',
+    // transitionConfig: () => fadeIn(1000),
+  }
+));

@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from "../axios";
 
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product`,
-      headers: {token: token}
+      url: `/product`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -32,8 +32,8 @@ export function getMyProducts(token) {
     dispatch(loadingMyProducts());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product/user`,
-      headers: {token: token}
+      url: `/product/user`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -56,13 +56,12 @@ export function loadingMyProducts() {
 }
 
 export function getProductDetail(token, id) {
-  console.log(token, id)
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product/${id}`,
-      headers: {token: token}
+      url: `/product/${id}`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -84,11 +83,68 @@ export function loadingProductDetail() {
   };
 }
 
+export function getProfile() {
+  return (dispatch, state) => {
+    console.log("getProfile");
+    const token = state().token;
+    console.log(token);
+    dispatch(loadingProfile());
+    return axios({
+      method: "GET",
+      url: `/user`,
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log(data);
+        dispatch({
+          type: "SUCCESS_PROFILE",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_PROFILE",
+          error
+        });
+      });
+  };
+}
 
+export function setToken(token) {
+  return {
+    type: "SUCCESS_TOKEN",
+    data: token
+  };
+}
 
+export function loadingProfile() {
+  return {
+    type: "LOADING_PROFILE"
+  };
+}
 
+export function toppingUp(value, token) {
+  console.log(value, token);
+  return (dispatch, state) => {
+    axios({
+      method: "PATCH",
+      url: `/user/topup`,
+      data: { balance: value },
+      headers: { token: token },
 
-
+    })
+      .then(({ data }) => {
+        console.log(data);
+        dispatch(getProfile());
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}
 
 export function pageCounter(number) {
   return (dispatch, state) => {
@@ -192,4 +248,3 @@ export function loadingHitApi2() {
     type: "LOADING_HIT_API2"
   };
 }
-
