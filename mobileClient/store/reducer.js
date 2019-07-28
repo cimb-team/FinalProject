@@ -15,6 +15,11 @@ const defaultValue = {
     loading: true,
     data: {},
     error: false
+  },
+  profile: {
+    loading: true,
+    data: {},
+    error: false
   }
 };
 
@@ -89,6 +94,31 @@ export default function reducer(state = defaultValue, action) {
           loading: true
         }
       };
+
+      case "SUCCESS_PROFILE":
+        console.log(action.data)
+        return {
+          ...state,
+          profile: {
+            loading: false,
+            data: action.data
+          }
+        };
+      case "ERROR_PROFILE":
+        return {
+          ...state,
+          profile: {
+            loading: false,
+            error: action.error
+          }
+        };
+      case "LOADING_PROFILE":
+        return {
+          ...state,
+          profile: {
+            loading: true
+          }
+        };
 
     default:
       return state;

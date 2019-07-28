@@ -56,7 +56,6 @@ export function loadingMyProducts() {
 }
 
 export function getProductDetail(token, id) {
-  console.log(token, id)
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
     axios({
@@ -81,6 +80,37 @@ export function getProductDetail(token, id) {
 export function loadingProductDetail() {
   return {
     type: "LOADING_PRODUCT_DETAIL"
+  };
+}
+
+export function getProfile(token) {
+  console.log(token)
+  return (dispatch, state) => {
+    console.log('asd')
+    dispatch(loadingProfile());
+    axios({
+      method: "GET",
+      url: `http://localhost:3000/user`,
+      headers: {token: token}
+    })
+      .then(({ data }) => {
+        console.log(data)
+        dispatch({
+          type: "SUCCESS_PROFILE",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_PROFILE",
+          error
+        });
+      });
+  };
+}
+export function loadingProfile() {
+  return {
+    type: "LOADING_PROFILE"
   };
 }
 
