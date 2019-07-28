@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from "../axios";
 
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product`,
-      headers: {token: token}
+      url: `/product`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -32,8 +32,8 @@ export function getMyProducts(token) {
     dispatch(loadingMyProducts());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product/user`,
-      headers: {token: token}
+      url: `/product/user`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -60,8 +60,8 @@ export function getProductDetail(token, id) {
     dispatch(loadingProductDetail());
     axios({
       method: "GET",
-      url: `http://localhost:3000/product/${id}`,
-      headers: {token: token}
+      url: `/product/${id}`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         dispatch({
@@ -83,15 +83,16 @@ export function loadingProductDetail() {
   };
 }
 
-export function getProfile(token) {
-  console.log(token)
+export function getProfile() {
   return (dispatch, state) => {
-    console.log('asd')
+    console.log('getProfile')
+    const token = state().token
+    console.log(token)
     dispatch(loadingProfile());
-    axios({
+    return axios({
       method: "GET",
-      url: `http://localhost:3000/user`,
-      headers: {token: token}
+      url: `/user`,
+      headers: { token: token }
     })
       .then(({ data }) => {
         console.log(data)
@@ -108,6 +109,14 @@ export function getProfile(token) {
       });
   };
 }
+
+export function setToken(token) {
+  return {
+    type: "SUCCESS_TOKEN",
+    data: token
+  };
+}
+
 export function loadingProfile() {
   return {
     type: "LOADING_PROFILE"
