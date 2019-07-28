@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   ActivityIndicator,
   AsyncStorage,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Animated,
+  Image
 } from 'react-native';
 import { getProfile, setToken } from "../store/action";
 import { connect } from 'react-redux'
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
 
 function SplashScreen({ navigation, getProfile, setToken }) {
   // buat ntar loading screen
+  const [loading, setLoading] = useState(false)
 
   function getUserInfo() {
     AsyncStorage.getItem('@NusantaraArt:token')
@@ -44,12 +46,19 @@ function SplashScreen({ navigation, getProfile, setToken }) {
   }
 
   useEffect(() => {
-    getUserInfo()
+    setTimeout(() => {
+      setLoading(true)
+    }, 1000);
+
+    setTimeout(() => {
+      getUserInfo()
+    }, 3000);
   }, [])
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator />
+      <Image source={require('../assets/splashScreen.png')} style={{width: '50%', height: '50%'}}/>
+      { loading && <ActivityIndicator size="large" />}
       <StatusBar barStyle="default" />
     </View>
   )

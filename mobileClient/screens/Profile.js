@@ -8,6 +8,7 @@ import {
   Platform,
   Text,
   TouchableHighlight,
+  AsyncStorage,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
@@ -32,18 +33,17 @@ import { getProfile } from "../store/action";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
-function logout(){
-  AsyncStorage.clear()
-    .then(() => this.props.navigation.navigate('Signin'))
-    .catch(err => console.log(err))
-}
-
 function ProfilePage(props) {
   useEffect(() => {
     props.getProfile(props.token);
   }, []);
 
-  console.log(props.profileData)
+  function logout(){
+    AsyncStorage.clear()
+      .then(() => props.navigation.navigate('Signin'))
+      .catch(err => console.log(err))
+  }
+
   return (
     <View style={styles.container}>
       <View
