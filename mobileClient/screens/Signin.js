@@ -5,15 +5,17 @@ import {AsyncStorage} from 'react-native';
 import axios from '../axios'
 import { Platform } from 'react-native'
 import Constants from 'expo-constants';
+import { getProfile } from '../store/action'
+import { connect } from 'react-redux'
 
-export default function Auth({ navigation }) {
+function Signin({ navigation, getProfile }) {
   const [loading, setloading] = useState(false)
 
   function submitForm(email, password){
     setloading(true)
     axios({
       method: 'post',
-      url: '/signin',
+      url: '/user/signin',
       data: {
         email,
         password,
@@ -31,7 +33,7 @@ export default function Auth({ navigation }) {
         type: 'success',
         buttonStyle: { backgroundColor: "green" }
       })
-      navigation.navigate('App')
+      navigation.navigate('Splash')
     })
     .catch(({response}) =>{
       console.log(response.data.message)
@@ -67,3 +69,12 @@ export default function Auth({ navigation }) {
     </Container>
   )
 }
+
+const mapDispatchToProps = {
+  getProfile
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Signin);
