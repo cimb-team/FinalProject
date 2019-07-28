@@ -13,7 +13,7 @@ import {
   StatusBar
 } from "react-native";
 import Constants from "expo-constants";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import TopBar from '../components/TopBar'
 import { getMyProducts } from "../store/action";
 import Card from "../components/Card";
 import { connect } from "react-redux";
@@ -24,12 +24,7 @@ function MyProduct(props) {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.flex} opacity={1}>
-        <TextInput style={styles.search} />
-        <Ionicons name="ios-add-circle" color="black" size={28} />
-        <Ionicons name="ios-albums" color="black" size={28} />
-        <Ionicons name="ios-person" color="black" size={28} />
-      </View>
+    <TopBar></TopBar>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
