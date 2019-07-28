@@ -8,6 +8,7 @@ class ProductController {
 
   static create(req, res, next) {
     let product;
+    console.log(req.body)
     Product.create({
       userId: req.decoded.id,
       title: req.body.title,

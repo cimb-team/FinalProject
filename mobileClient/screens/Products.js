@@ -103,8 +103,11 @@ function Product(props) {
   }, []);
   return (
     <View style={styles.container}>
+    <View style={{width: '100%'}}>
+    <TopBar navigation={props.navigation}></TopBar>
+    </View>
       <View style={styles.scrollContainer}>
-      <TopBar></TopBar>
+
         <ScrollView
           horizontal
           pagingEnabled
