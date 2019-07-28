@@ -12,8 +12,22 @@ import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
 import Profile from "../screens/Profile";
 import ProductDetail from "../screens/ProductDetail";
+import CreateProduct from "../screens/CreateProduct"
 
 const MyProductNav = createStackNavigator({
+  CreateProduct: {
+    screen: CreateProduct,
+    navigationOptions: {
+      headerTitle: 'Create Product',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
   MyProduct: {
     screen: MyProduct,
     navigationOptions: {
@@ -104,7 +118,7 @@ const MainNavigator = createBottomTabNavigator(
   },
 
   {
-    initialRouteName: "Profile",
+    initialRouteName: "MyProduct",
     tabBarOptions: {
       activeTintColor: 'lightblue',
       inactiveTintColor: 'white',
