@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -12,38 +12,117 @@ import {
   TouchableHighlight,
   StatusBar
 } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Constants from "expo-constants";
+import TopBar from '../components/TopBar'
+import { getMyProducts } from "../store/action";
+import Card from "../components/Card";
+import { connect } from "react-redux";
 import Title from "../components/Title";
-export default function MyProduct(props) {
+function MyProduct(props) {
+  useEffect(() => {
+    props.getMyProducts(props.token);
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
-
-      <View style={styles.flex} opacity={1}>
-        <TextInput style={styles.search} />
-        <Ionicons name="ios-add-circle" color="black" size={28} />
-        <Ionicons name="ios-albums" color="black" size={28} />
-        <Ionicons name="ios-person" color="black" size={28} />
-      </View>
-      <ScrollView>
-      <View
-        style={{
-          marginVertical: 10,
-          borderRadius: 20,
-          margin: 10
-        }}
-      >
-        <Text
+    <TopBar></TopBar>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
           style={{
-            textAlign: "center",
-            fontSize: 25,
-            fontWeight: "bold",
-            color: "black"
+            marginVertical: 10,
+            borderRadius: 20,
+            margin: 10,
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
-          My Products
-        </Text>
-      </View>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 25,
+              fontWeight: "bold",
+              color: "black"
+            }}
+          >
+            My Products
+          </Text>
+        </View>
+        <View
+          style={{
+            height: "100%",
+            width: "90%",
+            marginTop: 6,
+            marginBottom: "25%",
+            
+          }}
+        >
+          {!props.myProductsLoading && (
+            <Fragment>
+              {props.myProductsData.map(product => (
+                <Card key={product._id} product={product} navigation={props.navigation} />
+              ))}
+            </Fragment>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 
+const mapStateToProps = state => {
+  return {
+    myProductsData: state.myProducts.data,
+    myProductsError: state.myProducts.error,
+    myProductsLoading: state.myProducts.loading,
+    token: state.token
+  };
+};
+const mapDispatchToProps = {
+  getMyProducts
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyProduct);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  text: {
+    textAlign: "center",
+    margin: 5,
+    fontSize: 25,
+    fontWeight: "bold"
+  },
+  card: {
+    marginVertical: 10,
+    backgroundColor: "#f5f5f5",
+    margin: 10,
+    width: "100%"
+  },
+  search: {
+    height: 35,
+    borderColor: "gray",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 0.5,
+    width: 250
+  },
+  flex: {
+    justifyContent: "space-between",
+    padding: 15,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  flexCard: {
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 5
+  }
+});
+
+/*
       <View style={styles.flexCard}>
       <TouchableHighlight          onPress={() =>
         props.navigation.navigate("ProductDetail", {
@@ -152,46 +231,5 @@ export default function MyProduct(props) {
           </View>
         </View>
       </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  text: {
-    textAlign: "center",
-    margin: 5,
-    fontSize: 25,
-    fontWeight: "bold"
-  },
-  card: {
-    marginVertical: 10,
-    backgroundColor: "#f5f5f5",
-    margin: 10,
-    width: '100%'
-  },
-  search: {
-    height: 35,
-    borderColor: "gray",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 10,
-    borderWidth: 0.5,
-    width: 250
-  },
-  flex: {
-    justifyContent: "space-between",
-    padding: 15,
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  flexCard: {
-    alignItems: "center",
-    justifyContent: 'center',
-    margin: 5
-  }
-});
+    
+*/

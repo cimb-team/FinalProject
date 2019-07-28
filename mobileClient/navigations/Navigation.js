@@ -19,7 +19,32 @@ const MyProductNav = createStackNavigator({
     navigationOptions: {
       header: null,
       headerStyle: {
-        backgroundColor: "black"
+        backgroundColor: "white"
+      },
+    }
+  },
+  ProductDetail: {
+    screen: ProductDetail,
+    navigationOptions: {
+      headerTitle: 'Product Detail',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  }
+});
+
+const ProductsNav = createStackNavigator({
+  Products: {
+    screen: Products,
+    navigationOptions: {
+      header: null,
+      headerStyle: {
+        backgroundColor: "white"
       },
     }
   },
@@ -66,7 +91,7 @@ const MyprofileNav = createStackNavigator({
 const MainNavigator = createBottomTabNavigator(
   {
     Products: {
-      screen: Products,
+      screen: ProductsNav,
       navigationOptions: {
         tabBarLabel: "Products",
         tabBarIcon: ({ tintColor }) => (
