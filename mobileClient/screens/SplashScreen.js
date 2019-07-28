@@ -57,7 +57,7 @@ function SplashScreen({ navigation, getProfile, setToken }) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/splashScreen.png')} style={{width: '50%', height: '50%'}}/>
+      <Image source={require('../assets/splashScreen.png')} style={{width: '50%', height: '30%'}}/>
       { loading && <ActivityIndicator size="large" />}
       <StatusBar barStyle="default" />
     </View>
