@@ -1,30 +1,26 @@
-
 const defaultValue = {
+  token:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkM2MyOTVkZDI3MjUwOGUwNmEwZWVlZSIsImVtYWlsIjoib3J2aW5AbWFpbC5jb20iLCJpYXQiOjE1NjQyMjM4NDZ9.e_-YQvnyMd4TB2lHzuv5ZqtZAlAmFOpInqujjMHf9No",
   allProducts: {
     loading: true,
     data: [],
     error: false
   },
-  name: "Designed by Orvin Savero",
-  counter: 0,
-  pagingCounter: 0,
-  status: true,
-  manga: {
+  myProducts: {
     loading: true,
     data: [],
-    error: {}
+    error: false
   },
-  mangas: {
+  productDetail: {
     loading: true,
     data: {},
-    error: {}
+    error: false
   }
 };
 
 export default function reducer(state = defaultValue, action) {
   switch (action.type) {
     case "SUCCESS_ALL_PRODUCTS":
-        console.log(action.data)
       return {
         ...state,
         allProducts: {
@@ -35,7 +31,7 @@ export default function reducer(state = defaultValue, action) {
     case "ERROR_ALL_PRODUCTS":
       return {
         ...state,
-        manga: {
+        allProducts: {
           loading: false,
           error: action.error
         }
@@ -43,56 +39,53 @@ export default function reducer(state = defaultValue, action) {
     case "LOADING_ALL_PRODUCTS":
       return {
         ...state,
-        manga: {
+        allProducts: {
           loading: true
         }
       };
-    case "PAGE_COUNTER":
+    case "SUCCESS_MY_PRODUCTS":
       return {
         ...state,
-        pagingCounter: action.counterIncrement
-      };
-    case "ADD_COUNTER":
-      return {
-        ...state,
-        counter: state.counter + action.counterIncrement
-      };
-    case "REMOVE_COUNTER":
-      return {
-        ...state,
-        counter: state.counter - 1
-      };
-    case "SHOW_NAME":
-      return {
-        ...state,
-        status: true
-      };
-    case "HIDE_NAME":
-      return {
-        ...state,
-        status: false
-      };
-
-    case "SUCCESS_HIT_API2":
-      return {
-        ...state,
-        mangas: {
+        myProducts: {
           loading: false,
-          data: action.data.data
+          data: action.data
         }
       };
-    case "ERROR_HIT_API2":
+    case "ERROR_MY_PRODUCTS":
       return {
         ...state,
-        mangas: {
+        myProducts: {
           loading: false,
           error: action.error
         }
       };
-    case "LOADING_HIT_API2":
+    case "LOADING_MY_PRODUCTS":
       return {
         ...state,
-        mangas: {
+        myProducts: {
+          loading: true
+        }
+      };
+    case "SUCCESS_PRODUCT_DETAIL":
+      return {
+        ...state,
+        productDetail: {
+          loading: false,
+          data: action.data
+        }
+      };
+    case "ERROR_PRODUCT_DETAIL":
+      return {
+        ...state,
+        productDetail: {
+          loading: false,
+          error: action.error
+        }
+      };
+    case "LOADING_PRODUCT_DETAIL":
+      return {
+        ...state,
+        productDetail: {
           loading: true
         }
       };

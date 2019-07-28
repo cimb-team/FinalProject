@@ -1,17 +1,14 @@
 import axios from "axios";
 
-export function getAllProducts() {
-  console.log('action')
+export function getAllProducts(token) {
   return (dispatch, state) => {
-    console.log('return')
     dispatch(loadingAllProducts());
     axios({
       method: "GET",
       url: `http://localhost:3000/product`,
-      headers: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkM2MyOTVkZDI3MjUwOGUwNmEwZWVlZSIsImVtYWlsIjoib3J2aW5AbWFpbC5jb20iLCJpYXQiOjE1NjQyMjM4NDZ9.e_-YQvnyMd4TB2lHzuv5ZqtZAlAmFOpInqujjMHf9No'}
+      headers: {token: token}
     })
       .then(({ data }) => {
-        console.log('axios all products')
         dispatch({
           type: "SUCCESS_ALL_PRODUCTS",
           data
@@ -26,11 +23,73 @@ export function getAllProducts() {
   };
 }
 export function loadingAllProducts() {
-  console.log('loading all products')
   return {
     type: "LOADING_ALL_PRODUCTS"
   };
 }
+export function getMyProducts(token) {
+  return (dispatch, state) => {
+    dispatch(loadingMyProducts());
+    axios({
+      method: "GET",
+      url: `http://localhost:3000/product/user`,
+      headers: {token: token}
+    })
+      .then(({ data }) => {
+        dispatch({
+          type: "SUCCESS_MY_PRODUCTS",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_MY_PRODUCTS",
+          error
+        });
+      });
+  };
+}
+export function loadingMyProducts() {
+  return {
+    type: "LOADING_MY_PRODUCTS"
+  };
+}
+
+export function getProductDetail(token, id) {
+  console.log(token, id)
+  return (dispatch, state) => {
+    dispatch(loadingProductDetail());
+    axios({
+      method: "GET",
+      url: `http://localhost:3000/product/${id}`,
+      headers: {token: token}
+    })
+      .then(({ data }) => {
+        dispatch({
+          type: "SUCCESS_PRODUCT_DETAIL",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_PRODUCT_DETAIL",
+          error
+        });
+      });
+  };
+}
+export function loadingProductDetail() {
+  return {
+    type: "LOADING_PRODUCT_DETAIL"
+  };
+}
+
+
+
+
+
+
+
 export function pageCounter(number) {
   return (dispatch, state) => {
     dispatch(getMangas(number));
