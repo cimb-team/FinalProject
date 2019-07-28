@@ -1,6 +1,7 @@
 module.exports = function(err, req, res, next) {
   /* istanbul ignore else if */
   /* istanbul ignore else */
+  console.log(err)
   if (err.code === 400) {
     res.status(400).json({
       message: `Error 400: Bad Request`

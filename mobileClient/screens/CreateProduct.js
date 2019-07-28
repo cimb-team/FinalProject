@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { View, ScrollView, Image, StyleSheet, Dimensions, Text, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { getAllProducts, getMyProducts } from "../store/action";
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { Container, DatePicker, Textarea, Item, Input, Header, Content, Form, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base'
 import { ImagePicker, Permissions } from 'expo';
 import axios from 'axios';
 
-
+import { connect } from "react-redux";
 const { width } = Dimensions.get('window');
 const height = width * 0.6
 
@@ -18,7 +19,7 @@ tomorrow.setDate(today.getDate()+1);
 maxDate.setDate(today.getDate()+2);
 
 
-export default class CreateProduct extends Component {
+class CreateProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,23 +60,29 @@ export default class CreateProduct extends Component {
     data.append('details', this.state.details)
     data.append('initialPrice', this.state.initialPrize)
     data.append('closeDate', this.state.chosenDate)
-
+    console.log(data, '@@@@')
     axios({
       method: 'post',
-      url: 'http://35.187.231.14/product',
+      url: 'http://localhost:3000/product',
       data,
       headers : {
-        "token": 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkM2QyNGM4NzllM2FjNTc0MDM5ZDQzYSIsImVtYWlsIjoiZGVkeUBnbWFpbC5jb20iLCJpYXQiOjE1NjQyODgyMzB9.m3vrB894isZsiJ4fqxh1fdJepAzFIdAOzxZ_qVdaoqk',
+        "token": this.props.token,
         "content-type": "multipart/form-data"
       }
     })
     .then(({data})=>{
+      this.props.getAllProducts(this.props.token)
+      this.props.getMyProducts(this.props.token)
+      this.props.navigation.navigate("MyProduct", {
+        id: 'sdf'
+      })
       console.log("masuk then sukses");
       
       console.log(data);
       
     })
     .catch((err)=>{
+      console.log(err, '(()()(')
       console.log("masuk error");
       
     })
@@ -178,6 +185,20 @@ export default class CreateProduct extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    token: state.token
+  };
+};
+
+const mapDispatchToProps = {
+  getAllProducts, getMyProducts
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateProduct);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
