@@ -11,11 +11,11 @@ routes.post("/signup", UserController.signup);
 routes.post("/signin", UserController.signin);
 
 routes.use(Authentication);
-routes.get("/user", UserController.findOne);
+routes.get("/", UserController.findOne);
 /**
  * AUTH
  */
 routes.patch("/topup", UserController.topup);
-routes.get("/user/history", UserController.findBidByBidderId);
+routes.get("/history", UserController.findBidByBidderId);
 
 module.exports = routes;
