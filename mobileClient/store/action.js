@@ -114,13 +114,7 @@ export function loadingProductDetail() {
 }
 export function getProfile() {
   return (dispatch, state) => {
-<<<<<<< HEAD
-    // console.log("getProfile");
     const token = state().token;
-    // console.log(token);
-=======
-    const token = state().token;
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
     dispatch(loadingProfile());
     return axios({
       method: "GET",
@@ -128,10 +122,6 @@ export function getProfile() {
       headers: { token: token }
     })
       .then(({ data }) => {
-<<<<<<< HEAD
-        // console.log(data);
-=======
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
         dispatch({
           type: "SUCCESS_PROFILE",
           data
@@ -158,10 +148,6 @@ export function loadingProfile() {
 }
 
 export function toppingUp(value, token) {
-<<<<<<< HEAD
-  // console.log(value, token);
-=======
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
   return (dispatch, state) => {
     axios({
       method: "PATCH",
@@ -170,10 +156,6 @@ export function toppingUp(value, token) {
       headers: { token: token }
     })
       .then(({ data }) => {
-<<<<<<< HEAD
-        // console.log(data);
-=======
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
         dispatch(getProfile());
       })
       .catch(error => {

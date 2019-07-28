@@ -14,6 +14,7 @@ import {
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
+import dbh from '../FBConfig'
 function ProductDetail(props) {
   [bid, setbid] = useState("");
   handleChange = e => {
@@ -21,13 +22,16 @@ function ProductDetail(props) {
   };
   postbid = () => {
     props.bidding(bid, props.token, props.productDetailData._id);
+    dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
+      bids: props.productDetailData.bid.bids,
+      createdAt: props.productDetailData.bid.createdAt,
+      productId: props.productDetailData.bid.productId,
+      updatedAt: props.productDetailData.bid.updatedAt,
+      winnerId: props.productDetailData.bid.winnerId,
+    })
     setbid("");
   };
   useEffect(() => {
-<<<<<<< HEAD
-    // console.log(props.navigation, '@@')
-=======
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
     props.getProductDetail(props.token, props.navigation.state.params.id);
   }, []);
   return (

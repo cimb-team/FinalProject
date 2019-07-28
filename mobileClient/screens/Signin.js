@@ -41,20 +41,6 @@ function Signin({ navigation, getProfile }) {
       .then(({ data }) => {
         return AsyncStorage.setItem("@NusantaraArt:token", data.token);
       })
-<<<<<<< HEAD
-      navigation.navigate('Splash')
-    })
-    .catch(({response}) =>{
-      // console.log(response.data.message)
-      setloading(false)
-      Toast.show({
-        text: response.data.message,
-        buttonText: "OK",
-        duration: 3000,
-        type: 'danger',
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "red" }
-=======
       .then(result => {
         setloading(false);
         // Toast.show({
@@ -65,7 +51,6 @@ function Signin({ navigation, getProfile }) {
         //   buttonStyle: { backgroundColor: "green" }
         // })
         navigation.navigate("App");
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
       })
       .catch(({ response }) => {
         setloading(false);

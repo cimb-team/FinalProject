@@ -50,23 +50,8 @@ export default function Signup({ navigation }) {
           }
         });
       })
-<<<<<<< HEAD
-      navigation.navigate('Signin')
-    })
-    .catch(({response}) =>{
-      // console.log(response.data.message)
-      setloading(false)
-      Toast.show({
-        text: response.data.message,
-        buttonText: "OK",
-        duration: 3000,
-        type: 'danger',
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "red" }
-=======
       .then(({ data }) => {
         return AsyncStorage.setItem("@NusantaraArt:token", data.token);
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
       })
       .then(token => {
         setloading(false);

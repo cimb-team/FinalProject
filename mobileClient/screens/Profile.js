@@ -44,10 +44,6 @@ function ProfilePage(props) {
     props.getProfile(props.token);
   }, []);
 
-<<<<<<< HEAD
-  // console.log(props.profileData)
-=======
->>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View
