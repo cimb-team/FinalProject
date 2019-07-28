@@ -36,11 +36,7 @@ export default class CreateProduct extends Component {
   setDate(newDate) {
    let day = newDate.getDate()
    let  month = newDate.getMonth()+1
-    let year = newDate.getFullYear()
-
-    console.log(`${month}-${day}-${year}`);
-    
-    
+   let year = newDate.getFullYear()
     this.setState({ chosenDate: `${month}-${day}-${year}`});
   }
 
@@ -49,15 +45,7 @@ export default class CreateProduct extends Component {
   }
 
   submitCreate = () => {
-    console.log("tes button submit");
-
-    console.log(this.state);
-
-    const blob = new Blob([this.state.imageMentah],{
-      type : this.state.imageMentah.type
-    })
-    
-    const imageFilenameBeforeSplit = this.state.image.split('/')
+  const imageFilenameBeforeSplit = this.state.image.split('/')
    const imageFilename = imageFilenameBeforeSplit[imageFilenameBeforeSplit.length - 1]
     
     const data = new FormData()
@@ -70,12 +58,7 @@ export default class CreateProduct extends Component {
     data.append('category', this.state.category)
     data.append('details', this.state.details)
     data.append('initialPrice', this.state.initialPrize)
-    data.append('closeDate', this.state.chosenDate) 
-
-
-
-    
-    
+    data.append('closeDate', this.state.chosenDate)
 
     axios({
       method: 'post',
@@ -94,9 +77,6 @@ export default class CreateProduct extends Component {
     })
     .catch((err)=>{
       console.log("masuk error");
-
-      console.log(err, "==================");
-      
       
     })
   }
