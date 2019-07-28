@@ -6,7 +6,6 @@ import {
 } from "react-navigation";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
 import Products from "../screens/Products";
 import MyProduct from "../screens/MyProduct";
 import History from "../screens/History";
@@ -17,6 +16,8 @@ import SplashScreen from "../screens/SplashScreen";
 import Signup from "../screens/Signup";
 import Signin from "../screens/Signin";
 import Filter from "../screens/Filter";
+import { fromTop, fadeIn } from "react-navigation-transitions";
+import Create from "../screens/CreateProduct";
 import { fromTop, fadeIn } from "react-navigation-transitions";
 
 const MyProductNav = createStackNavigator({
@@ -46,6 +47,19 @@ const MyProductNav = createStackNavigator({
     screen: Filter,
     navigationOptions: {
       headerTitle: "Search Result: My Product",
+      headerStyle: {
+        backgroundColor: "white"
+      },
+      headerTintColor: "black",
+      headerTitleStyle: {
+        color: "black"
+      }
+    }
+  },
+  Create: {
+    screen: Create,
+    navigationOptions: {
+      headerTitle: "Create Product",
       headerStyle: {
         backgroundColor: "white"
       },
@@ -172,18 +186,9 @@ const MainNavigator = createBottomTabNavigator(
     MyProduct: {
       screen: MyProductNav,
       navigationOptions: {
-        tabBarLabel: "MyProduct",
+        tabBarLabel: "My Product",
         tabBarIcon: ({ tintColor }) => (
           <Ionicons name="ios-apps" color={tintColor} size={24} />
-        )
-      }
-    },
-    MyHistory: {
-      screen: History,
-      navigationOptions: {
-        tabBarLabel: "MyHistory",
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-book" color={tintColor} size={24} />
         )
       }
     },
@@ -197,7 +202,6 @@ const MainNavigator = createBottomTabNavigator(
       }
     }
   },
-
   {
     initialRouteName: "Profile",
     tabBarOptions: {

@@ -9,3 +9,4 @@ npm-debug.*
 web-build/
 web-report/
 firebaseConfig.js
+package-lock.json

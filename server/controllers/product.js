@@ -8,6 +8,7 @@ class ProductController {
 
   static create(req, res, next) {
     let product;
+    console.log(req.body)
     Product.create({
       userId: req.decoded.id,
       title: req.body.title,
@@ -124,6 +125,7 @@ class ProductController {
    * PATCH /product/:id/addbid
    */
   static addBid(req, res, next) {
+    console.log(req.body, '==')
     Bid.findOneAndUpdate(
       {
         productId: req.params.id

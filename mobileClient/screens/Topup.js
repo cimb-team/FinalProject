@@ -11,12 +11,33 @@ import {
   TextInput,
   TouchableHighlight
 } from "react-native";
+import { connect } from "react-redux";
+import { getProfile, toppingUp } from "../store/action";
 import Title from "../components/Title";
-export default function Topup(props) {
+function Topup(props) {
+  [topup, setTopup] = useState("");
+  handleChange = e => {
+    setTopup(e);
+  };
+  postTopup = () => {
+    props.toppingUp(topup, props.token);
+    setTopup("");
+  };
+  useEffect(() => {
+    props.getProfile(props.token);
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Title title="Top up" style={styles.text} />
-      <Title title="Balance: $ 220.5" style={styles.text} />
+
+      {!props.profileLoading && (
+        <>
+          <Title
+            title={`Balance: $ ${props.profileData.balance}`}
+            style={styles.text}
+          />
+        </>
+      )}
       <View
         style={{
           marginVertical: 10,
@@ -29,32 +50,55 @@ export default function Topup(props) {
           flexWrap: "wrap"
         }}
       >
-        <TextInput style={styles.search} />
-        <View
-          style={{
-            padding: 10,
-            backgroundColor: "#3399ff",
-            width: 100,
-            borderRadius: 10,
-            marginLeft: 10
-          }}
-        >
-          <Text
+        <TextInput
+          style={styles.search}
+          onChangeText={handleChange}
+          value={topup}
+        />
+        <TouchableHighlight onPress={() => postTopup()}>
+          <View
             style={{
-              color: "white",
-              fontWeight: "600",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center"
+              padding: 10,
+              backgroundColor: "#3399ff",
+              width: 100,
+              borderRadius: 10,
+              marginLeft: 10
             }}
           >
-            Top up
-          </Text>
-        </View>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "600",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center"
+              }}
+            >
+              Top up
+            </Text>
+          </View>
+        </TouchableHighlight>
       </View>
     </SafeAreaView>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    profileData: state.profile.data,
+    profileError: state.profile.error,
+    profileLoading: state.profile.loading,
+    token: state.token
+  };
+};
+const mapDispatchToProps = {
+  getProfile,
+  toppingUp
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Topup);
 
 const styles = StyleSheet.create({
   container: {

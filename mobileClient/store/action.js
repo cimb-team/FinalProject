@@ -1,5 +1,35 @@
 import axios from "../axios";
 
+export function getHistory(token) {
+  return (dispatch, state) => {
+    dispatch(loadingHistory());
+    axios({
+      method: "GET",
+      url: `/user/history`,
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log("@@@");
+        console.log(data, "history @@@@@ =====");
+        dispatch({
+          type: "SUCCESS_HISTORY",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_HISTORY",
+          error
+        });
+      });
+  };
+}
+export function loadingHistory() {
+  return {
+    type: "LOADING_HISTORY"
+  };
+}
+
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
@@ -63,6 +93,7 @@ export function getProductDetail(token, id) {
       headers: { token: token }
     })
       .then(({ data }) => {
+        console.log(data);
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
           data
@@ -116,31 +147,44 @@ export function loadingProfile() {
   };
 }
 
-// export function loadingFilter() {
-//   return {
-//     type: "LOADING_FILTER"
-//   };
-// }
-// export function getFilter(filter) {
-//   return (dispatch, state) => {
-//     const token = state().token;
-//     dispatch(loadingFilter());
-//     return axios({
-//       method: "GET",
-//       url: `/product?search=` + filter,
-//       headers: { token: token }
-//     })
-//       .then(({ data }) => {
-//         dispatch({
-//           type: "SUCCESS_FILTER",
-//           data
-//         });
-//       })
-//       .catch(error => {
-//         dispatch({
-//           type: "ERROR_FILTER",
-//           error
-//         });
-//       });
-//   };
-// }
+export function toppingUp(value, token) {
+  return (dispatch, state) => {
+    axios({
+      method: "PATCH",
+      url: `/user/topup`,
+      data: { balance: value },
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        dispatch(getProfile());
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}
+
+export function bidding(value, token, id) {
+  console.log(value, token, id);
+  return (dispatch, state) => {
+    axios({
+      method: "PATCH",
+      url: `/product/${id}/addbid`,
+      data: { price: value },
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log(data);
+        dispatch(getProductDetail(token, id));
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}

@@ -19,11 +19,42 @@ const defaultValue = {
     loading: true,
     data: {},
     error: false
+  },
+  history: {
+    loading: true,
+    data: [],
+    error: false
   }
 };
 
 export default function reducer(state = defaultValue, action) {
   switch (action.type) {
+    case "SUCCESS_HISTORY":
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          loading: false,
+          data: action.data
+        }
+      };
+    case "ERROR_HISTORY":
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          loading: false,
+          error: action.error
+        }
+      };
+    case "LOADING_HISTORY":
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          loading: true
+        }
+      };
     case "SUCCESS_ALL_PRODUCTS":
       return {
         ...state,
@@ -133,33 +164,6 @@ export default function reducer(state = defaultValue, action) {
         ...state,
         token: action.data
       };
-    // case "ERROR_FILTER":
-    //   return {
-    //     ...state,
-    //     filterProducts: {
-    //       data: [],
-    //       loading: false,
-    //       error: true
-    //     }
-    //   };
-    // case "LOADING_FILTER":
-    //   return {
-    //     ...state,
-    //     filterProducts: {
-    //       data: [],
-    //       loading: true,
-    //       error: false
-    //     }
-    //   };
-    // case "SUCCESS_FILTER":
-    //   return {
-    //     ...state,
-    //     filterProducts: {
-    //       data: action.data,
-    //       loading: false,
-    //       error: false
-    //     }
-    //   };
     default:
       return state;
   }

@@ -7,7 +7,8 @@ import {
   Dimensions,
   Platform,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";

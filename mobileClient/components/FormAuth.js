@@ -9,7 +9,8 @@ import {
   Button,
   Text,
   Icon,
-  Spinner
+  Spinner,
+  Label
 } from "native-base";
 
 export default function FormAuth({ title, children, submitForm, loading }) {
@@ -17,25 +18,20 @@ export default function FormAuth({ title, children, submitForm, loading }) {
   const [password, setpassword] = useState("");
 
   return (
-    <Form style={{ marginTop: 40 }}>
+    <Form>
       {children}
-      <Item>
-        <Icon active name="mail" />
-        <Input
-          keyboardType="email-address"
-          value={email}
-          onChangeText={text => setemail(text)}
-          placeholder="Email"
-        />
+      <Item stackedLabel>
+        <Label>Email</Label>
+        {/* <Icon active name='mail' /> */}
+        <Input value={email} onChangeText={text => setemail(text)} />
       </Item>
-      <Item>
-        <Icon active name="lock" />
+      <Item stackedLabel>
+        <Label>Password</Label>
+        {/* <Icon active name='lock' /> */}
         <Input
-          keyboardType="default"
           value={password}
           onChangeText={text => setpassword(text)}
           secureTextEntry
-          placeholder="Password"
         />
       </Item>
       <Button
