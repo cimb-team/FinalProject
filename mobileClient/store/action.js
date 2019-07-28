@@ -1,5 +1,36 @@
 import axios from "../axios";
 
+
+export function getHistory(token) {
+  return (dispatch, state) => {
+    dispatch(loadingHistory());
+    axios({
+      method: "GET",
+      url: `/user/history`,
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log('@@@')
+        console.log(data, 'history @@@@@ =====')
+        dispatch({
+          type: "SUCCESS_HISTORY",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_HISTORY",
+          error
+        });
+      });
+  };
+}
+export function loadingHistory() {
+  return {
+    type: "LOADING_HISTORY"
+  };
+}
+
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
