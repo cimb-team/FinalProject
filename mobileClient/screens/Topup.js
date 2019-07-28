@@ -20,8 +20,8 @@ function Topup(props) {
     setTopup(e);
   }; 
   postTopup = () => {
-    props.toppingUp(topup, props.token)
-    setTopup("")
+    props.toppingUp(topup, props.token);
+    setTopup("");
   };
   useEffect(() => {
     props.getProfile(props.token);
@@ -56,27 +56,27 @@ function Topup(props) {
           value={topup}
         />
         <TouchableHighlight onPress={() => postTopup()}>
-        <View
-          style={{
-            padding: 10,
-            backgroundColor: "#3399ff",
-            width: 100,
-            borderRadius: 10,
-            marginLeft: 10
-          }}
-        >
-          <Text
+          <View
             style={{
-              color: "white",
-              fontWeight: "600",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center"
+              padding: 10,
+              backgroundColor: "#3399ff",
+              width: 100,
+              borderRadius: 10,
+              marginLeft: 10
             }}
           >
-            Top up
-          </Text>
-        </View>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "600",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center"
+              }}
+            >
+              Top up
+            </Text>
+          </View>
         </TouchableHighlight>
       </View>
     </SafeAreaView>
@@ -92,7 +92,8 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = {
-  getProfile, toppingUp
+  getProfile,
+  toppingUp
 };
 export default connect(
   mapStateToProps,

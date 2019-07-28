@@ -1,6 +1,15 @@
-import React, { Component } from 'react';
-import { View, ScrollView, Image, StyleSheet, Dimensions, Text, TouchableHighlight, KeyboardAvoidingView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { Component } from "react";
+import {
+  View,
+  ScrollView,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableHighlight,
+  KeyboardAvoidingView
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { getAllProducts, getMyProducts } from "../store/action";
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
@@ -20,9 +29,8 @@ const height = width * 0.6
 var today = new Date();
 var tomorrow = new Date();
 var maxDate = new Date();
-tomorrow.setDate(today.getDate()+1);
-maxDate.setDate(today.getDate()+2);
-
+tomorrow.setDate(today.getDate() + 1);
+maxDate.setDate(today.getDate() + 2);
 
 class CreateProduct extends Component {
   constructor(props) {
@@ -30,20 +38,19 @@ class CreateProduct extends Component {
     this.state = {
       chosenDate: new Date(),
       image: null,
-      title : '',
-      category : '',
-      initialPrize : 0,
-      details : '',
-      imageMentah : ''
-
+      title: "",
+      category: "",
+      initialPrize: 0,
+      details: "",
+      imageMentah: ""
     };
     this.setDate = this.setDate.bind(this);
   }
   setDate(newDate) {
-   let day = newDate.getDate()
-   let  month = newDate.getMonth()+1
-   let year = newDate.getFullYear()
-    this.setState({ chosenDate: `${month}-${day}-${year}`});
+    let day = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+    this.setState({ chosenDate: `${month}-${day}-${year}` });
   }
 
   componentDidMount() {
@@ -76,8 +83,8 @@ class CreateProduct extends Component {
       method: 'post',
       url: 'http://35.187.231.14/product',
       data,
-      headers : {
-        "token": this.props.token,
+      headers: {
+        token: this.props.token,
         "content-type": "multipart/form-data"
       }
     })
@@ -109,95 +116,130 @@ class CreateProduct extends Component {
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
       }
     }
-  }
+  };
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [16, 9],
-      
+      aspect: [16, 9]
     });
 
-   
-
-    console.log(result);
-
     if (!result.cancelled) {
-      this.setState({ image: result.uri, imageMentah : result });
+      this.setState({ image: result.uri, imageMentah: result });
     }
   };
 
   render() {
-
     let { image } = this.state;
     return (
-      <View style={styles.container}> 
-        
-          <View style={{ height: '25%', width: '90%', backgroundColor: 'red', justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ height: '100%', width: '100%', backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
-              <TouchableHighlight onPress={this._pickImage}>
-                {image ?
-                  <Image source={{ uri: image }} style={{ width: 300, height: 170 }} />
-                  :
-                  <Ionicons name="ios-image" size={32} color="black" />}
-              </TouchableHighlight>
-              {!image &&
-                <Text style={{ fontSize: 10 }}>Upload Design</Text>}
-
-            </View>
+      <View style={styles.container}>
+        <View
+          style={{
+            height: "25%",
+            width: "90%",
+            backgroundColor: "red",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <View
+            style={{
+              height: "100%",
+              width: "100%",
+              backgroundColor: "white",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <TouchableHighlight onPress={this._pickImage}>
+              {image ? (
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: 300, height: 170 }}
+                />
+              ) : (
+                <Ionicons name="ios-image" size={32} color="black" />
+              )}
+            </TouchableHighlight>
+            {!image && <Text style={{ fontSize: 10 }}>Upload Design</Text>}
           </View>
+        </View>
 
-          <View style={{ height: '100%', width: '90%', backgroundColor: 'green' }}>
-            <View style={{ width: '100%', height: '100%' }}>
-              <Container>
-                <Content>
-                  <Form >
-                    <Item>
-                      <Input placeholder="Title" onChangeText={(text) => this.setState({title : text})} />
-                    </Item>
-                    <Item>
-                      <Input placeholder="Category" onChangeText={(text) => this.setState({category : text})} />
-                    </Item>
-                    <Item>
-                      <Input placeholder="Initial Prize" keyboardType='numeric' onChangeText={(text) => this.setState({initialPrize : text})} />
-                    </Item>
-                    <Item>
-                      <Content>
-                        <DatePicker 
-                          defaultDate={tomorrow}
-                          minimumDate={today}
-                          maximumDate={maxDate}
-                          locale={"en"}
-                          timeZoneOffsetInMinutes={undefined}
-                          modalTransparent={false}
-                          animationType={"fade"}
-                          androidMode={"default"}
-                          placeHolderText="Select Close Date"
-                          textStyle={{ color: "green" }}
-                          placeHolderTextStyle={{ color: "grey", fontSize: 18 }}
-                          onDateChange={this.setDate}
-                          disabled={false}
-                        />
-                      </Content>
-                    </Item>
-                    <Item>
-                      <Textarea onChangeText={(text) => this.setState({details : text})} style={{ width: '100%', marginTop: 10 }} rowSpan={5} bordered placeholder="Description" />
-                    </Item>
-                    <Item style={{ width: '100%', marginTop: 10 }}>
-                      <Button onPress={this.submitCreate} style={{ width: '100%', marginTop: 10 }} block>
-                        <Text>Create Product</Text>
-                      </Button>
-                    </Item>
-                  </Form>
-                </Content>
-              </Container>
-            </View>
+        <View
+          style={{ height: "100%", width: "90%", backgroundColor: "green" }}
+        >
+          <View style={{ width: "100%", height: "100%" }}>
+            <Container>
+              <Content>
+                <Form>
+                  <Item>
+                    <Input
+                      placeholder="Title"
+                      onChangeText={text => this.setState({ title: text })}
+                    />
+                  </Item>
+                  <Item>
+                    <Input
+                      placeholder="Category"
+                      onChangeText={text => this.setState({ category: text })}
+                    />
+                  </Item>
+                  <Item>
+                    <Input
+                      placeholder="Initial Prize"
+                      keyboardType="numeric"
+                      onChangeText={text =>
+                        this.setState({ initialPrize: text })
+                      }
+                    />
+                  </Item>
+                  <Item>
+                    <Content>
+                      <DatePicker
+                        defaultDate={tomorrow}
+                        minimumDate={today}
+                        maximumDate={maxDate}
+                        locale={"en"}
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode={"default"}
+                        placeHolderText="Select Close Date"
+                        textStyle={{ color: "green" }}
+                        placeHolderTextStyle={{ color: "grey", fontSize: 18 }}
+                        onDateChange={this.setDate}
+                        disabled={false}
+                      />
+                    </Content>
+                  </Item>
+                  <Item>
+                    <Textarea
+                      onChangeText={text => this.setState({ details: text })}
+                      style={{ width: "100%", marginTop: 10 }}
+                      rowSpan={5}
+                      bordered
+                      placeholder="Description"
+                    />
+                  </Item>
+                  <Item style={{ width: "100%", marginTop: 10 }}>
+                    <Button
+                      onPress={this.submitCreate}
+                      style={{ width: "100%", marginTop: 10 }}
+                      block
+                    >
+                      <Text>Create Product</Text>
+                    </Button>
+                  </Item>
+                </Form>
+              </Content>
+            </Container>
           </View>
+        </View>
       </View>
     );
   }
@@ -210,7 +252,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  getAllProducts, getMyProducts
+  getAllProducts,
+  getMyProducts
 };
 
 export default connect(
@@ -222,17 +265,16 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white'
-
+    alignItems: "center",
+    backgroundColor: "white"
   },
   scrollContainer: {
-    height: '34.5%',
-    width: '100%',
-    backgroundColor: 'red',
+    height: "34.5%",
+    width: "100%",
+    backgroundColor: "red"
   },
   image: {
     width,
-    height,
-  },
+    height
+  }
 });

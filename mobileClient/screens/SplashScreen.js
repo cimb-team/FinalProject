@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
   AsyncStorage,
@@ -7,24 +7,27 @@ import {
   StyleSheet,
   View,
   Animated,
-} from 'react-native';
+  Image
+} from "react-native";
 import { getProfile, setToken } from "../store/action";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
 
 function SplashScreen({ navigation, getProfile, setToken }) {
   // buat ntar loading screen
+  const [loading, setLoading] = useState(false);
 
   function getUserInfo() {
-    AsyncStorage.getItem('@NusantaraArt:token')
+    AsyncStorage.getItem("@NusantaraArt:token")
       .then(token => {
+<<<<<<< HEAD
         // console.log(token)
         if (!token)
           throw 'Token is null'
@@ -41,18 +44,40 @@ function SplashScreen({ navigation, getProfile, setToken }) {
         
         navigation.navigate('Auth');
       })
+=======
+        if (!token) throw "Token is null";
+        setToken(token);
+        return getProfile();
+      })
+      .then(data => {
+        navigation.navigate("App");
+      })
+      .catch(err => {
+        navigation.navigate("Auth");
+      });
+>>>>>>> 29c8e5f12479c60cf60d9ef75a00017ca5c5806f
   }
 
   useEffect(() => {
-    getUserInfo()
-  }, [])
+    setTimeout(() => {
+      setLoading(true);
+    }, 1500);
+
+    setTimeout(() => {
+      getUserInfo();
+    }, 3000);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator />
+      <Image
+        source={require("../assets/splashScreen.png")}
+        style={{ width: "50%", height: "50%" }}
+      />
+      {loading && <ActivityIndicator size="large" />}
       <StatusBar barStyle="default" />
     </View>
-  )
+  );
 }
 
 const mapDispatchToProps = {
