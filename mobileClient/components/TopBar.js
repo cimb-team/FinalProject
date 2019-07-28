@@ -15,19 +15,37 @@ import {
 } from "react-native";
 
 function TopBar(props) {
+  const [filter, setFilter] = useState("");
   useEffect(() => {}, []);
-
   return (
     <View style={styles.flex} opacity={1}>
-      <TextInput style={styles.search} />
+      <TextInput
+        style={styles.search}
+        onChangeText={e => {
+          setFilter(e);
+        }}
+        onSubmitEditing={e => {
+          if (props.cr == "MyProduct" && filter !== "") {
+            props.navigation.navigate("FilterMyproduct", {
+              search: filter
+            });
+          }
+          if (props.cr == "Products" && filter !== "") {
+            console.log(filter);
+            props.navigation.navigate("FilterProduct", {
+              search: filter
+            });
+          }
+        }}
+      />
       <TouchableHighlight
-      onPress={() =>
-        props.navigation.navigate("Create", {
-          id: 'sdf'
-        })
-      }
-    >
-      <Ionicons name="ios-add-circle" color="black" size={28} />
+        onPress={() =>
+          props.navigation.navigate("Create", {
+            id: "sdf"
+          })
+        }
+      >
+        <Ionicons name="ios-add-circle" color="black" size={28} />
       </TouchableHighlight>
       <Ionicons name="ios-albums" color="black" size={28} />
       <Ionicons name="ios-person" color="black" size={28} />
@@ -37,53 +55,49 @@ function TopBar(props) {
 
 const mapStateToProps = state => {
   return {
+    myProductsData: state.myProducts.data,
     token: state.token
   };
 };
-
-// const mapDispatchToProps = {
-//
-// };
-
 export default connect(
   mapStateToProps,
   null
 )(TopBar);
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1
-    },
-    text: {
-      textAlign: "center",
-      margin: 5,
-      fontSize: 25,
-      fontWeight: "bold"
-    },
-    card: {
-      marginVertical: 10,
-      backgroundColor: "#f5f5f5",
-      margin: 10,
-      width: "100%"
-    },
-    search: {
-      height: 35,
-      borderColor: "gray",
-      backgroundColor: "white",
-      borderRadius: 10,
-      padding: 10,
-      borderWidth: 0.5,
-      width: 250
-    },
-    flex: {
-      justifyContent: "space-between",
-      padding: 15,
-      flexDirection: "row",
-      alignItems: "center"
-    },
-    flexCard: {
-      alignItems: "center",
-      justifyContent: "center",
-      margin: 5
-    }
-  });
+  container: {
+    flex: 1
+  },
+  text: {
+    textAlign: "center",
+    margin: 5,
+    fontSize: 25,
+    fontWeight: "bold"
+  },
+  card: {
+    marginVertical: 10,
+    backgroundColor: "#f5f5f5",
+    margin: 10,
+    width: "100%"
+  },
+  search: {
+    height: 35,
+    borderColor: "gray",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 0.5,
+    width: 250
+  },
+  flex: {
+    justifyContent: "space-between",
+    padding: 15,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  flexCard: {
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 5
+  }
+});

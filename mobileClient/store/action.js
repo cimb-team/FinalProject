@@ -1,5 +1,35 @@
 import axios from "../axios";
 
+export function getHistory(token) {
+  return (dispatch, state) => {
+    dispatch(loadingHistory());
+    axios({
+      method: "GET",
+      url: `/user/history`,
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log("@@@");
+        console.log(data, "history @@@@@ =====");
+        dispatch({
+          type: "SUCCESS_HISTORY",
+          data
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_HISTORY",
+          error
+        });
+      });
+  };
+}
+export function loadingHistory() {
+  return {
+    type: "LOADING_HISTORY"
+  };
+}
+
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
@@ -54,7 +84,6 @@ export function loadingMyProducts() {
     type: "LOADING_MY_PRODUCTS"
   };
 }
-
 export function getProductDetail(token, id) {
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
@@ -64,6 +93,7 @@ export function getProductDetail(token, id) {
       headers: { token: token }
     })
       .then(({ data }) => {
+        console.log(data);
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
           data
@@ -82,12 +112,9 @@ export function loadingProductDetail() {
     type: "LOADING_PRODUCT_DETAIL"
   };
 }
-
 export function getProfile() {
   return (dispatch, state) => {
-    console.log("getProfile");
     const token = state().token;
-    console.log(token);
     dispatch(loadingProfile());
     return axios({
       method: "GET",
@@ -95,7 +122,6 @@ export function getProfile() {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch({
           type: "SUCCESS_PROFILE",
           data
@@ -109,14 +135,12 @@ export function getProfile() {
       });
   };
 }
-
 export function setToken(token) {
   return {
     type: "SUCCESS_TOKEN",
     data: token
   };
 }
-
 export function loadingProfile() {
   return {
     type: "LOADING_PROFILE"
@@ -124,17 +148,14 @@ export function loadingProfile() {
 }
 
 export function toppingUp(value, token) {
-  console.log(value, token);
   return (dispatch, state) => {
     axios({
       method: "PATCH",
       url: `/user/topup`,
       data: { balance: value },
-      headers: { token: token },
-
+      headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch(getProfile());
       })
       .catch(error => {
@@ -146,105 +167,24 @@ export function toppingUp(value, token) {
   };
 }
 
-export function pageCounter(number) {
+export function bidding(value, token, id) {
+  console.log(value, token, id);
   return (dispatch, state) => {
-    dispatch(getMangas(number));
-    dispatch({
-      type: "PAGE_COUNTER",
-      counterIncrement: number
-    });
-  };
-}
-
-export function addCounter(number) {
-  return {
-    type: "ADD_COUNTER",
-    counterIncrement: number
-  };
-}
-
-export function removeCounter() {
-  return {
-    type: "REMOVE_COUNTER"
-  };
-}
-export function showName() {
-  return {
-    type: "SHOW_NAME"
-  };
-}
-export function hideName() {
-  return {
-    type: "HIDE_NAME"
-  };
-}
-
-export function getMangas(number) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
     axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?page[limit]=10&page[offset]=number`
+      method: "PATCH",
+      url: `/product/${id}/addbid`,
+      data: { price: value },
+      headers: { token: token }
     })
       .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
+        console.log(data);
+        dispatch(getProductDetail(token, id));
       })
       .catch(error => {
         dispatch({
-          type: "ERROR_HIT_API2",
+          type: "ERROR_TOPUP",
           error
         });
       });
-  };
-}
-export function getGenre(genre) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
-    axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?filter[genres]=genre`
-    })
-      .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
-      })
-      .catch(error => {
-        dispatch({
-          type: "ERROR_HIT_API2",
-          error
-        });
-      });
-  };
-}
-
-export function searchManga(title) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
-    axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?filter[text]=title`
-    })
-      .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
-      })
-      .catch(error => {
-        dispatch({
-          type: "ERROR_HIT_API2",
-          error
-        });
-      });
-  };
-}
-export function loadingHitApi2() {
-  return {
-    type: "LOADING_HIT_API2"
   };
 }

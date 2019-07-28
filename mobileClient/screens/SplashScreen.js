@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
   AsyncStorage,
@@ -8,55 +8,57 @@ import {
   View,
   Animated,
   Image
-} from 'react-native';
+} from "react-native";
 import { getProfile, setToken } from "../store/action";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
 
 function SplashScreen({ navigation, getProfile, setToken }) {
   // buat ntar loading screen
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   function getUserInfo() {
-    AsyncStorage.getItem('@NusantaraArt:token')
+    AsyncStorage.getItem("@NusantaraArt:token")
       .then(token => {
-        if (!token)
-          throw 'Token is null'
-        setToken(token)
-        return getProfile()
+        if (!token) throw "Token is null";
+        setToken(token);
+        return getProfile();
       })
       .then(data => {
-        navigation.navigate('App');
+        navigation.navigate("App");
       })
       .catch(err => {
-        navigation.navigate('Auth');
-      })
+        navigation.navigate("Auth");
+      });
   }
 
   useEffect(() => {
     setTimeout(() => {
-      setLoading(true)
+      setLoading(true);
     }, 1500);
 
     setTimeout(() => {
-      getUserInfo()
+      getUserInfo();
     }, 3000);
-  }, [])
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/splashScreen.png')} style={{width: '50%', height: '50%'}}/>
-      { loading && <ActivityIndicator size="large" />}
+      <Image
+        source={require("../assets/splashScreen.png")}
+        style={{ width: "50%", height: "50%" }}
+      />
+      {loading && <ActivityIndicator size="large" />}
       <StatusBar barStyle="default" />
     </View>
-  )
+  );
 }
 
 const mapDispatchToProps = {

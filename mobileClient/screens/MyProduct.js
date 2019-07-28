@@ -13,7 +13,7 @@ import {
   StatusBar
 } from "react-native";
 import Constants from "expo-constants";
-import TopBar from '../components/TopBar'
+import TopBar from "../components/TopBar";
 import { getMyProducts } from "../store/action";
 import Card from "../components/Card";
 import { connect } from "react-redux";
@@ -24,7 +24,7 @@ function MyProduct(props) {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-    <TopBar navigation={props.navigation}></TopBar>
+      <TopBar navigation={props.navigation} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -51,14 +51,17 @@ function MyProduct(props) {
             height: "100%",
             width: "90%",
             marginTop: 6,
-            marginBottom: "25%",
-            
+            marginBottom: "25%"
           }}
         >
           {!props.myProductsLoading && (
             <Fragment>
               {props.myProductsData.map(product => (
-                <Card key={product._id} product={product} navigation={props.navigation} />
+                <Card
+                  key={product._id}
+                  product={product}
+                  navigation={props.navigation}
+                />
               ))}
             </Fragment>
           )}

@@ -8,7 +8,7 @@ import {
   Platform,
   Text,
   TouchableHighlight,
-  AsyncStorage,
+  AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
@@ -33,19 +33,19 @@ import { getProfile } from "../store/action";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
+function logout() {
+  AsyncStorage.clear()
+    .then(() => this.props.navigation.navigate("Signin"))
+    .catch(err => console.log(err));
+}
+
 function ProfilePage(props) {
   useEffect(() => {
     props.getProfile(props.token);
   }, []);
 
-  function logout(){
-    AsyncStorage.clear()
-      .then(() => props.navigation.navigate('Signin'))
-      .catch(err => console.log(err))
-  }
-
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View
         style={{
           height: "50%",
@@ -55,33 +55,30 @@ function ProfilePage(props) {
           alignItems: "center"
         }}
       >
-
-      {props.profileLoading && (
-        <Image
-          style={{ width: 200, height: 200, borderRadius: 100 }}
-          source={{
-            uri:
-              "https://thumbs.gfycat.com/UnitedSmartBinturong-max-1mb.gif"
-          }}
-        />
-      )}
+        {props.profileLoading && (
+          <Image
+            style={{ width: 200, height: 200, borderRadius: 100 }}
+            source={{
+              uri: "https://thumbs.gfycat.com/UnitedSmartBinturong-max-1mb.gif"
+            }}
+          />
+        )}
         {!props.profileLoading && (
           <Image
             style={{ width: 200, height: 200, borderRadius: 100 }}
             source={{
-              uri:
-                props.profileData.image
+              uri: props.profileData.image
             }}
           />
         )}
 
         {!props.profileLoading && (
           <>
-        <Text style={{ fontWeight: "bold", fontSize: 25, marginTop: 20 }}>
-          {props.profileData.name}
-        </Text>
-        <Text style={{ fontSize: 15, marginTop: 5 }}> Artist</Text>
-        </>
+            <Text style={{ fontWeight: "bold", fontSize: 25, marginTop: 20 }}>
+              {props.profileData.name}
+            </Text>
+            <Text style={{ fontSize: 15, marginTop: 5 }}> Artist</Text>
+          </>
         )}
       </View>
 
@@ -93,19 +90,19 @@ function ProfilePage(props) {
           marginTop: 15
         }}
       >
-          <Button onPress={logout} block danger>
-            <Text>
-              Logout
-            </Text>
-          </Button>
+        <Button onPress={logout} block danger>
+          <Text>Logout</Text>
+        </Button>
         <Card>
           <CardItem>
             <Body>
               <Text style={{ fontWeight: "bold", fontSize: 20 }}>Balance</Text>
               {!props.profileLoading && (
                 <>
-              <Text style={{ fontSize: 14 }}>Rp. {props.profileData.balance}</Text>
-              </>
+                  <Text style={{ fontSize: 14 }}>
+                    Rp. {props.profileData.balance}
+                  </Text>
+                </>
               )}
             </Body>
           </CardItem>
@@ -117,8 +114,10 @@ function ProfilePage(props) {
               <Text style={{ fontWeight: "bold", fontSize: 20 }}>Email</Text>
               {!props.profileLoading && (
                 <>
-              <Text style={{ fontSize: 14 }}>{props.profileData.email}</Text>
-              </>
+                  <Text style={{ fontSize: 14 }}>
+                    {props.profileData.email}
+                  </Text>
+                </>
               )}
             </Body>
           </CardItem>
@@ -132,8 +131,10 @@ function ProfilePage(props) {
               </Text>
               {!props.profileLoading && (
                 <>
-              <Text style={{ fontSize: 14 }}>{props.profileData.phonenumber}</Text>
-              </>
+                  <Text style={{ fontSize: 14 }}>
+                    {props.profileData.phonenumber}
+                  </Text>
+                </>
               )}
             </Body>
           </CardItem>
@@ -149,8 +150,6 @@ function ProfilePage(props) {
           justifyContent: "space-around"
         }}
       >
-
-
         <View
           style={{
             width: "45%",
@@ -160,26 +159,24 @@ function ProfilePage(props) {
             alignItems: "center"
           }}
         >
-
           <Card style={{ width: "100%" }}>
-          <TouchableHighlight
-          onPress={() =>
-            props.navigation.navigate("History", {
-              id: 'sdf'
-            })
-          }
-        >
-            <CardItem>
-
-              <Body style={{ justifyContent: "center", alignItems: "center" }}>
-                <FontAwesome name="history" size={45} color="black" />
-                <Text style={{ fontSize: 10 }}>Bid History</Text>
-              </Body>
-          
-            </CardItem>
+            <TouchableHighlight
+              onPress={() =>
+                props.navigation.navigate("History", {
+                  id: "sdf"
+                })
+              }
+            >
+              <CardItem>
+                <Body
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <FontAwesome name="history" size={45} color="black" />
+                  <Text style={{ fontSize: 10 }}>Bid History</Text>
+                </Body>
+              </CardItem>
             </TouchableHighlight>
           </Card>
-
         </View>
 
         <View
@@ -191,26 +188,27 @@ function ProfilePage(props) {
             alignItems: "center"
           }}
         >
-      
           <Card style={{ width: "100%" }}>
-          <TouchableHighlight
-          onPress={() =>
-            props.navigation.navigate("Topup", {
-              id: 'sdf'
-            })
-          }
-        >
-            <CardItem>
-              <Body style={{ justifyContent: "center", alignItems: "center" }}>
-                <FontAwesome name="money" size={45} color="black" />
-                <Text style={{ fontSize: 10 }}>TopUp Balance</Text>
-              </Body>
-            </CardItem>
+            <TouchableHighlight
+              onPress={() =>
+                props.navigation.navigate("Topup", {
+                  id: "sdf"
+                })
+              }
+            >
+              <CardItem>
+                <Body
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <FontAwesome name="money" size={45} color="black" />
+                  <Text style={{ fontSize: 10 }}>TopUp Balance</Text>
+                </Body>
+              </CardItem>
             </TouchableHighlight>
           </Card>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -233,9 +231,9 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
-    backgroundColor: 'white'
+    alignItems: "center",
+    paddingTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
+    backgroundColor: "white"
   },
   scrollContainer: {
     height: "34.5%",
