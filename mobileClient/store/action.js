@@ -64,6 +64,7 @@ export function getProductDetail(token, id) {
       headers: { token: token }
     })
       .then(({ data }) => {
+        console.log(data)
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
           data
@@ -85,9 +86,7 @@ export function loadingProductDetail() {
 
 export function getProfile() {
   return (dispatch, state) => {
-    console.log("getProfile");
     const token = state().token;
-    console.log(token);
     dispatch(loadingProfile());
     return axios({
       method: "GET",
@@ -95,7 +94,6 @@ export function getProfile() {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch({
           type: "SUCCESS_PROFILE",
           data
@@ -124,7 +122,6 @@ export function loadingProfile() {
 }
 
 export function toppingUp(value, token) {
-  console.log(value, token);
   return (dispatch, state) => {
     axios({
       method: "PATCH",
@@ -134,7 +131,6 @@ export function toppingUp(value, token) {
 
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch(getProfile());
       })
       .catch(error => {
@@ -145,6 +141,34 @@ export function toppingUp(value, token) {
       });
   };
 }
+
+export function bidding(value, token, id) {
+  console.log(value, token, id);
+  return (dispatch, state) => {
+    axios({
+      method: "PATCH",
+      url: `/product/${id}/addbid`,
+      data: { price: value },
+      headers: { token: token },
+    })
+      .then(({ data }) => {
+        console.log(data);
+        dispatch(getProductDetail(token, id));
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}
+
+
+
+
+
+
 
 export function pageCounter(number) {
   return (dispatch, state) => {
