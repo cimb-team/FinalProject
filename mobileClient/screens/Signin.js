@@ -36,7 +36,7 @@ function Signin({ navigation, getProfile }) {
       navigation.navigate('Splash')
     })
     .catch(({response}) =>{
-      console.log(response.data.message)
+      // console.log(response.data.message)
       setloading(false)
       Toast.show({
         text: response.data.message,

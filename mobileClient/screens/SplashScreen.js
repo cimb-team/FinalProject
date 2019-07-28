@@ -25,19 +25,19 @@ function SplashScreen({ navigation, getProfile, setToken }) {
   function getUserInfo() {
     AsyncStorage.getItem('@NusantaraArt:token')
       .then(token => {
-        console.log(token)
+        // console.log(token)
         if (!token)
           throw 'Token is null'
         setToken(token)
         return getProfile()
       })
       .then(data => {
-        console.log('then');
+        // console.log('then');
         
         navigation.navigate('App');
       })
       .catch(err => {
-        console.log('catch');
+        // console.log('catch');
         
         navigation.navigate('Auth');
       })

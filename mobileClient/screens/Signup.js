@@ -34,7 +34,7 @@ export default function Signup({ navigation }) {
       navigation.navigate('Signin')
     })
     .catch(({response}) =>{
-      console.log(response.data.message)
+      // console.log(response.data.message)
       setloading(false)
       Toast.show({
         text: response.data.message,

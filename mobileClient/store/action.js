@@ -85,9 +85,9 @@ export function loadingProductDetail() {
 
 export function getProfile() {
   return (dispatch, state) => {
-    console.log("getProfile");
+    // console.log("getProfile");
     const token = state().token;
-    console.log(token);
+    // console.log(token);
     dispatch(loadingProfile());
     return axios({
       method: "GET",
@@ -95,7 +95,7 @@ export function getProfile() {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         dispatch({
           type: "SUCCESS_PROFILE",
           data
@@ -124,7 +124,7 @@ export function loadingProfile() {
 }
 
 export function toppingUp(value, token) {
-  console.log(value, token);
+  // console.log(value, token);
   return (dispatch, state) => {
     axios({
       method: "PATCH",
@@ -134,7 +134,7 @@ export function toppingUp(value, token) {
 
     })
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         dispatch(getProfile());
       })
       .catch(error => {

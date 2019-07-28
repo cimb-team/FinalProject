@@ -43,7 +43,7 @@ function ProfilePage(props) {
     props.getProfile(props.token);
   }, []);
 
-  console.log(props.profileData)
+  // console.log(props.profileData)
   return (
     <View style={styles.container}>
       <View

@@ -16,7 +16,7 @@ import { getProductDetail } from "../store/action";
 import Title from "../components/Title";
 function ProductDetail(props) {
   useEffect(() => {
-    console.log(props.navigation, '@@')
+    // console.log(props.navigation, '@@')
     props.getProductDetail(props.token, props.navigation.state.params.id);
   }, []);
   return (
