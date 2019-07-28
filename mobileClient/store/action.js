@@ -86,10 +86,11 @@ export function loadingProductDetail() {
 export function getProfile(token) {
   console.log(token)
   return (dispatch, state) => {
+    console.log('asd')
     dispatch(loadingProfile());
     axios({
       method: "GET",
-      url: `http://localhost:3000/user/user`,
+      url: `http://localhost:3000/user`,
       headers: {token: token}
     })
       .then(({ data }) => {
