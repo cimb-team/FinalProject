@@ -23,7 +23,6 @@ export default function Signup({ navigation }) {
       }
     })
     .then(({data})=>{
-      console.log('then1')
       return axios({
         method: 'post',
         url: '/user/signin',
@@ -35,11 +34,9 @@ export default function Signup({ navigation }) {
       
     })
     .then(({data})=>{
-      console.log('then2')
       return AsyncStorage.setItem('@NusantaraArt:token', data.token)
     })
     .then(token => {
-      console.log('then3')
       setloading(false)
       // Toast.show({
       //   style: {
@@ -54,7 +51,6 @@ export default function Signup({ navigation }) {
       navigation.navigate('App')
     })
     .catch(({response}) =>{
-      console.log('catch')
       setloading(false)
       Toast.show({
         style: {
