@@ -16,6 +16,7 @@ import ProductDetail from "../screens/ProductDetail";
 import SplashScreen from "../screens/SplashScreen";
 import Signup from "../screens/Signup";
 import Signin from "../screens/Signin";
+import Create from "../screens/CreateProduct";
 import { fromTop, fadeIn } from 'react-navigation-transitions';
 
 const MyProductNav = createStackNavigator({
@@ -32,6 +33,19 @@ const MyProductNav = createStackNavigator({
     screen: ProductDetail,
     navigationOptions: {
       headerTitle: 'Product Detail',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
+      }
+    }
+  },
+  Create: {
+    screen: Create,
+    navigationOptions: {
+      headerTitle: 'Create Product',
       headerStyle: {
         backgroundColor: "white",
       },

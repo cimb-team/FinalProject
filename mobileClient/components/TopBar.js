@@ -20,7 +20,15 @@ function TopBar(props) {
   return (
     <View style={styles.flex} opacity={1}>
       <TextInput style={styles.search} />
+      <TouchableHighlight
+      onPress={() =>
+        props.navigation.navigate("Create", {
+          id: 'sdf'
+        })
+      }
+    >
       <Ionicons name="ios-add-circle" color="black" size={28} />
+      </TouchableHighlight>
       <Ionicons name="ios-albums" color="black" size={28} />
       <Ionicons name="ios-person" color="black" size={28} />
     </View>
