@@ -25,11 +25,18 @@ import {
   Body,
   Right
 } from "native-base";
+import { View, ScrollView, Image, StyleSheet, Dimensions, Platform, Text, AsyncStorage } from 'react-native';
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { getProfile } from "../store/action";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
+
+function logout(){
+  AsyncStorage.clear()
+    .then(() => this.props.navigation.navigate('Signin'))
+    .catch(err => console.log(err))
+}
 
 function ProfilePage(props) {
   useEffect(() => {
@@ -84,6 +91,11 @@ function ProfilePage(props) {
           marginTop: 15
         }}
       >
+          <Button onPress={logout} block danger>
+            <Text>
+              Logout
+            </Text>
+          </Button>
         <Card>
           <CardItem>
             <Body>
@@ -219,9 +231,9 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: "white"
+    alignItems: 'center',
+    paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
+    backgroundColor: 'white'
   },
   scrollContainer: {
     height: "34.5%",

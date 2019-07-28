@@ -1,8 +1,8 @@
 import {
+  createSwitchNavigator,
   createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator
 } from "react-navigation";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -13,6 +13,10 @@ import History from "../screens/History";
 import Topup from "../screens/Topup";
 import Profile from "../screens/Profile";
 import ProductDetail from "../screens/ProductDetail";
+import SplashScreen from "../screens/SplashScreen";
+import Signup from "../screens/Signup";
+import Signin from "../screens/Signin";
+import { fromTop, fadeIn } from 'react-navigation-transitions';
 
 const MyProductNav = createStackNavigator({
   MyProduct: {
@@ -182,4 +186,42 @@ const MainNavigator = createBottomTabNavigator(
   }
 );
 
-export default createAppContainer(MainNavigator);
+const Auth = createBottomTabNavigator({
+  Signup: { 
+    screen: Signup,
+    navigationOptions: {
+      tabBarLabel: "Signup",
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name="ios-person" color={tintColor} size={24} />
+      )
+    }
+  },
+  Signin: { 
+    screen: Signin,
+    navigationOptions: {
+      tabBarLabel: "Signin",
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name="ios-log-in" color={tintColor} size={24} />
+      )
+    }
+  },
+},{
+    initialRouteName: 'Signup',
+    activeColor: '#f0edf6',
+    inactiveColor: '#3e2465',
+    barStyle: { backgroundColor: '#694fad' },
+    transitionConfig: () => fromTop(1000),
+  })
+
+export default createAppContainer(
+  createSwitchNavigator(
+  {
+    Splash: SplashScreen,
+    Auth: Auth,
+    App: MainNavigator,
+  },
+  {
+    initialRouteName: 'Splash',
+    transitionConfig: () => fadeIn(1000),
+  }
+));
