@@ -147,15 +147,6 @@ const MainNavigator = createBottomTabNavigator(
         )
       }
     },
-    MyHistory: {
-      screen: History,
-      navigationOptions: {
-        tabBarLabel: "MyHistory",
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-book" color={tintColor} size={24} />
-        )
-      }
-    },
     Profile: {
       screen: ProfileNav,
       navigationOptions: {
