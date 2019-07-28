@@ -42,6 +42,8 @@ function ProfilePage(props) {
   useEffect(() => {
     props.getProfile(props.token);
   }, []);
+
+  console.log(props.profileData)
   return (
     <View style={styles.container}>
       <View

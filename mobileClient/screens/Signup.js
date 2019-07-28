@@ -5,7 +5,7 @@ import axios from '../axios'
 import { Platform } from 'react-native'
 import Constants from 'expo-constants';
 
-export default function Auth({ navigation }) {
+export default function Signup({ navigation }) {
   const [name, setname] = useState('')
   const [phonenumber, setphonenumber] = useState('')
   const [loading, setloading] = useState(false)
@@ -14,7 +14,7 @@ export default function Auth({ navigation }) {
     setloading(true)
     axios({
       method: 'post',
-      url: '/signup',
+      url: '/user/signup',
       data: {
         name,
         email,

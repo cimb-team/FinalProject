@@ -8,7 +8,8 @@ import {
   View,
   Animated,
 } from 'react-native';
-import axios from '../axios'
+import { getProfile, setToken } from "../store/action";
+import { connect } from 'react-redux'
 
 const styles = StyleSheet.create({
   container: {
@@ -18,34 +19,33 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function SplashScreen({navigation}) {
+function SplashScreen({ navigation, getProfile, setToken }) {
   // buat ntar loading screen
 
-  function getUserInfo(){
+  function getUserInfo() {
     AsyncStorage.getItem('@NusantaraArt:token')
-    .then(token =>{
-      console.log(token)
-      if(!token)
-        throw 'Token is null'
-      return axios({
-        method: 'get',
-        url: '/user',
-        headers: {
-          token
-        }
+      .then(token => {
+        console.log(token)
+        if (!token)
+          throw 'Token is null'
+        setToken(token)
+        return getProfile()
       })
-    })
-    .then(({data})=>{
-      navigation.navigate('App');
-    })
-    .catch(err =>{
-      navigation.navigate('Auth');
-    })
+      .then(data => {
+        console.log('then');
+        
+        navigation.navigate('App');
+      })
+      .catch(err => {
+        console.log('catch');
+        
+        navigation.navigate('Auth');
+      })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserInfo()
-  },[])
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -54,3 +54,13 @@ export default function SplashScreen({navigation}) {
     </View>
   )
 }
+
+const mapDispatchToProps = {
+  getProfile,
+  setToken
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(SplashScreen);
