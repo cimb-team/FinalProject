@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Header, Content, Form, Item, Input, Icon, Toast, Left, Body, Right, Title } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Icon, H1, H2, H3, Text, Toast, Left, Body, Right, Title, Label } from 'native-base';
 import FormAuth from '../components/FormAuth'
 import axios from '../axios'
-import { Platform } from 'react-native'
+import { Platform, AsyncStorage, Image } from 'react-native'
 import Constants from 'expo-constants';
 
 export default function Signup({ navigation }) {
@@ -23,36 +23,62 @@ export default function Signup({ navigation }) {
       }
     })
     .then(({data})=>{
-      setloading(false)
-      Toast.show({
-        text: "Sign up success",
-        buttonText: "OK",
-        duration: 3000,
-        type: 'success',
-        buttonStyle: { backgroundColor: "green" }
+      console.log('then1')
+      return axios({
+        method: 'post',
+        url: '/user/signin',
+        data: {
+          email,
+          password,
+        }
       })
-      navigation.navigate('Signin')
+      
+    })
+    .then(({data})=>{
+      console.log('then2')
+      return AsyncStorage.setItem('@NusantaraArt:token', data.token)
+    })
+    .then(token => {
+      console.log('then3')
+      setloading(false)
+      // Toast.show({
+      //   style: {
+          
+      //   },
+      //   text: "Sign up success",
+      //   buttonText: "OK",
+      //   duration: 3000,
+      //   type: 'success',
+      //   buttonStyle: { backgroundColor: "green" }
+      // })
+      navigation.navigate('App')
     })
     .catch(({response}) =>{
-      console.log(response.data.message)
+      console.log('catch')
       setloading(false)
       Toast.show({
+        style: {
+          marginBottom: '11%',
+          marginHorizontal: '5%',
+          borderRadius: 10,
+          backgroundColor: 'rgba(236, 232, 232, 0.5)',
+        },
         text: response.data.message,
         buttonText: "OK",
         duration: 3000,
         type: 'danger',
-        buttonTextStyle: { color: "#008000" },
-        buttonStyle: { backgroundColor: "red" }
+        textStyle: { color: "black", marginBottom: 20 },
+        // buttonTextStyle: { color: "black" },
+        buttonStyle: { backgroundColor: "red", marginBottom: 20 }
       })
     })
   }
 
   return (
     <Container style={{ marginTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight, }}>
-      <Header>
-        <Left/>
-        <Body>
-          <Title>Create New Account</Title>
+      <Header transparent noLeft>
+        <Body style={{ marginHorizontal: 20 }}>
+          <H3>Create New Account</H3>
         </Body>
       </Header>
       <Content contentContainerStyle={{ marginHorizontal: 20 }}>
@@ -74,13 +100,15 @@ export default function Signup({ navigation }) {
         //   </Fragment>
         // )}
         >
-          <Item>
-            <Icon active name='person' />
-            <Input value={name} onChangeText={(text) => setname(text)} placeholder='Name' />
+          <Item stackedLabel>
+            <Label>Name</Label>
+            <Input value={name} onChangeText={(text) => setname(text)}/>
+            {/* <Icon active name='person' /> */}
           </Item>
-          <Item last>
-            <Icon active name='call' />
-            <Input value={phonenumber} onChangeText={(text) => setphonenumber(text)} placeholder='Phone Number' />
+          <Item stackedLabel>
+            <Label>Phone Number</Label>
+            <Input keyboardType="numeric" value={phonenumber} onChangeText={(text) => setphonenumber(text)}/>
+            {/* <Icon active name='call'/> */}
           </Item>
         </FormAuth>
       </Content>

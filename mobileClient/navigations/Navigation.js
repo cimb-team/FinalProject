@@ -215,7 +215,7 @@ const Auth = createBottomTabNavigator({
     activeColor: '#f0edf6',
     inactiveColor: '#3e2465',
     barStyle: { backgroundColor: '#694fad' },
-    transitionConfig: () => fromTop(1000),
+    // transitionConfig: () => fromTop(1000),
   })
 
 export default createAppContainer(
@@ -227,6 +227,6 @@ export default createAppContainer(
   },
   {
     initialRouteName: 'Splash',
-    transitionConfig: () => fadeIn(1000),
+    // transitionConfig: () => fadeIn(1000),
   }
 ));
