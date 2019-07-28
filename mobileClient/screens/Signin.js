@@ -33,7 +33,7 @@ function Signin({ navigation, getProfile }) {
       //   type: 'success',
       //   buttonStyle: { backgroundColor: "green" }
       // })
-      navigation.navigate('Splash')
+      navigation.navigate('App')
     })
     .catch(({response}) =>{
       setloading(false)
