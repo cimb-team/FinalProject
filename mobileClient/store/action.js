@@ -54,7 +54,6 @@ export function loadingMyProducts() {
     type: "LOADING_MY_PRODUCTS"
   };
 }
-
 export function getProductDetail(token, id) {
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
@@ -82,12 +81,9 @@ export function loadingProductDetail() {
     type: "LOADING_PRODUCT_DETAIL"
   };
 }
-
 export function getProfile() {
   return (dispatch, state) => {
-    console.log('getProfile')
-    const token = state().token
-    console.log(token)
+    const token = state().token;
     dispatch(loadingProfile());
     return axios({
       method: "GET",
@@ -95,7 +91,6 @@ export function getProfile() {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data)
         dispatch({
           type: "SUCCESS_PROFILE",
           data
@@ -109,126 +104,43 @@ export function getProfile() {
       });
   };
 }
-
 export function setToken(token) {
   return {
     type: "SUCCESS_TOKEN",
     data: token
   };
 }
-
 export function loadingProfile() {
   return {
     type: "LOADING_PROFILE"
   };
 }
 
-
-
-
-
-
-
-export function pageCounter(number) {
-  return (dispatch, state) => {
-    dispatch(getMangas(number));
-    dispatch({
-      type: "PAGE_COUNTER",
-      counterIncrement: number
-    });
-  };
-}
-
-export function addCounter(number) {
-  return {
-    type: "ADD_COUNTER",
-    counterIncrement: number
-  };
-}
-
-export function removeCounter() {
-  return {
-    type: "REMOVE_COUNTER"
-  };
-}
-export function showName() {
-  return {
-    type: "SHOW_NAME"
-  };
-}
-export function hideName() {
-  return {
-    type: "HIDE_NAME"
-  };
-}
-
-export function getMangas(number) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
-    axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?page[limit]=10&page[offset]=number`
-    })
-      .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
-      })
-      .catch(error => {
-        dispatch({
-          type: "ERROR_HIT_API2",
-          error
-        });
-      });
-  };
-}
-export function getGenre(genre) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
-    axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?filter[genres]=genre`
-    })
-      .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
-      })
-      .catch(error => {
-        dispatch({
-          type: "ERROR_HIT_API2",
-          error
-        });
-      });
-  };
-}
-
-export function searchManga(title) {
-  return (dispatch, state) => {
-    dispatch(loadingHitApi2());
-    axios({
-      method: "GET",
-      url: `https://kitsu.io/api/edge/manga?filter[text]=title`
-    })
-      .then(({ data }) => {
-        dispatch({
-          type: "SUCCESS_HIT_API2",
-          data
-        });
-      })
-      .catch(error => {
-        dispatch({
-          type: "ERROR_HIT_API2",
-          error
-        });
-      });
-  };
-}
-export function loadingHitApi2() {
-  return {
-    type: "LOADING_HIT_API2"
-  };
-}
-
+// export function loadingFilter() {
+//   return {
+//     type: "LOADING_FILTER"
+//   };
+// }
+// export function getFilter(filter) {
+//   return (dispatch, state) => {
+//     const token = state().token;
+//     dispatch(loadingFilter());
+//     return axios({
+//       method: "GET",
+//       url: `/product?search=` + filter,
+//       headers: { token: token }
+//     })
+//       .then(({ data }) => {
+//         dispatch({
+//           type: "SUCCESS_FILTER",
+//           data
+//         });
+//       })
+//       .catch(error => {
+//         dispatch({
+//           type: "ERROR_FILTER",
+//           error
+//         });
+//       });
+//   };
+// }

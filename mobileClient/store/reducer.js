@@ -102,14 +102,13 @@ export default function reducer(state = defaultValue, action) {
           loading: true
         }
       };
-
     case "SUCCESS_PROFILE":
       return {
         ...state,
         profile: {
           ...state.profile,
           loading: false,
-          data: action.data,
+          data: action.data
         }
       };
     case "ERROR_PROFILE":
@@ -134,7 +133,33 @@ export default function reducer(state = defaultValue, action) {
         ...state,
         token: action.data
       };
-
+    // case "ERROR_FILTER":
+    //   return {
+    //     ...state,
+    //     filterProducts: {
+    //       data: [],
+    //       loading: false,
+    //       error: true
+    //     }
+    //   };
+    // case "LOADING_FILTER":
+    //   return {
+    //     ...state,
+    //     filterProducts: {
+    //       data: [],
+    //       loading: true,
+    //       error: false
+    //     }
+    //   };
+    // case "SUCCESS_FILTER":
+    //   return {
+    //     ...state,
+    //     filterProducts: {
+    //       data: action.data,
+    //       loading: false,
+    //       error: false
+    //     }
+    //   };
     default:
       return state;
   }

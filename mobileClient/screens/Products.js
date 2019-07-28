@@ -12,7 +12,7 @@ import Card from "../components/Card";
 import React, { Fragment, useState, useEffect } from "react";
 import { getAllProducts } from "../store/action";
 import { connect } from "react-redux";
-import TopBar from '../components/TopBar'
+import TopBar from "../components/TopBar";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
@@ -104,13 +104,15 @@ function Product(props) {
   return (
     <View style={styles.container}>
       <View style={styles.scrollContainer}>
-      <TopBar></TopBar>
+        <TopBar
+          cr={props.navigation.state.routeName}
+          navigation={props.navigation}
+        />
         <ScrollView
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={true}
         >
-
           {images.map(image => (
             <View style={{ width: "33.35%", height: "100%" }} key={image.id}>
               <Image style={styles.image} source={{ uri: image.uri }} />
@@ -160,7 +162,11 @@ function Product(props) {
           {!props.allProductsLoading && (
             <Fragment>
               {props.allProductsData.map(product => (
-                <Card key={product._id} product={product}  navigation={props.navigation}/>
+                <Card
+                  key={product._id}
+                  product={product}
+                  navigation={props.navigation}
+                />
               ))}
             </Fragment>
           )}
