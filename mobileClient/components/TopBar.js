@@ -25,13 +25,15 @@ function TopBar(props) {
           setFilter(e);
         }}
         onSubmitEditing={e => {
-          if (props.cr == "MyProduct" && filter !== "") {
+          if (
+            props.navigation.state.routeName == "MyProduct" &&
+            filter !== ""
+          ) {
             props.navigation.navigate("FilterMyproduct", {
               search: filter
             });
           }
-          if (props.cr == "Products" && filter !== "") {
-            console.log(filter);
+          if (props.navigation.state.routeName == "Products" && filter !== "") {
             props.navigation.navigate("FilterProduct", {
               search: filter
             });

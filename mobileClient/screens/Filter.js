@@ -18,17 +18,6 @@ const Filter = props => {
     }
     if (data.length >= 1) {
       data.forEach((d, i) => {
-        console.log(
-          d.title,
-          d.details,
-          search,
-          String(search)
-            .toLowerCase()
-            .indexOf(String(d.title).toLowerCase()),
-          String(d.title)
-            .toLowerCase()
-            .indexOf(String(search).toLowerCase())
-        );
         if (
           String(d.title)
             .toLowerCase()
@@ -37,11 +26,15 @@ const Filter = props => {
           if (result.length == 0) {
             result.push(d);
           } else {
+            let exist = false;
             result.forEach(r => {
-              if (r._id !== d._id) {
-                result.push(d);
+              if (r._id === d._id) {
+                exist = true;
               }
             });
+            if (!exist) {
+              result.push(d);
+            }
           }
         }
         if (
@@ -52,11 +45,15 @@ const Filter = props => {
           if (result.length == 0) {
             result.push(d);
           } else {
+            let exist = false;
             result.forEach(r => {
-              if (r._id !== d._id) {
-                result.push(d);
+              if (r._id === d._id) {
+                exist = true;
               }
             });
+            if (!exist) {
+              result.push(d);
+            }
           }
         }
       });

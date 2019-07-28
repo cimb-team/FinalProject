@@ -16,7 +16,6 @@ import SplashScreen from "../screens/SplashScreen";
 import Signup from "../screens/Signup";
 import Signin from "../screens/Signin";
 import Filter from "../screens/Filter";
-import { fromTop, fadeIn } from "react-navigation-transitions";
 import Create from "../screens/CreateProduct";
 import { fromTop, fadeIn } from "react-navigation-transitions";
 
