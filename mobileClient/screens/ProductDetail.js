@@ -12,11 +12,18 @@ import {
   TouchableHighlight
 } from "react-native";
 import { connect } from "react-redux";
-import { getProductDetail } from "../store/action";
+import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
 function ProductDetail(props) {
+  [bid, setbid] = useState("");
+  handleChange = e => {
+    setbid(e);
+  };
+  postbid = () => {
+    props.bidding(bid, props.token, props.productDetailData._id)
+    setbid("")
+  };
   useEffect(() => {
-    console.log(props.navigation, '@@')
     props.getProductDetail(props.token, props.navigation.state.params.id);
   }, []);
   return (
@@ -98,7 +105,9 @@ function ProductDetail(props) {
     </View>
     <View style={{ justifyContent: "center", alignItems: "center" }}>
       <View style={{flexDirection: 'row', justifyContent: 'center', width: 412, marginVertical: 20}}>
-        <TextInput style={styles.search} placeholder="$" />
+        <TextInput style={styles.search} placeholder="$"           onChangeText={handleChange}
+        value={bid} />
+        <TouchableHighlight onPress={() => postbid()}>
         <View
           style={{
             padding: 10,
@@ -120,6 +129,7 @@ function ProductDetail(props) {
             BID
           </Text>
         </View>
+        </TouchableHighlight>
       </View>
       <View
         style={{
@@ -144,16 +154,20 @@ function ProductDetail(props) {
         </Text>
       </View>
 
-      <View
-        style={{
-          padding: 10,
-          backgroundColor: "#f5f5f5",
-          width: 200,
-          borderRadius: 10,
-          margin: 2.5
-        }}
-      >
-        <Text
+      {!props.productDetailLoading && ( 
+        <>
+        {props.productDetailData.bid.bids.map((bid, index) => (
+          <View
+          key={index}
+          style={{
+            padding: 10,
+            backgroundColor: "#f5f5f5",
+            width: 200,
+            borderRadius: 10,
+            margin: 2.5
+          }}
+        >
+          <Text
           style={{
             color: "black",
             fontWeight: "400",
@@ -162,30 +176,13 @@ function ProductDetail(props) {
             textAlign: "center"
           }}
         >
-          Bid 2: $25
+          Bid {index+1}: ${bid.price}
         </Text>
-      </View>
-      <View
-        style={{
-          padding: 10,
-          backgroundColor: "#f5f5f5",
-          width: 200,
-          borderRadius: 10,
-          margin: 2.5
-        }}
-      >
-        <Text
-          style={{
-            color: "black",
-            fontWeight: "400",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center"
-          }}
-        >
-          Bid 1: $21
-        </Text>
-      </View>
+        </View>
+        ))}
+          </>
+          )}
+       
     </View>
       </Fragment>)}
 
@@ -203,7 +200,7 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = {
-  getProductDetail
+  getProductDetail, bidding
 };
 export default connect(
   mapStateToProps,

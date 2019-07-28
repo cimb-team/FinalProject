@@ -125,6 +125,7 @@ class ProductController {
    * PATCH /product/:id/addbid
    */
   static addBid(req, res, next) {
+    console.log(req.body, '==')
     Bid.findOneAndUpdate(
       {
         productId: req.params.id
