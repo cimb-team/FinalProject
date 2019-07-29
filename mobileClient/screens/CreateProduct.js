@@ -11,33 +11,21 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { getAllProducts, getMyProducts } from "../store/action";
-import { Ionicons } from "@expo/vector-icons";
-import Constants from "expo-constants";
-import {
-  Container,
-  DatePicker,
-  Textarea,
-  Item,
-  Input,
-  Header,
-  Content,
-  Form,
-  Card,
-  CardItem,
-  Thumbnail,
-  Button,
-  Icon,
-  Left,
-  Body,
-  Right
-} from "native-base";
-import { ImagePicker, Permissions } from "expo";
-import axios from "axios";
-
+import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
+import { Container, DatePicker, Textarea, Item, Input, Header, Content, Form, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base'
+import { ImagePicker, Permissions } from 'expo';
+import axios from 'axios';
+// import * as firebase from 'firebase';
 import { connect } from "react-redux";
-const { width } = Dimensions.get("window");
-const height = width * 0.6;
+import dbh from '../FBConfig'
 
+
+
+
+const { width } = Dimensions.get('window');
+const height = width * 0.6
+// var db = firebase.firestore();
 var today = new Date();
 var tomorrow = new Date();
 var maxDate = new Date();
@@ -67,45 +55,63 @@ class CreateProduct extends Component {
 
   componentDidMount() {
     this.getPermissionAsync();
+    
+      
   }
 
   submitCreate = () => {
-    const imageFilenameBeforeSplit = this.state.image.split("/");
-    const imageFilename =
-      imageFilenameBeforeSplit[imageFilenameBeforeSplit.length - 1];
-
-    const data = new FormData();
-    data.append("images", {
-      uri: this.state.image,
-      type: "image/jpeg",
-      name: imageFilename
-    });
-    data.append("title", this.state.title);
-    data.append("category", this.state.category);
-    data.append("details", this.state.details);
-    data.append("initialPrice", this.state.initialPrize);
-    data.append("closeDate", this.state.chosenDate);
+    console.log("masuk woy");
+    
+ 
+    
+  const imageFilenameBeforeSplit = this.state.image.split('/')
+   const imageFilename = imageFilenameBeforeSplit[imageFilenameBeforeSplit.length - 1]
+    
+    const data = new FormData()
+    data.append('images', {
+      uri : this.state.image,
+      type : 'image/jpeg',
+      name : imageFilename
+    })
+    data.append('title', this.state.title)
+    data.append('category', this.state.category)
+    data.append('details', this.state.details)
+    data.append('initialPrice', this.state.initialPrize)
+    data.append('closeDate', this.state.chosenDate)
+    // console.log(data, '@@@@')
     axios({
-      method: "post",
-      url: "http://localhost:3000/product",
+      method: 'post',
+      url: 'http://35.187.231.14/product',
       data,
       headers: {
         token: this.props.token,
         "content-type": "multipart/form-data"
       }
     })
-      .then(({ data }) => {
-        this.props.getAllProducts(this.props.token);
-        this.props.getMyProducts(this.props.token);
-        this.props.navigation.navigate("MyProduct", {
-          id: "sdf"
-        });
+    .then(({data})=>{
+      
+      this.props.getAllProducts(this.props.token)
+      this.props.getMyProducts(this.props.token)
+      dbh.collection("biding").doc(`${data.bid._id}`).set({
+        bids: data.bid.bids,
+        createdAt: data.bid.createdAt,
+        productId: data.bid.productId,
+        updatedAt: data.bid.updatedAt,
+        winnerId: data.bid.winnerId,
       })
-      .catch(err => {
-        console.log(err, "(()()(");
-        console.log("masuk error");
-      });
-  };
+      this.props.navigation.navigate("MyProduct", {
+        id: 'sdf'
+      })
+      console.log("masuk then sukses");
+      
+      
+    })
+    .catch((err)=>{
+      console.log(err, '(()()(')
+      console.log("masuk error");
+      
+    })
+  }
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -254,6 +260,8 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(CreateProduct);
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -14,18 +14,46 @@ import {
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
+import dbh from '../FBConfig'
 function ProductDetail(props) {
   [bid, setbid] = useState("");
+  [bidDariFirebase, setbidDariFirebase] = useState("")
   handleChange = e => {
     setbid(e);
   };
   postbid = () => {
+    let arr1 = props.productDetailData.bid.bids
+    arr1.push({
+      "bidderId": props.bidderId,
+      "dateIssued": new Date(),
+      "price": bid,
+    })
+    dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
+      bids: arr1,
+      createdAt: props.productDetailData.bid.createdAt,
+      productId: props.productDetailData.bid.productId,
+      updatedAt: props.productDetailData.bid.updatedAt,
+      winnerId: props.productDetailData.bid.winnerId,
+    })
     props.bidding(bid, props.token, props.productDetailData._id);
     setbid("");
   };
   useEffect(() => {
-    props.getProductDetail(props.token, props.navigation.state.params.id);
-  }, []);
+
+    if (props.ProductDetailfunction) {
+      dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
+        console.log(doc.data(), '====')
+        setbidDariFirebase(doc.data())
+
+      });
+    } else {
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    }
+
+
+
+
+  }, [props.ProductDetailfunction]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -164,9 +192,9 @@ function ProductDetail(props) {
                 </Text>
               </View>
 
-              {!props.productDetailLoading && (
+              {bidDariFirebase.bids && (
                 <>
-                  {props.productDetailData.bid.bids.map((bid, index) => (
+                  {bidDariFirebase.bids.map((bid, index) => (
                     <View
                       key={index}
                       style={{
@@ -205,7 +233,9 @@ const mapStateToProps = state => {
     productDetailData: state.productDetail.data,
     productDetailError: state.productDetail.error,
     productDetailLoading: state.productDetail.loading,
-    token: state.token
+    ProductDetailfunction: state.productDetail.function,
+    token: state.token,
+    bidderId: state.profile.data._id
   };
 };
 const mapDispatchToProps = {

@@ -22,6 +22,7 @@ import FormAuth from "../components/FormAuth";
 import axios from "../axios";
 import { Platform, AsyncStorage, Image } from "react-native";
 import Constants from "expo-constants";
+
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
 import { getProfile, setToken } from '../store/action'
@@ -75,7 +76,7 @@ function Signup({ navigation, getProfile, setToken }) {
         return getProfile()
       })
       .then(data => {
-        navigation.navigate("App");        
+        navigation.navigate("App");
       })
       .catch(({ response }) => {
         setloading(false);
@@ -160,6 +161,7 @@ function Signup({ navigation, getProfile, setToken }) {
     </Container>
   );
 }
+
 
 const mapDispatchToProps = {
   getProfile,

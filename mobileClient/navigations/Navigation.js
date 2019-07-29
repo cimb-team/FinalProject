@@ -21,12 +21,26 @@ import Create from "../screens/CreateProduct";
 // import { fromTop, fadeIn } from "react-navigation-transitions";
 
 const MyProductNav = createStackNavigator({
+  
   MyProduct: {
     screen: MyProduct,
     navigationOptions: {
       header: null,
       headerStyle: {
         backgroundColor: "white"
+      }
+    }
+  },
+  Create: {
+    screen: Create,
+    navigationOptions: {
+      headerTitle: 'Create Product',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: 'black',
+      headerTitleStyle: {
+        color: 'black'
       }
     }
   },
@@ -203,7 +217,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Profile",
+    initialRouteName: "Products",
     tabBarOptions: {
       activeTintColor: "lightblue",
       inactiveTintColor: "white",

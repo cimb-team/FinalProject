@@ -1,3 +1,5 @@
+
+
 const defaultValue = {
   token: null,
   allProducts: {
@@ -13,7 +15,8 @@ const defaultValue = {
   productDetail: {
     loading: true,
     data: {},
-    error: false
+    error: false,
+    function : false
   },
   profile: {
     loading: true,
@@ -113,10 +116,12 @@ export default function reducer(state = defaultValue, action) {
         productDetail: {
           ...state.productDetail,
           loading: false,
-          data: action.data
+          data: action.data,
+          function: true
         }
       };
     case "ERROR_PRODUCT_DETAIL":
+
       return {
         ...state,
         productDetail: {
