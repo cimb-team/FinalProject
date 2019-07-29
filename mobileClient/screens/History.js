@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Title from "../components/Title";
-<<<<<<< HEAD
 import { getHistory } from "../store/action";
 
 function formatCash(num) {
@@ -30,11 +29,6 @@ function formatCash(num) {
     p[1]
   );
 }
-=======
-import { getHistory } from "../store/action"
-import { NavigationEvents } from "react-navigation";
-import * as Animatable from 'react-native-animatable';
->>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
 
 function History(props) {
   useEffect(() => {
@@ -42,20 +36,11 @@ function History(props) {
     console.log(props.historyData.bids);
   }, []);
 
-  const handleViewRef = ref => this.view = ref;
-  const animation = () => this.view.fadeInUp(300)
+  const handleViewRef = ref => (this.view = ref);
+  const animation = () => this.view.fadeInUp(300);
 
   return (
     <SafeAreaView style={styles.container}>
-<<<<<<< HEAD
-=======
-      <NavigationEvents
-        onWillBlur={animation}
-        onWillFocus={animation}
-      />
-      <Animatable.View ref={handleViewRef}>
-      <Title title="History" style={styles.text} />
->>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
       {!props.allProductsLoading && (
         <ScrollView>
           {props.historyData.map((history, index) => (
@@ -136,12 +121,7 @@ function History(props) {
           ))}
         </ScrollView>
       )}
-<<<<<<< HEAD
     </SafeAreaView>
-=======
-      </Animatable.View>
-  </SafeAreaView>
->>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
   );
 }
 const mapStateToProps = state => {
