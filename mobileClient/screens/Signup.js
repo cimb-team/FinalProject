@@ -22,8 +22,10 @@ import FormAuth from "../components/FormAuth";
 import axios from "../axios";
 import { Platform, AsyncStorage, Image } from "react-native";
 import Constants from "expo-constants";
+import { connect } from "react-redux";
+import {setToken, getProfile} from '../store/action';
 
-export default function Signup({ navigation }) {
+function Signup({ navigation, setToken, getProfile }) {
   const [name, setname] = useState("");
   const [phonenumber, setphonenumber] = useState("");
   const [loading, setloading] = useState(false);
@@ -51,6 +53,7 @@ export default function Signup({ navigation }) {
         });
       })
       .then(({ data }) => {
+        setToken(data.token)
         return AsyncStorage.setItem("@NusantaraArt:token", data.token);
       })
       .then(token => {
@@ -65,6 +68,10 @@ export default function Signup({ navigation }) {
         //   type: 'success',
         //   buttonStyle: { backgroundColor: "green" }
         // })
+        return getProfile()
+        
+      })
+      .then(()=>{
         navigation.navigate("App");
       })
       .catch(({ response }) => {
@@ -136,3 +143,14 @@ export default function Signup({ navigation }) {
     </Container>
   );
 }
+
+
+const mapDispatchToProps = {
+  getProfile,setToken
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Signup);
+

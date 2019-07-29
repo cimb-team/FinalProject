@@ -18,7 +18,7 @@ function Topup(props) {
   [topup, setTopup] = useState("");
   handleChange = e => {
     setTopup(e);
-  };
+  }; 
   postTopup = () => {
     props.toppingUp(topup, props.token);
     setTopup("");
