@@ -84,7 +84,7 @@ export function loadingMyProducts() {
     type: "LOADING_MY_PRODUCTS"
   };
 }
-export function getProductDetail(token, id) {
+export function getProductDetail(token, id, cb) {
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
     axios({
@@ -96,7 +96,8 @@ export function getProductDetail(token, id) {
         console.log(data);
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
-          data
+          data,
+          cb
         });
       })
       .catch(error => {
@@ -177,7 +178,7 @@ export function bidding(value, token, id) {
       headers: { token: token }
     })
       .then(({ data }) => {
-        dispatch(getProductDetail(token, id));
+        // dispatch(getProductDetail(token, id));
       })
       .catch(error => {
         dispatch({

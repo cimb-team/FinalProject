@@ -22,23 +22,38 @@ function ProductDetail(props) {
     setbid(e);
   };
   postbid = () => {
-    props.bidding(bid, props.token, props.productDetailData._id);
+    let arr1 = props.productDetailData.bid.bids
+    arr1.push({
+      "bidderId": props.bidderId,
+      "dateIssued": new Date(),
+      "price": bid,
+    })
     dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
-      bids: props.productDetailData.bid.bids,
+      bids: arr1,
       createdAt: props.productDetailData.bid.createdAt,
       productId: props.productDetailData.bid.productId,
       updatedAt: props.productDetailData.bid.updatedAt,
       winnerId: props.productDetailData.bid.winnerId,
     })
+    props.bidding(bid, props.token, props.productDetailData._id);
     setbid("");
   };
   useEffect(() => {
-    props.getProductDetail(props.token, props.navigation.state.params.id);
-    dbh.collection("biding").doc(`5d3dd16dc6beb66e4aec399d`).onSnapshot(function(doc) {
-      setbidDariFirebase(doc.data())
-        console.log("????????????",bidDariFirebase, "??????????????");
-    });
-  }, []);
+
+    if (props.ProductDetailfunction) {
+      dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
+        console.log(doc.data(), '====')
+        setbidDariFirebase(doc.data())
+
+      });
+    } else {
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    }
+
+
+
+
+  }, [props.ProductDetailfunction]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -177,7 +192,7 @@ function ProductDetail(props) {
                 </Text>
               </View>
 
-              {!bidDariFirebase.bids && (
+              {bidDariFirebase.bids && (
                 <>
                   {bidDariFirebase.bids.map((bid, index) => (
                     <View
@@ -218,7 +233,9 @@ const mapStateToProps = state => {
     productDetailData: state.productDetail.data,
     productDetailError: state.productDetail.error,
     productDetailLoading: state.productDetail.loading,
-    token: state.token
+    ProductDetailfunction: state.productDetail.function,
+    token: state.token,
+    bidderId: state.profile.data._id
   };
 };
 const mapDispatchToProps = {

@@ -33,16 +33,18 @@ import { getProfile } from "../store/action";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
-function logout() {
-  AsyncStorage.clear()
-    .then(() => this.props.navigation.navigate("Signin"))
-    .catch(err => console.log(err));
-}
+
 
 function ProfilePage(props) {
   useEffect(() => {
     props.getProfile(props.token);
   }, []);
+
+  function logout() {
+    AsyncStorage.clear()
+      .then(() => props.navigation.navigate("Signin"))
+      .catch(err => console.log(err));
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
