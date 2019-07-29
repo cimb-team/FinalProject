@@ -14,27 +14,19 @@ import {
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
-<<<<<<< HEAD
 import dbh from "../FBConfig";
-function ProductDetail(props) {
-  [bid, setbid] = useState("");
-  [bidDariFirebase, setbidDariFirebase] = useState("");
-=======
-import dbh from '../FBConfig'
 import { NavigationEvents } from "react-navigation";
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from "react-native-animatable";
 
 function ProductDetail(props) {
   const [bid, setbid] = useState("");
-  const [bidDariFirebase, setbidDariFirebase] = useState("")
->>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
+  const [bidDariFirebase, setbidDariFirebase] = useState("");
   handleChange = e => {
     setbid(e);
   };
   postbid = () => {
-<<<<<<< HEAD
-    let arr1 = props.productDetailData.bid.bids;
-    arr1.push({
+    let arr1 = bidDariFirebase.bids;
+    arr1.unshift({
       bidderId: props.bidderId,
       dateIssued: new Date(),
       price: bid
@@ -48,53 +40,32 @@ function ProductDetail(props) {
         productId: props.productDetailData.bid.productId,
         updatedAt: props.productDetailData.bid.updatedAt,
         winnerId: props.productDetailData.bid.winnerId
+      })
+      .then(() => {
+        props.bidding(bid, props.token, props.productDetailData._id);
       });
-    props.bidding(bid, props.token, props.productDetailData._id);
     setbid("");
   };
   useEffect(() => {
-    if (props.ProductDetailfunction) {
+    if (props.productDetailData._id != props.navigation.state.params.id) {
+      console.log(
+        props.navigation.state.params.id,
+        "++++++++++++++++++++++++++++"
+      );
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    } else if (props.ProductDetailfunction) {
       dbh
         .collection("biding")
         .doc(`${props.productDetailData.bid._id}`)
         .onSnapshot(function(doc) {
+          console.log("XXXXX", doc.data(), "====");
           setbidDariFirebase(doc.data());
         });
-=======
-    let arr1 = bidDariFirebase.bids
-    arr1.unshift({
-      "bidderId": props.bidderId,
-      "dateIssued": new Date(),
-      "price": bid,
-    })
-    dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
-      bids: arr1,
-      createdAt: props.productDetailData.bid.createdAt,
-      productId: props.productDetailData.bid.productId,
-      updatedAt: props.productDetailData.bid.updatedAt,
-      winnerId: props.productDetailData.bid.winnerId,
-    }).then( ()=>{
-      props.bidding(bid, props.token, props.productDetailData._id);
-    })
-    setbid("");
-  };
-  useEffect(() => {
-
-    if (props.productDetailData._id != props.navigation.state.params.id) {
-      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
-      props.getProductDetail(props.token, props.navigation.state.params.id);
-    }
-
-   else  if (props.ProductDetailfunction) {
-      dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
-        console.log("XXXXX", 
-        doc.data(), '====')
-        setbidDariFirebase(doc.data())
-
-      });
->>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
     } else {
-      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
+      console.log(
+        props.navigation.state.params.id,
+        "++++++++++++++++++++++++++++"
+      );
       props.getProductDetail(props.token, props.navigation.state.params.id);
     }
   }, [props.ProductDetailfunction]);
@@ -102,7 +73,7 @@ function ProductDetail(props) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {!props.productDetailLoading && (
+        {!props.productDetailLoading && props.productDetailData && (
           <Fragment>
             <View style={styles.card}>
               <View
@@ -238,8 +209,6 @@ function ProductDetail(props) {
                 </Text>
               </View>
 
-
-
               {bidDariFirebase.bids && (
                 <>
                   {bidDariFirebase.bids.map((bid, index) => (
@@ -290,6 +259,7 @@ const mapDispatchToProps = {
   getProductDetail,
   bidding
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
