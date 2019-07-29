@@ -16,14 +16,14 @@ import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
 import dbh from '../FBConfig'
 function ProductDetail(props) {
-  [bid, setbid] = useState("");
-  [bidDariFirebase, setbidDariFirebase] = useState("")
+  const [bid, setbid] = useState("");
+  const [bidDariFirebase, setbidDariFirebase] = useState("")
   handleChange = e => {
     setbid(e);
   };
   postbid = () => {
-    let arr1 = props.productDetailData.bid.bids
-    arr1.push({
+    let arr1 = bidDariFirebase.bids
+    arr1.unshift({
       "bidderId": props.bidderId,
       "dateIssued": new Date(),
       "price": bid,
@@ -34,19 +34,27 @@ function ProductDetail(props) {
       productId: props.productDetailData.bid.productId,
       updatedAt: props.productDetailData.bid.updatedAt,
       winnerId: props.productDetailData.bid.winnerId,
+    }).then( ()=>{
+      props.bidding(bid, props.token, props.productDetailData._id);
     })
-    props.bidding(bid, props.token, props.productDetailData._id);
     setbid("");
   };
   useEffect(() => {
 
-    if (props.ProductDetailfunction) {
+    if (props.productDetailData._id != props.navigation.state.params.id) {
+      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    }
+
+   else  if (props.ProductDetailfunction) {
       dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
-        console.log(doc.data(), '====')
+        console.log("XXXXX", 
+        doc.data(), '====')
         setbidDariFirebase(doc.data())
 
       });
     } else {
+      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
       props.getProductDetail(props.token, props.navigation.state.params.id);
     }
 
@@ -191,6 +199,8 @@ function ProductDetail(props) {
                   Initial Price: ${props.productDetailData.initialPrice}
                 </Text>
               </View>
+
+
 
               {bidDariFirebase.bids && (
                 <>

@@ -9,8 +9,6 @@ export function getHistory(token) {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log("@@@");
-        console.log(data, "history @@@@@ =====");
         dispatch({
           type: "SUCCESS_HISTORY",
           data
@@ -93,7 +91,6 @@ export function getProductDetail(token, id, cb) {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
           data,
@@ -168,8 +165,7 @@ export function toppingUp(value, token) {
   };
 }
 
-export function bidding(value, token, id) {
-  console.log(value, token, id);
+export function bidding(value, token, id) {;
   return (dispatch, state) => {
     axios({
       method: "PATCH",
