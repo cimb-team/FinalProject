@@ -51,6 +51,7 @@ function Topup(props) {
         }}
       >
         <TextInput
+          keyboardType="numeric"
           style={styles.search}
           onChangeText={handleChange}
           value={topup}

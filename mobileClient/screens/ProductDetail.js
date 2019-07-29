@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
 import dbh from '../FBConfig'
+
 function ProductDetail(props) {
   const [bid, setbid] = useState("");
   const [bidDariFirebase, setbidDariFirebase] = useState("")
@@ -148,6 +149,7 @@ function ProductDetail(props) {
                 }}
               >
                 <TextInput
+                  keyboardType="numeric"
                   style={styles.search}
                   placeholder="$"
                   onChangeText={handleChange}
