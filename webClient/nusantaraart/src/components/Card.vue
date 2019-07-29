@@ -24,7 +24,7 @@
         <li class="list-group-item" style="border-radius:10px;margin-bottom:5px">
           <small>
             created at: {{product.createdAt}}
-            by: {{ product.userId }}
+            by: {{ product.userId.name }}
         
           </small>
         </li>

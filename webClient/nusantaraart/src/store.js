@@ -12,9 +12,11 @@ export default new Vuex.Store({
     user: {},
     token: '',
     products: [],
+    myProducts: [],
     categories: [],
-    answers: [],
-    product: {}
+    product: {},
+    profile: {},
+    history: []
   },
   mutations: {
     USERLOGIN (state, payload) {
@@ -28,8 +30,17 @@ export default new Vuex.Store({
       state.token = ''
       state.islogin = false
     },
+    PROFILE (state, payload) {
+      state.profile = payload
+    },
+    HISTORY (state, payload) {
+      state.history = payload
+    },
     ALLPRODUCTS (state, payload) {
       state.products = payload
+    },
+    MYPRODUCTS (state, payload) {
+      state.myProducts = payload
     },
     FILTER (state, payload) {
       state.categories = payload
@@ -51,6 +62,53 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    FETCH_HISTORY ({ commit, state }, payload) {
+      axios({
+        method: 'GET',
+        url: `${state.url}/user/history`,
+        headers: {
+          token: state.token
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('HISTORY', data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    FETCH_PROFILE ({ commit, state }, payload) {
+      axios({
+        method: 'GET',
+        url: `${state.url}/user`,
+        headers: {
+          token: state.token
+        }
+      })
+        .then(({ data }) => {
+          console.log(data)
+          commit('PROFILE', data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    FETCH_MY_PRODUCTS ({ commit, state }, payload) {
+      axios({
+        method: 'GET',
+        url: `${state.url}/product/user`,
+        headers: {
+          token: state.token
+        }
+      })
+        .then(({ data }) => {
+          commit('MYPRODUCTS', data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     FETCH_ALL_PRODUCTS ({ commit, state }, payload) {
       axios({
         method: 'GET',

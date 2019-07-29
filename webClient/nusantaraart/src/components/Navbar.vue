@@ -11,10 +11,14 @@
   <div v-if="islogin" class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
+         <router-link v-if="islogin" to="/myproducts">
         <a class="nav-link" href="#">My Products <span class="sr-only">(current)</span></a>
+            </router-link>
       </li>
             <li class="nav-item active">
+              <router-link v-if="islogin" to="/profile">
         <a class="nav-link" href="#">Profile <span class="sr-only">(current)</span></a>
+            </router-link>
       </li>
 
     </ul>

@@ -48,6 +48,7 @@ class ProductController {
   static findByUserId(req, res, next) {
     Product.find({ userId: req.decoded.id })
       .populate("bid")
+      .populate("userId")
       .then(result => {
         res.status(200).json(result);
       })
@@ -62,6 +63,7 @@ class ProductController {
       _id: req.params.id
     })
       .populate("bid")
+      .populate("userId")
       .then(result => {
         res.status(200).json(result);
       })
@@ -74,6 +76,7 @@ class ProductController {
   static findAll(req, res, next) {
     Product.find({ status: "open" })
       .populate("bid")
+      .populate("userId")
       .then(result => {
         console.log(result.length);
         if (result.length > 0) {

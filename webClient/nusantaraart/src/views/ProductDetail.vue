@@ -22,21 +22,36 @@
             <footer class="blockquote-footer">
               <small
                 style="color:white"
-              >By {{ product.userId }} at {{ product.createdAt.slice(0,10) }}</small>
+              >By {{ product.userId.name }} at {{ product.createdAt.slice(0,10) }}</small>
             </footer>
           </blockquote>
         </div>
       </div>
     </div>
+    <input
+      v-model="value"
+      type="text
+    "
+      class="form-control"
+      id="exampleInputPassword1"
+      placeholder="$"
+    />
+    <button @click="addBid" type="button" class="btn btn-primary">BID</button>
+    <div v-if="product.bid">
+      <div v-for="bid in product.bid.bids" :key="bid._id">{{bid}}</div>
+    </div>
   </div>
 </template>
 <script>
 import { mapActions } from "vuex";
+import axios from "axios";
 export default {
   name: "product-detail",
   props: ["islogin"],
   data() {
-    return {};
+    return {
+      value: ""
+    };
   },
   components: {},
   computed: {
@@ -45,10 +60,31 @@ export default {
     },
     product() {
       return this.$store.state.product;
+    },
+    token() {
+      return this.$store.state.token;
     }
   },
   methods: {
-    ...mapActions(["FETCHPRODUCT"])
+    ...mapActions(["FETCHPRODUCT"]),
+    addBid() {
+      console.log(this.product._id, "====");
+      console.log(this.token)
+      console.log(this.value)
+      axios({
+        method: "PATCH",
+        url: `${this.url}/product/${this.product._id}/addbid`,
+        data: { price: this.value },
+        headers: { token: this.token }
+      })
+        .then(({ data }) => {
+          this.value = ""
+          this.FETCHPRODUCT(this.$route.params.id);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   },
   created() {
     this.FETCHPRODUCT(this.$route.params.id);

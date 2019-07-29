@@ -24,9 +24,24 @@ export default new Router({
       component: () => import("./views/ProductDetail.vue")
     },
     {
-      path: "/myProducts/",
+      path: "/myProducts",
       name: "my-product-detail",
       component: () => import("./views/MyProducts.vue")
+    },
+    {
+      path: "/profile",
+      name: "my-product-detail",
+      component: () => import("./views/Profile.vue")
+    },
+    {
+      path: "/topup",
+      name: "my-product-detail",
+      component: () => import("./views/Topup.vue")
+    },
+    {
+      path: "/history",
+      name: "my-product-detail",
+      component: () => import("./views/History.vue")
     }
   ]
 });
