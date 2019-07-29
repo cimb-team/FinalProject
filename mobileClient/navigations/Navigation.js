@@ -231,6 +231,23 @@ const MainNavigator = createMaterialBottomTabNavigator(
   }
 );
 
+
+
+const auth2 = createStackNavigator({
+  SignIn: {
+    screen: Signin,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SignUp: {
+    screen: Signup,
+    navigationOptions: {
+      header: null,
+    }
+  }
+});
+
 const Auth = createMaterialBottomTabNavigator(
   {
     Signup: {
@@ -253,10 +270,10 @@ const Auth = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Signup",
+    initialRouteName: "Signin",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
-    barStyle: { backgroundColor: "#FF943C" },
+    barStyle: { backgroundColor: "#F3411E" },
     // transitionConfig: () => fromTop(1000)
   }
 );
@@ -265,7 +282,7 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Splash: SplashScreen,
-      Auth: Auth,
+      Auth: auth2,
       App: MainNavigator
     },
     {

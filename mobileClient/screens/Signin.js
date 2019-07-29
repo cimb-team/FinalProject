@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 import FormAuth from "../components/FormAuth.js";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage,Text,KeyboardAvoidingView } from "react-native";
 import axios from "../axios";
-import { Platform } from "react-native";
+import { Platform, ImageBackground, Dimensions, View } from "react-native";
 import Constants from "expo-constants";
 import { getProfile, setToken } from "../store/action";
 import { connect } from "react-redux";
@@ -22,7 +22,8 @@ import {
   Body,
   Right,
   Title,
-  Label
+  Label,
+
 } from "native-base";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
@@ -30,8 +31,10 @@ import * as Animatable from 'react-native-animatable';
 function Signin({ navigation, getProfile, setToken }) {
   const [loading, setloading] = useState(false);
   const [opacity, setopacity] = useState(0.2)
+  const { width } = Dimensions.get("window");
+  const { height } = Dimensions.get("window");
 
-  function submitForm(email, password) {
+  function submitForm(email, password, navigation) {
     setloading(true);
     axios({
       method: "post",
@@ -75,17 +78,16 @@ function Signin({ navigation, getProfile, setToken }) {
           type: "danger",
           textStyle: { color: "black", marginBottom: 20 },
           // buttonTextStyle: { color: "black" },
-          buttonStyle: { backgroundColor: "red", marginBottom: 20 }
+          buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
         });
       });
   }
 
   return (
-    <Container
-      style={{
-        marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight
-      }}
-    >
+    <KeyboardAvoidingView style={{marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight}} 
+    behavior="position" enabled>
+
+    <ImageBackground blurRadius={0} source={require('../assets/2withlogo.png')} style={{width: width*1, height: height*1,}}>
       <NavigationEvents
         onWillBlur={payload => {
           // SignupRef.current.transitionTo({ opacity: 0.2 })
@@ -99,22 +101,27 @@ function Signin({ navigation, getProfile, setToken }) {
               
       <Header transparent noLeft>
       <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
-        <Body style={{ marginHorizontal: 20 }}>
-          <H3>Sign in</H3>
-        </Body>
+      
     </Animatable.View>
       </Header>
-      <Content contentContainerStyle={{ marginHorizontal: 20 }}>
+      <Content contentContainerStyle={{ marginHorizontal: height*0.05, marginTop:height*0.5,  }}>
             <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
+        <View style={{width:width*0.8}}>
         <FormAuth
           loading={loading}
           submitForm={submitForm}
           navigation={navigation}
           title="Signin"
         />
+        </View>
+        <View style={{marginTop:height*0.04, justifyContent:"center", alignItems:'center'}}>
+          
+        <Text style={{fontWeight:'bold',color:'white'}}>Don't have an account ? <Text onPress={() => navigation.navigate("SignUp")} style={{fontWeight:'bold',color:'#F3411E'}}> Sing Up </Text> </Text>
+        </View>
     </Animatable.View>
       </Content>
-    </Container>
+      </ImageBackground>
+      </KeyboardAvoidingView>
   );
 }
 

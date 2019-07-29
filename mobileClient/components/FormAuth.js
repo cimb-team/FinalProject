@@ -20,16 +20,21 @@ export default function FormAuth({ title, children, submitForm, loading }) {
   return (
     <Form>
       {children}
-      <Item stackedLabel>
-        <Label>Email</Label>
+      <Item>
         {/* <Icon active name='mail' /> */}
-        <Input value={email} onChangeText={text => setemail(text)} />
+        <Input value={email} 
+        placeholder="Email"
+        placeholderTextColor='white'
+        style={{color : "white"}}
+        onChangeText={text => setemail(text)} />
       </Item>
-      <Item stackedLabel>
-        <Label>Password</Label>
+      <Item>
         {/* <Icon active name='lock' /> */}
         <Input
           value={password}
+          placeholder="Password"
+          placeholderTextColor='white'
+          style={{color : "white"}}
           onChangeText={text => setpassword(text)}
           secureTextEntry
         />
@@ -37,9 +42,10 @@ export default function FormAuth({ title, children, submitForm, loading }) {
       <Button
         onPress={() => submitForm(email, password)}
         block
-        danger
+        rounded
+        
         disabled={loading}
-        style={{ marginTop: 30 }}
+        style={{ marginTop: 30, backgroundColor:'#EE5537' }}
       >
         {!loading ? <Text>{title}</Text> : <Spinner />}
       </Button>
