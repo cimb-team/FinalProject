@@ -106,11 +106,9 @@ function Signup({ navigation, getProfile, setToken }) {
     >
       <NavigationEvents
         onWillBlur={payload => {
-          // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(0.2)
         }}
         onWillFocus={payload => {
-          // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(1)
         }}
       />

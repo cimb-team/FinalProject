@@ -40,14 +40,17 @@ function SplashScreen({ navigation, getProfile, setToken }) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(true);
-    }, 1500);
-
-    setTimeout(() => {
-      getUserInfo();
-    }, 3000);
+    getUserInfo();
   }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLoading(true);
+  //   }, 1500);
+
+  //   setTimeout(() => {
+  //     getUserInfo();
+  //   }, 3000);
+  // }, []);
 
   return (
     <View style={styles.container}>

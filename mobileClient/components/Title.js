@@ -11,6 +11,8 @@ import {
   ScrollView,
   TextInput
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 export default function Title(props) {
 

@@ -15,6 +15,9 @@ import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
 import dbh from '../FBConfig'
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 function ProductDetail(props) {
   const [bid, setbid] = useState("");
   const [bidDariFirebase, setbidDariFirebase] = useState("")
@@ -62,6 +65,7 @@ function ProductDetail(props) {
 
 
   }, [props.ProductDetailfunction]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -148,6 +152,7 @@ function ProductDetail(props) {
                 }}
               >
                 <TextInput
+                  keyboardType="numeric"
                   style={styles.search}
                   placeholder="$"
                   onChangeText={handleChange}

@@ -14,12 +14,24 @@ import {
 import { connect } from "react-redux";
 import Title from "../components/Title";
 import { getHistory } from "../store/action"
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
   }, []);
+
+  const handleViewRef = ref => this.view = ref;
+  const animation = () => this.view.fadeInUp(300)
+
   return (
     <SafeAreaView style={styles.container}>
+      <NavigationEvents
+        onWillBlur={animation}
+        onWillFocus={animation}
+      />
+      <Animatable.View ref={handleViewRef}>
       <Title title="History" style={styles.text} />
       {!props.allProductsLoading && (
         <Fragment>
@@ -116,6 +128,7 @@ function History(props) {
           ))}
         </Fragment>
       )}
+      </Animatable.View>
   </SafeAreaView>
   );
 }
