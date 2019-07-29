@@ -17,6 +17,7 @@ import Title from "../components/Title";
 import dbh from '../FBConfig'
 function ProductDetail(props) {
   [bid, setbid] = useState("");
+  [bidDariFirebase, setbidDariFirebase] = useState("")
   handleChange = e => {
     setbid(e);
   };
@@ -33,6 +34,10 @@ function ProductDetail(props) {
   };
   useEffect(() => {
     props.getProductDetail(props.token, props.navigation.state.params.id);
+    dbh.collection("biding").doc(`5d3dd16dc6beb66e4aec399d`).onSnapshot(function(doc) {
+      setbidDariFirebase(doc.data())
+        console.log("????????????",bidDariFirebase, "??????????????");
+    });
   }, []);
   return (
     <SafeAreaView style={styles.container}>
@@ -172,9 +177,9 @@ function ProductDetail(props) {
                 </Text>
               </View>
 
-              {!props.productDetailLoading && (
+              {!bidDariFirebase.bids && (
                 <>
-                  {props.productDetailData.bid.bids.map((bid, index) => (
+                  {bidDariFirebase.bids.map((bid, index) => (
                     <View
                       key={index}
                       style={{
