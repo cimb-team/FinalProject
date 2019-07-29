@@ -24,8 +24,7 @@ const defaultValue = {
     loading: true,
     data: [],
     error: false
-  },
-
+  }
 };
 
 export default function reducer(state = defaultValue, action) {
@@ -134,14 +133,13 @@ export default function reducer(state = defaultValue, action) {
           loading: true
         }
       };
-
     case "SUCCESS_PROFILE":
       return {
         ...state,
         profile: {
           ...state.profile,
           loading: false,
-          data: action.data,
+          data: action.data
         }
       };
     case "ERROR_PROFILE":
@@ -166,7 +164,6 @@ export default function reducer(state = defaultValue, action) {
         ...state,
         token: action.data
       };
-
     default:
       return state;
   }
