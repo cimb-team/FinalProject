@@ -174,7 +174,7 @@ export function bidding(value, token, id) {
       headers: { token: token }
     })
       .then(({ data }) => {
-        // dispatch(getProductDetail(token, id));
+        dispatch(getProfile());
       })
       .catch(error => {
         dispatch({

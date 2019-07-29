@@ -9,21 +9,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { getHistory } from "../store/action";
-
-function formatCash(num) {
-  var p = num.toFixed(2).split(".");
-  return (
-    "Rp" +
-    p[0]
-      .split("")
-      .reverse()
-      .reduce(function(acc, num, i, orig) {
-        return num == "-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
-      }, "") +
-    "," +
-    p[1]
-  );
-}
+import formatCash from "../helpers";
 
 function History(props) {
   useEffect(() => {
@@ -36,10 +22,10 @@ function History(props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {!props.allProductsLoading && (
+      {!props.historyLoading && (
         <ScrollView>
           {props.historyData.map((history, index) => (
-            <View key={index} style={styles.card}>
+            <View key={history._id + "history"} style={styles.card}>
               <Text
                 style={{
                   textAlign: "center",
@@ -90,10 +76,17 @@ function History(props) {
                   <Text>
                     {String(history.productId.details).substr(0, 200) + "..."}
                   </Text>
-                  {history.bids.map(b => {
+                  {history.bids.map((b, index) => {
                     return (
                       b.bidderId === props.profileData._id && (
-                        <>
+                        <View
+                          key={
+                            "biddetail" +
+                            props.bidderId +
+                            JSON.stringify(b.dateIssued) +
+                            index
+                          }
+                        >
                           <View
                             style={{ flexDirection: "row", marginVertical: 5 }}
                           >
@@ -106,7 +99,7 @@ function History(props) {
                             <Text>At</Text>
                             <Text>{new Date(b.dateIssued).toDateString()}</Text>
                           </View>
-                        </>
+                        </View>
                       )
                     );
                   })}
@@ -114,6 +107,12 @@ function History(props) {
               </View>
             </View>
           ))}
+        </ScrollView>
+      )}
+
+      {props.allProductsError && (
+        <ScrollView style>
+          <Text>Sorry, error occured. Please try again later.</Text>
         </ScrollView>
       )}
     </SafeAreaView>

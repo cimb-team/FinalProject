@@ -15,13 +15,14 @@ import { connect } from "react-redux";
 import { getProfile, toppingUp } from "../store/action";
 import Title from "../components/Title";
 import { NavigationEvents } from "react-navigation";
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from "react-native-animatable";
+import formatCash from "../helpers";
 
 function Topup(props) {
   [topup, setTopup] = useState("");
   handleChange = e => {
     setTopup(e);
-  }; 
+  };
   postTopup = () => {
     props.toppingUp(topup, props.token);
     setTopup("");
@@ -36,7 +37,7 @@ function Topup(props) {
       {!props.profileLoading && (
         <>
           <Title
-            title={`Balance: $ ${props.profileData.balance}`}
+            title={`Balance: ${formatCash(props.profileData.balance)}`}
             style={styles.text}
           />
         </>
