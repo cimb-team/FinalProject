@@ -14,45 +14,44 @@ import {
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
-import dbh from '../FBConfig'
+import dbh from "../FBConfig";
 function ProductDetail(props) {
   [bid, setbid] = useState("");
-  [bidDariFirebase, setbidDariFirebase] = useState("")
+  [bidDariFirebase, setbidDariFirebase] = useState("");
   handleChange = e => {
     setbid(e);
   };
   postbid = () => {
-    let arr1 = props.productDetailData.bid.bids
+    let arr1 = props.productDetailData.bid.bids;
     arr1.push({
-      "bidderId": props.bidderId,
-      "dateIssued": new Date(),
-      "price": bid,
-    })
-    dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
-      bids: arr1,
-      createdAt: props.productDetailData.bid.createdAt,
-      productId: props.productDetailData.bid.productId,
-      updatedAt: props.productDetailData.bid.updatedAt,
-      winnerId: props.productDetailData.bid.winnerId,
-    })
+      bidderId: props.bidderId,
+      dateIssued: new Date(),
+      price: bid
+    });
+    dbh
+      .collection("biding")
+      .doc(`${props.productDetailData.bid._id}`)
+      .set({
+        bids: arr1,
+        createdAt: props.productDetailData.bid.createdAt,
+        productId: props.productDetailData.bid.productId,
+        updatedAt: props.productDetailData.bid.updatedAt,
+        winnerId: props.productDetailData.bid.winnerId
+      });
     props.bidding(bid, props.token, props.productDetailData._id);
     setbid("");
   };
   useEffect(() => {
-
     if (props.ProductDetailfunction) {
-      dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
-        console.log(doc.data(), '====')
-        setbidDariFirebase(doc.data())
-
-      });
+      dbh
+        .collection("biding")
+        .doc(`${props.productDetailData.bid._id}`)
+        .onSnapshot(function(doc) {
+          setbidDariFirebase(doc.data());
+        });
     } else {
       props.getProductDetail(props.token, props.navigation.state.params.id);
     }
-
-
-
-
   }, [props.ProductDetailfunction]);
   return (
     <SafeAreaView style={styles.container}>

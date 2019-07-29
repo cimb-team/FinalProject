@@ -60,7 +60,6 @@ class CreateProduct extends Component {
   }
 
   submitCreate = () => {
-    console.log("masuk woy");
     
  
     
@@ -78,7 +77,6 @@ class CreateProduct extends Component {
     data.append('details', this.state.details)
     data.append('initialPrice', this.state.initialPrize)
     data.append('closeDate', this.state.chosenDate)
-    // console.log(data, '@@@@')
     axios({
       method: 'post',
       url: 'http://35.187.231.14/product',
@@ -102,13 +100,11 @@ class CreateProduct extends Component {
       this.props.navigation.navigate("MyProduct", {
         id: 'sdf'
       })
-      console.log("masuk then sukses");
       
       
     })
     .catch((err)=>{
       console.log(err, '(()()(')
-      console.log("masuk error");
       
     })
   }

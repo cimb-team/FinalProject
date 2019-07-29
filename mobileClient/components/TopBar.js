@@ -16,7 +16,8 @@ import {
 
 function TopBar(props) {
   const [filter, setFilter] = useState("");
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
   return (
     <View style={styles.flex} opacity={1}>
       <TextInput
@@ -40,17 +41,24 @@ function TopBar(props) {
           }
         }}
       />
+      {props.navigation.state.routeName == "Products" && (
+        <TouchableHighlight
+          onPress={() =>
+            props.navigation.navigate("Create", {
+              id: "sdf"
+            })
+          }
+        >
+          <Ionicons name="ios-add-circle" color="black" size={28} />
+        </TouchableHighlight>
+      )}
       <TouchableHighlight
-        onPress={() =>
-          props.navigation.navigate("Create", {
-            id: "sdf"
-          })
-        }
+        onPress={() => {
+          props.navigation.navigate("History");
+        }}
       >
-        <Ionicons name="ios-add-circle" color="black" size={28} />
+        <Ionicons name="ios-albums" color="black" size={28} />
       </TouchableHighlight>
-      <Ionicons name="ios-albums" color="black" size={28} />
-      <Ionicons name="ios-person" color="black" size={28} />
     </View>
   );
 }

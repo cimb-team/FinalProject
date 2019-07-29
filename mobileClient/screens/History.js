@@ -13,110 +13,111 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Title from "../components/Title";
-import { getHistory } from "../store/action"
+import { getHistory } from "../store/action";
+
+function formatCash(num) {
+  var p = num.toFixed(2).split(".");
+  return (
+    "Rp" +
+    p[0]
+      .split("")
+      .reverse()
+      .reduce(function(acc, num, i, orig) {
+        return num == "-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
+      }, "") +
+    "," +
+    p[1]
+  );
+}
+
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
+    console.log(props.historyData.bids);
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Title title="History" style={styles.text} />
       {!props.allProductsLoading && (
-        <Fragment>
+        <ScrollView>
           {props.historyData.map((history, index) => (
             <View key={index} style={styles.card}>
-            <Text
-              style={{
-                textAlign: "center",
-                color: "black",
-                fontWeight: "600",
-                marginBottom: 10
-              }}
-            >
-              Status: {history.bids[history.bids.length-1].price}
-            </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              <View
+              <Text
                 style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginRight: 10
+                  textAlign: "center",
+                  color: "black",
+                  fontWeight: "600",
+                  marginBottom: 10
                 }}
               >
-                <Image
+                Status:{" "}
+                {props.historyData.winnerId
+                  ? props.historyData.winnerId._id == props.profileData._id
+                    ? "You Win"
+                    : "You lose"
+                  : "Bid is still on going"}
+              </Text>
+              <View style={{ flexWrap: "wrap" }}>
+                <View
                   style={{
-                    width: 150,
-                    height: 120,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: 10
-                  }}
-                  source={{
-                    uri: "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
-                  }}
-                />
-              </View>
-              <View>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "600",
-                    marginBottom: 10
+                    marginRight: 10
                   }}
                 >
-                    {history._id}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.productId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.createdId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.winnerId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.updatedAt}
-                </Text>
+                  <Image
+                    style={{
+                      width: 150,
+                      height: 120,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 10
+                    }}
+                    source={{
+                      uri: history.productId.images[0]
+                    }}
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "black",
+                      fontWeight: "600",
+                      marginVertical: 10
+                    }}
+                  >
+                    {history.productId.title}
+                  </Text>
+                  <Text>
+                    {String(history.productId.details).substr(0, 200) + "..."}
+                  </Text>
+                  {history.bids.map(b => {
+                    return (
+                      b.bidderId === props.profileData._id && (
+                        <>
+                          <View
+                            style={{ flexDirection: "row", marginVertical: 5 }}
+                          >
+                            <Text>Placed Bid</Text>
+                            <Text>{formatCash(b.price)}</Text>
+                          </View>
+                          <View
+                            style={{ flexDirection: "row", marginVertical: 5 }}
+                          >
+                            <Text>At</Text>
+                            <Text>{new Date(b.dateIssued).toDateString()}</Text>
+                          </View>
+                        </>
+                      )
+                    );
+                  })}
+                </View>
               </View>
             </View>
-          </View>
-    
-    
-      
           ))}
-        </Fragment>
+        </ScrollView>
       )}
-  </SafeAreaView>
+    </SafeAreaView>
   );
 }
 const mapStateToProps = state => {
@@ -124,6 +125,7 @@ const mapStateToProps = state => {
     historyData: state.history.data,
     historyError: state.history.error,
     historyLoading: state.history.loading,
+    profileData: state.profile.data,
     token: state.token
   };
 };
