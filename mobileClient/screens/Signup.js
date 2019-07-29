@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Header,
@@ -22,11 +22,17 @@ import FormAuth from "../components/FormAuth";
 import axios from "../axios";
 import { Platform, AsyncStorage, Image } from "react-native";
 import Constants from "expo-constants";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+import { getProfile, setToken } from '../store/action'
+import { connect } from 'react-redux'
 
-export default function Signup({ navigation }) {
+function Signup({ navigation, getProfile, setToken }) {
   const [name, setname] = useState("");
   const [phonenumber, setphonenumber] = useState("");
   const [loading, setloading] = useState(false);
+  const [opacity, setopacity] = useState(0.2)
+  // const SignupRef = useRef(null);
 
   function submitForm(email, password) {
     setloading(true);
@@ -51,6 +57,7 @@ export default function Signup({ navigation }) {
         });
       })
       .then(({ data }) => {
+        setToken(data.token)
         return AsyncStorage.setItem("@NusantaraArt:token", data.token);
       })
       .then(token => {
@@ -65,7 +72,10 @@ export default function Signup({ navigation }) {
         //   type: 'success',
         //   buttonStyle: { backgroundColor: "green" }
         // })
-        navigation.navigate("App");
+        return getProfile()
+      })
+      .then(data => {
+        navigation.navigate("App");        
       })
       .catch(({ response }) => {
         setloading(false);
@@ -93,12 +103,27 @@ export default function Signup({ navigation }) {
         marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight
       }}
     >
+      <NavigationEvents
+        onWillBlur={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(0.2)
+          console.log('will blur',payload)
+        }}
+        onWillFocus={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(1)
+          console.log('will focus',payload)
+        }}
+      />
       <Header transparent noLeft>
+      <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
         <Body style={{ marginHorizontal: 20 }}>
           <H3>Create New Account</H3>
         </Body>
+    </Animatable.View>
       </Header>
       <Content contentContainerStyle={{ marginHorizontal: 20 }}>
+            <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
         <FormAuth
           loading={loading}
           submitForm={submitForm}
@@ -132,7 +157,18 @@ export default function Signup({ navigation }) {
             {/* <Icon active name='call'/> */}
           </Item>
         </FormAuth>
+    </Animatable.View>
       </Content>
     </Container>
   );
 }
+
+const mapDispatchToProps = {
+  getProfile,
+  setToken
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Signup);
