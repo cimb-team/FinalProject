@@ -2,7 +2,7 @@
   <div style="display:flex;flex-direction:column">
     TOPUP
     <br />
-    <h3>{{profile.balance}}</h3>
+    <h3>{{ profile.balance }}</h3>
     <label for="exampleInputPassword1">Topup</label>
     <input
       v-model="money"
@@ -51,7 +51,7 @@ export default {
       })
         .then(({ data }) => {
           this.FETCH_PROFILE();
-          this.money = ""
+          this.money = "";
         })
         .catch(error => {
           console.log(error);

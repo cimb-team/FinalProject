@@ -15,36 +15,51 @@
           />
         </div>
 
-        <div class="card-header" style="height:47px">Category: {{ product.category }}</div>
+        <div class="card-header" style="height:47px">
+          Category: {{ product.category }}
+        </div>
         <div class="card-body">
           <blockquote class="blockquote mb-0">
             <p>{{ product.details }}</p>
             <footer class="blockquote-footer">
-              <small
-                style="color:white"
-              >By {{ product.userId.name }} at {{ product.createdAt.slice(0,10) }}</small>
+              <small style="color:white"
+                >By {{ product.userId.name }} at
+                {{ product.createdAt.slice(0, 10) }}</small
+              >
             </footer>
           </blockquote>
         </div>
       </div>
     </div>
-    <input
-      v-model="value"
-      type="text
+    <div v-if="product.userId">
+      <div v-if="user._id != product.userId._id">
+        <input
+          v-model="value"
+          type="text
     "
-      class="form-control"
-      id="exampleInputPassword1"
-      placeholder="$"
-    />
-    <button @click="addBid" type="button" class="btn btn-primary">BID</button>
+          class="form-control"
+          id="exampleInputPassword1"
+          placeholder="$"
+        />
+        <button @click="addBid" type="button" class="btn btn-primary">
+          BID
+        </button>
+      </div>
+    </div>
     <div v-if="product.bid">
-      <div v-for="bid in product.bid.bids" :key="bid._id">{{bid}}</div>
+      <div v-for="bid in product.bid.bids" :key="bid._id">
+        <div v-if="bid.bidderId !== user._id">
+          {{ bid }}
+        </div>
+        <div v-if="bid.bidderId == user._id">YOU ${{ bid.price }}</div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions } from "vuex";
 import axios from "axios";
+import dbh from "../../FBConfig";
 export default {
   name: "product-detail",
   props: ["islogin"],
@@ -63,26 +78,44 @@ export default {
     },
     token() {
       return this.$store.state.token;
+    },
+    user() {
+      return this.$store.state.user;
     }
   },
   methods: {
     ...mapActions(["FETCHPRODUCT"]),
     addBid() {
-      console.log(this.product._id, "====");
-      console.log(this.token)
-      console.log(this.value)
-      axios({
-        method: "PATCH",
-        url: `${this.url}/product/${this.product._id}/addbid`,
-        data: { price: this.value },
-        headers: { token: this.token }
-      })
-        .then(({ data }) => {
-          this.value = ""
-          this.FETCHPRODUCT(this.$route.params.id);
+      let arr1 = this.product.bid.bids;
+      arr1.unshift({
+        bidderId: this.user._id,
+        dateIssued: new Date(),
+        price: this.value
+      });
+      dbh
+        .collection("biding")
+        .doc(`${this.product.bid._id}`)
+        .set({
+          bids: arr1,
+          createdAt: this.product.bid.createdAt,
+          productId: this.product.bid.productId,
+          updatedAt: this.product.bid.updatedAt,
+          winnerId: this.product.bid.winnerId
         })
-        .catch(error => {
-          console.log(error);
+        .then(() => {
+          axios({
+            method: "PATCH",
+            url: `${this.url}/product/${this.product._id}/addbid`,
+            data: { price: this.value },
+            headers: { token: this.token }
+          })
+            .then(({ data }) => {
+              this.value = "";
+              this.FETCHPRODUCT(this.$route.params.id);
+            })
+            .catch(error => {
+              console.log(error);
+            });
         });
     }
   },
