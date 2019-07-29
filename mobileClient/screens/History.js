@@ -2,17 +2,12 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
   Text,
   View,
   Image,
-  Platform,
-  ScrollView,
-  TextInput,
-  TouchableHighlight
+  ScrollView
 } from "react-native";
 import { connect } from "react-redux";
-import Title from "../components/Title";
 import { getHistory } from "../store/action";
 
 function formatCash(num) {
