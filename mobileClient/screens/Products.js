@@ -109,7 +109,7 @@ function Product(props) {
   return (
     <View style={styles.container}>
       <View style={{ width: "100%" }}>
-        <TopBar navigation={props.navigation} />
+        <TopBar navigation={props.navigation} screen={'products'} />
       </View>
       <View style={styles.scrollContainer}>
         <ScrollView

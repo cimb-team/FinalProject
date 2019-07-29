@@ -43,24 +43,23 @@ function TopBar(props) {
           }
         }}
       />
-      {props.navigation.state.routeName == "Products" && (
-        <TouchableHighlight
-          onPress={() =>
-            props.navigation.navigate("Create", {
-              id: "sdf"
-            })
-          }
-        >
-          <Ionicons name="ios-add-circle" color="black" size={28} />
-        </TouchableHighlight>
-      )}
+      {props.navigation.state.routeName === "MyProduct" && 
       <TouchableHighlight
         onPress={() => {
-          props.navigation.navigate("History");
+          props.navigation.navigate("Create");
         }}
       >
-        <Ionicons name="ios-albums" color="black" size={28} />
+        <Ionicons name="ios-add-circle" color="black" size={28} />
       </TouchableHighlight>
+      }
+      <TouchableHighlight
+        onPress={() =>
+          props.navigation.navigate("History", {
+            id: "sdf"
+          })
+        }
+      >
+      <Ionicons name="ios-albums" color="black" size={28} /></TouchableHighlight>
     </View>
   );
 }
@@ -99,10 +98,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     borderWidth: 0.5,
-    width: 250
+    width: '80%'
   },
   flex: {
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     padding: 15,
     flexDirection: "row",
     alignItems: "center"
