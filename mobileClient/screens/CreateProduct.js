@@ -126,7 +126,7 @@ class CreateProduct extends Component {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [16, 9]
+      aspect: [1, 1]
     });
 
     if (!result.cancelled) {
@@ -159,8 +159,9 @@ class CreateProduct extends Component {
             <TouchableHighlight onPress={this._pickImage}>
               {image ? (
                 <Image
+                scale={0.2}
                   source={{ uri: image }}
-                  style={{ width: 300, height: 170 }}
+                  style={{ width: 150, height: 150,  }}
                 />
               ) : (
                 <Ionicons name="ios-image" size={32} color="black" />
