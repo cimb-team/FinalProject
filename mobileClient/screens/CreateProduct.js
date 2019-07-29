@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  Text,
   TouchableHighlight,
   KeyboardAvoidingView
 } from "react-native";
@@ -13,15 +12,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import { getAllProducts, getMyProducts } from "../store/action";
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { Container, DatePicker, Textarea, Item, Input, Header, Content, Form, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base'
+import { Container, DatePicker, Text, Textarea, Item, Input, Header, Content, Form, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right, Toast, Spinner } from 'native-base'
 import { ImagePicker, Permissions } from 'expo';
-import axios from 'axios';
+import axios from '../axios';
 // import * as firebase from 'firebase';
 import { connect } from "react-redux";
 import dbh from '../FBConfig'
-
-
-
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+import moment from 'moment'
 
 const { width } = Dimensions.get('window');
 const height = width * 0.6
@@ -32,34 +31,42 @@ var maxDate = new Date();
 tomorrow.setDate(today.getDate() + 1);
 maxDate.setDate(today.getDate() + 2);
 
+const AnimatedKeyboardAvoiding = Animatable.createAnimatableComponent(KeyboardAvoidingView)
+
 class CreateProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chosenDate: new Date(),
+      chosenDate: moment(tomorrow).format("MM-DD-YYYY"),
       image: null,
       title: "",
       category: "",
-      initialPrize: 0,
+      initialPrize: '0',
       details: "",
-      imageMentah: ""
+      imageMentah: "",
+      dateText: moment(tomorrow).format("dddd, MMMM Do YYYY"),
+      loading: false
     };
     this.setDate = this.setDate.bind(this);
   }
+  
   setDate(newDate) {
-    let day = newDate.getDate();
-    let month = newDate.getMonth() + 1;
-    let year = newDate.getFullYear();
-    this.setState({ chosenDate: `${month}-${day}-${year}` });
+    // let day = newDate.getDate();
+    // let month = newDate.getMonth() + 1;
+    // let year = newDate.getFullYear();
+    // this.setState({ chosenDate: `${month}-${day}-${year}` });
+    this.setState({ chosenDate: moment(newDate).format("MM-DD-YYYY") });
+    this.setState({ dateText: moment(newDate).format("dddd, MMMM Do YYYY") })
   }
 
   componentDidMount() {
     this.getPermissionAsync();
-    
-      
+
+
   }
 
   submitCreate = () => {
+<<<<<<< HEAD
     
  
     
@@ -84,22 +91,82 @@ class CreateProduct extends Component {
       headers: {
         token: this.props.token,
         "content-type": "multipart/form-data"
+=======
+    this.setState({ loading: true })
+    console.log("masuk woy");
+    let errorMessage = []
+    console.log(typeof this.state.initialPrize, this.state.initialPrize)
+    if (this.state.initialPrize === '0') 
+      errorMessage.push('Initial Prize must be more than 0')
+    for (let key in this.state) {
+      if (!this.state[key]) {
+        switch (key) {
+          case 'image':
+            errorMessage.push('You must upload an image')
+            break;
+          case 'title':
+            errorMessage.push('Title cannot be blank')
+            break;
+          case 'category':
+            errorMessage.push('Category cannot be blank')
+            break;
+          case 'initialPrize':
+            errorMessage.push('Initial prize cannot be blank')
+            break;
+          case 'details':
+            errorMessage.push('Details cannot be blank')
+            break;
+          default:
+            break;
+        }
+>>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
       }
-    })
-    .then(({data})=>{
-      
-      this.props.getAllProducts(this.props.token)
-      this.props.getMyProducts(this.props.token)
-      dbh.collection("biding").doc(`${data.bid._id}`).set({
-        bids: data.bid.bids,
-        createdAt: data.bid.createdAt,
-        productId: data.bid.productId,
-        updatedAt: data.bid.updatedAt,
-        winnerId: data.bid.winnerId,
+    }
+    console.log(errorMessage)
+    console.log(this.state)
+    if (errorMessage.length > 0) {
+      Toast.show({
+        style: {
+          marginBottom: "11%",
+          marginHorizontal: "5%",
+          borderRadius: 10,
+          backgroundColor: "rgba(236, 232, 232, 0.5)"
+        },
+        text: errorMessage.join(', '),
+        buttonText: "OK",
+        duration: 3000,
+        type: "danger",
+        textStyle: { color: "black", marginBottom: 20 },
+        // buttonTextStyle: { color: "black" },
+        buttonStyle: { backgroundColor: "red", marginBottom: 20 }
       })
-      this.props.navigation.navigate("MyProduct", {
-        id: 'sdf'
+    }
+    else {
+      const imageFilenameBeforeSplit = this.state.image.split('/')
+      const imageFilename = imageFilenameBeforeSplit[imageFilenameBeforeSplit.length - 1]
+
+      const data = new FormData()
+      data.append('images', {
+        uri: this.state.image,
+        type: 'image/jpeg',
+        name: imageFilename
       })
+      data.append('title', this.state.title)
+      data.append('category', this.state.category)
+      data.append('details', this.state.details)
+      data.append('initialPrice', this.state.initialPrize)
+      data.append('closedDate', this.state.chosenDate)
+      // console.log(data, '@@@@')
+      axios({
+        method: 'post',
+        url: '/product',
+        data,
+        headers: {
+          token: this.props.token,
+          "content-type": "multipart/form-data"
+        }
+      })
+<<<<<<< HEAD
       
       
     })
@@ -107,6 +174,33 @@ class CreateProduct extends Component {
       console.log(err, '(()()(')
       
     })
+=======
+        .then(({ data }) => {
+          this.setState({ loading: false })
+          this.props.getAllProducts(this.props.token)
+          this.props.getMyProducts(this.props.token)
+          dbh.collection("biding").doc(`${data.bid._id}`).set({
+            bids: data.bid.bids,
+            createdAt: data.bid.createdAt,
+            productId: data.bid.productId,
+            updatedAt: data.bid.updatedAt,
+            winnerId: data.bid.winnerId,
+          })
+          this.props.navigation.navigate("MyProduct", {
+            id: 'sdf'
+          })
+          console.log("masuk then sukses");
+
+
+        })
+        .catch((err) => {
+          this.setState({ loading: false })
+          console.log(JSON.stringify(err, null, 2))
+          console.log("masuk error");
+
+        })
+    }
+>>>>>>> c3478b818a27a7d9a358a26c20b191be2d4dc6b8
   }
 
   getPermissionAsync = async () => {
@@ -130,15 +224,22 @@ class CreateProduct extends Component {
     }
   };
 
+  handleViewRef = ref => this.view = ref;
+  animation = () => this.view.fadeInRight(300)
+
   render() {
     let { image } = this.state;
     return (
-      <View style={styles.container}>
+      <AnimatedKeyboardAvoiding ref={this.handleViewRef} style={styles.container} behavior="padding" keyboardVerticalOffset={230}>
+      <NavigationEvents
+      onWillBlur={this.animation}
+      onWillFocus={this.animation}
+    />
         <View
           style={{
             height: "25%",
             width: "90%",
-            backgroundColor: "red",
+            
             justifyContent: "center",
             alignItems: "center"
           }}
@@ -159,15 +260,15 @@ class CreateProduct extends Component {
                   style={{ width: 300, height: 170 }}
                 />
               ) : (
-                <Ionicons name="ios-image" size={32} color="black" />
-              )}
+                  <Ionicons name="ios-image" size={32} color="black" />
+                )}
             </TouchableHighlight>
             {!image && <Text style={{ fontSize: 10 }}>Upload Design</Text>}
           </View>
         </View>
 
         <View
-          style={{ height: "100%", width: "90%", backgroundColor: "green" }}
+          style={{ height: "100%", width: "90%"}}
         >
           <View style={{ width: "100%", height: "100%" }}>
             <Container>
@@ -190,28 +291,32 @@ class CreateProduct extends Component {
                       placeholder="Initial Prize"
                       keyboardType="numeric"
                       onChangeText={text =>
-                        this.setState({ initialPrize: text })
+                        this.setState({ initialPrize: String(Number(text)) })
                       }
+                      value={this.state.initialPrize}
                     />
                   </Item>
                   <Item>
                     <Content>
                       <DatePicker
                         defaultDate={tomorrow}
-                        minimumDate={today}
+                        minimumDate={tomorrow}
                         maximumDate={maxDate}
                         locale={"en"}
                         timeZoneOffsetInMinutes={undefined}
                         modalTransparent={false}
                         animationType={"fade"}
                         androidMode={"default"}
-                        placeHolderText="Select Close Date"
+                        placeHolderText="Select Closed Date"
                         textStyle={{ color: "green" }}
-                        placeHolderTextStyle={{ color: "grey", fontSize: 18 }}
+                        placeHolderTextStyle={{ color: "grey", fontSize: 14 }}
                         onDateChange={this.setDate}
                         disabled={false}
                       />
                     </Content>
+                    <Text>
+                      { this.state.dateText }
+                    </Text>
                   </Item>
                   <Item>
                     <Textarea
@@ -227,8 +332,9 @@ class CreateProduct extends Component {
                       onPress={this.submitCreate}
                       style={{ width: "100%", marginTop: 10 }}
                       block
+                      disabled={this.state.loading}
                     >
-                      <Text>Create Product</Text>
+                      {!this.state.loading ? <Text>Create Product</Text> : <Spinner />}
                     </Button>
                   </Item>
                 </Form>
@@ -236,7 +342,7 @@ class CreateProduct extends Component {
             </Container>
           </View>
         </View>
-      </View>
+        </AnimatedKeyboardAvoiding>
     );
   }
 }

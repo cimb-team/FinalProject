@@ -22,6 +22,8 @@ import {
   ScrollView,
   TouchableHighlight
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 export default function eachCard(props) {
   useEffect(() => {}, []);

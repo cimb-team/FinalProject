@@ -132,7 +132,8 @@ export default function reducer(state = defaultValue, action) {
         ...state,
         productDetail: {
           ...state.productDetail,
-          loading: true
+          loading: true,
+          function: false
         }
       };
     case "SUCCESS_PROFILE":

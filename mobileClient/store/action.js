@@ -9,7 +9,6 @@ export function getHistory(token) {
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data)
         dispatch({
           type: "SUCCESS_HISTORY",
           data
