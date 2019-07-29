@@ -107,12 +107,10 @@ function Signup({ navigation, getProfile, setToken }) {
         onWillBlur={payload => {
           // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(0.2)
-          console.log('will blur',payload)
         }}
         onWillFocus={payload => {
           // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(1)
-          console.log('will focus',payload)
         }}
       />
       <Header transparent noLeft>
