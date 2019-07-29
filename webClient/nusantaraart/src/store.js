@@ -14,7 +14,7 @@ export default new Vuex.Store({
     products: [],
     categories: [],
     answers: [],
-    question: {}
+    product: {}
   },
   mutations: {
     USERLOGIN (state, payload) {
@@ -43,8 +43,8 @@ export default new Vuex.Store({
       })
       state.questions = arr
     },
-    SET_QUESTION (state, payload) {
-      state.question = payload
+    SET_PRODUCT (state, payload) {
+      state.product = payload
     },
     SET_ANSWERS (state, payload) {
       state.answers = payload
@@ -67,26 +67,17 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
-    FETCHQUESTION ({ commit, state }, payload) {
+    FETCHPRODUCT ({ commit, state }, payload) {
       axios({
         method: 'GET',
-        url: `${state.url}/question?search=${payload}`,
+        url: `${state.url}/product/${payload}`,
         headers: {
           token: state.token
         }
       })
         .then(({ data }) => {
-          commit('SET_QUESTION', data[0])
-          return axios({
-            method: 'GET',
-            url: `${state.url}/answer/${payload}`,
-            headers: {
-              token: state.token
-            }
-          })
-        })
-        .then(({ data }) => {
-          commit('SET_ANSWERS', data)
+          console.log(data)
+          commit('SET_PRODUCT', data)
         })
         .catch(error => {
           console.log(error)

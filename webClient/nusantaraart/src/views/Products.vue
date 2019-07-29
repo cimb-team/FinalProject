@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-3" v-if="islogin">
       <h2 style="text-align:center">Categories</h2>
       <div class="card text-white bg-dark mb-3" style="width: 18rem;margin-top:30px">
         <ul class="list-group list-group-flush" style="padding:20px">
