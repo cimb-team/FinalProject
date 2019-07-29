@@ -33,8 +33,6 @@ import { getProfile } from "../store/action";
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
-
-
 function ProfilePage(props) {
   useEffect(() => {
     props.getProfile(props.token);

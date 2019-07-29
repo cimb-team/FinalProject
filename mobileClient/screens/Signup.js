@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Header,
@@ -22,13 +22,18 @@ import FormAuth from "../components/FormAuth";
 import axios from "../axios";
 import { Platform, AsyncStorage, Image } from "react-native";
 import Constants from "expo-constants";
-import { connect } from "react-redux";
-import {setToken, getProfile} from '../store/action';
 
-function Signup({ navigation, setToken, getProfile }) {
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+import { getProfile, setToken } from '../store/action'
+import { connect } from 'react-redux'
+
+function Signup({ navigation, getProfile, setToken }) {
   const [name, setname] = useState("");
   const [phonenumber, setphonenumber] = useState("");
   const [loading, setloading] = useState(false);
+  const [opacity, setopacity] = useState(0.2)
+  // const SignupRef = useRef(null);
 
   function submitForm(email, password) {
     setloading(true);
@@ -69,9 +74,8 @@ function Signup({ navigation, setToken, getProfile }) {
         //   buttonStyle: { backgroundColor: "green" }
         // })
         return getProfile()
-        
       })
-      .then(()=>{
+      .then(data => {
         navigation.navigate("App");
       })
       .catch(({ response }) => {
@@ -100,12 +104,25 @@ function Signup({ navigation, setToken, getProfile }) {
         marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight
       }}
     >
+      <NavigationEvents
+        onWillBlur={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(0.2)
+        }}
+        onWillFocus={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(1)
+        }}
+      />
       <Header transparent noLeft>
+      <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
         <Body style={{ marginHorizontal: 20 }}>
           <H3>Create New Account</H3>
         </Body>
+    </Animatable.View>
       </Header>
       <Content contentContainerStyle={{ marginHorizontal: 20 }}>
+            <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
         <FormAuth
           loading={loading}
           submitForm={submitForm}
@@ -139,6 +156,7 @@ function Signup({ navigation, setToken, getProfile }) {
             {/* <Icon active name='call'/> */}
           </Item>
         </FormAuth>
+    </Animatable.View>
       </Content>
     </Container>
   );
@@ -146,11 +164,11 @@ function Signup({ navigation, setToken, getProfile }) {
 
 
 const mapDispatchToProps = {
-  getProfile,setToken
+  getProfile,
+  setToken
 };
 
 export default connect(
   null,
   mapDispatchToProps
 )(Signup);
-

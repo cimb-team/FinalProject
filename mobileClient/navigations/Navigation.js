@@ -2,8 +2,9 @@ import {
   createSwitchNavigator,
   createStackNavigator,
   createAppContainer,
-  createBottomTabNavigator
+  createBottomTabNavigator,
 } from "react-navigation";
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Products from "../screens/Products";
@@ -17,7 +18,7 @@ import Signup from "../screens/Signup";
 import Signin from "../screens/Signin";
 import Filter from "../screens/Filter";
 import Create from "../screens/CreateProduct";
-import { fromTop, fadeIn } from "react-navigation-transitions";
+// import { fromTop, fadeIn } from "react-navigation-transitions";
 
 const MyProductNav = createStackNavigator({
   
@@ -185,7 +186,7 @@ const ProfileNav = createStackNavigator({
 //   // }
 // });
 
-const MainNavigator = createBottomTabNavigator(
+const MainNavigator = createMaterialBottomTabNavigator(
   {
     Products: {
       screen: ProductsNav,
@@ -230,7 +231,7 @@ const MainNavigator = createBottomTabNavigator(
   }
 );
 
-const Auth = createBottomTabNavigator(
+const Auth = createMaterialBottomTabNavigator(
   {
     Signup: {
       screen: Signup,
@@ -255,8 +256,8 @@ const Auth = createBottomTabNavigator(
     initialRouteName: "Signup",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
-    barStyle: { backgroundColor: "#694fad" },
-    transitionConfig: () => fromTop(1000)
+    barStyle: { backgroundColor: "#FF943C" },
+    // transitionConfig: () => fromTop(1000)
   }
 );
 
@@ -269,7 +270,7 @@ export default createAppContainer(
     },
     {
       initialRouteName: "Splash",
-      transitionConfig: () => fadeIn(1000)
+      // transitionConfig: () => fadeIn(1000)
     }
   )
 );
