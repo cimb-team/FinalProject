@@ -3,6 +3,8 @@ import { ScrollView, View, Text, FlatList } from "react-native";
 import { connect } from "react-redux";
 import { getFilter } from "../store/action";
 import Card from "../components/Card";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 const Filter = props => {
   const [list, setList] = useState([]);

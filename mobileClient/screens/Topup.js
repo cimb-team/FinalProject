@@ -14,6 +14,9 @@ import {
 import { connect } from "react-redux";
 import { getProfile, toppingUp } from "../store/action";
 import Title from "../components/Title";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 function Topup(props) {
   [topup, setTopup] = useState("");
   handleChange = e => {

@@ -13,6 +13,8 @@ import {
   ScrollView,
   TouchableHighlight
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 function TopBar(props) {
   const [filter, setFilter] = useState("");

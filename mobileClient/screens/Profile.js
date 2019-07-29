@@ -30,6 +30,9 @@ import {
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { getProfile } from "../store/action";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
@@ -44,8 +47,16 @@ function ProfilePage(props) {
       .catch(err => console.log(err));
   }
 
+  const handleViewRef = ref => this.view = ref;
+  const animation = () => this.view.fadeInUp(300)
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <Animatable.View ref={handleViewRef} style={styles.container}>
+    <NavigationEvents
+      onWillBlur={animation}
+      onWillFocus={animation}
+    />
+    <ScrollView contentContainerStyle={{ alignItems: 'center' }} showsVerticalScrollIndicator={false}>
       <View
         style={{
           height: "50%",
@@ -209,6 +220,7 @@ function ProfilePage(props) {
         </View>
       </View>
     </ScrollView>
+    </Animatable.View>
   );
 }
 
@@ -232,7 +244,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
+    marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
     backgroundColor: "white"
   },
   scrollContainer: {
