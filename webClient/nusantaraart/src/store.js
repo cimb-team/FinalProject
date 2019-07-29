@@ -16,7 +16,8 @@ export default new Vuex.Store({
     categories: [],
     product: {},
     profile: {},
-    history: []
+    history: [],
+    search: false
   },
   mutations: {
     USERLOGIN(state, payload) {
@@ -38,6 +39,7 @@ export default new Vuex.Store({
     },
     ALLPRODUCTS(state, payload) {
       state.products = payload;
+      state.search = false;
     },
     MYPRODUCTS(state, payload) {
       state.myProducts = payload;
@@ -55,6 +57,7 @@ export default new Vuex.Store({
       });
       console.log(arr);
       state.products = arr;
+      state.search = true;
     },
     CATEGORY(state, payload) {
       let arr = [];
@@ -64,6 +67,7 @@ export default new Vuex.Store({
         }
       });
       state.products = arr;
+      state.search = true;
     },
     SET_PRODUCT(state, payload) {
       state.product = payload;

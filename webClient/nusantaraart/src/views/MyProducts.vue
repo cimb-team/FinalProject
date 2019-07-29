@@ -1,7 +1,7 @@
 <template>
   <div style="display:flex">
     <div class="col-9" v-if="islogin">
-      <h2 style="text-align:center">My Products</h2>
+      <h2 style="text-align:center;color:white">My Products</h2>
       <br />
       <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
         <div class="col-4" v-for="product in myProducts" :key="product._id">
@@ -10,6 +10,7 @@
       </div>
     </div>
     <div class="col-3" v-if="islogin">
+          <h2 style="text-align:center;color:white">Create</h2>
       <form @submit.prevent="create">
         <div v-if="error.create.length != 0" id="errorCreate">
           <p class="error" style="color:red;">{{ error.create }}</p>

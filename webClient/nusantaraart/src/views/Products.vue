@@ -2,14 +2,28 @@
   <div style>
     <div class="row">
       <div class="col-sm" style="display:flex;justify-content:center;align-items:center">
-        <h1 style="text-align:center;color:white;font-weight:700;margin-top:10px">Nusantara Art</h1>
+        <div style="display:flex;text-align:center;color:white;;margin-top:10px">
+          <h1 style="font-weight:700 ;color:#E51500">N</h1>
+          <h1 style="font-weight:700 ;color:#EA4333">u</h1>
+          <h1 style="font-weight:700 ;color:#EC5B4C">s</h1>
+          <h1 style="font-weight:700 ;color:#EF7266">a</h1>
+          <h1 style="font-weight:700 ;color:#F28A7F">n</h1>
+          <h1 style="font-weight:700 ;color:#F4A199">t</h1>
+          <h1 style="font-weight:700 ;color:#F7B8B2">a</h1>
+          <h1 style="font-weight:700 ;color:#F7BFB9">r</h1>
+          <h1 style="font-weight:700 ;color:#FCE9E7">a &nbsp;</h1>
+          <h1 style="font-weight:700 ;color:#FCE9E7">A</h1>
+          <h1 style="font-weight:700 ;color:#FCE9E7">r</h1>
+          <h1 style="font-weight:700 ;color:#FCE9E7">t</h1>
+        </div>
         <img
           src="https://storage.googleapis.com/orvin-savero/15644071751275856e9c3-7102-479c-9d89-b7f83f228562.png"
           style="margin-left:20px;width:60px;height:60px;border-radius:20px"
         />
       </div>
     </div>
-    <div class="row" style="margin-top: 20px">
+
+    <div class="row" style="margin-top: 15px">
       <div class="col-sm"></div>
       <div class="col-sm" style="display:flex">
         <input
@@ -30,7 +44,7 @@
       <div class="col-sm"></div>
     </div>
 
-    <div class="row" style="margin-top: 50px">
+    <div v-if="!searchs" class="row" style="margin-top: 30px">
       <div class="col-2"></div>
       <div class="col">
         <div class="bd-example">
@@ -43,7 +57,7 @@
             <div class="carousel-inner">
               <div class="carousel-item active">
                 <img
-                  :src="products[4].images[0]"
+                  :src="'https://i.pinimg.com/originals/5a/76/4e/5a764e1ec61b41b0dd664b00bfc1fcc3.jpg'"
                   class="d-block w-100"
                   style="width:200px;height: 400px"
                   alt="..."
@@ -55,7 +69,7 @@
               </div>
               <div class="carousel-item">
                 <img
-                  :src="products[5].images[0]"
+                  :src="'https://pm1.narvii.com/6855/cfd7568fbf550bc8f40a8d55cd6f4d7eb3311ad3v2_hq.jpg'"
                   class="d-block w-100"
                   style="width:200px;height: 400px"
                   alt="..."
@@ -67,7 +81,7 @@
               </div>
               <div class="carousel-item">
                 <img
-                  :src="products[6].images[0]"
+                  :src="'https://image.freepik.com/free-vector/logo-ninja-assasin_60267-219.jpg'"
                   class="d-block w-100"
                   style="width:200px;height: 400px"
                   alt="..."
@@ -101,28 +115,31 @@
       </div>
       <div class="col-2"></div>
     </div>
-    <div class="col" style="margin-top:20px">
-      <br />
-      <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
-        <div class="col-3" v-for="product in products" :key="product._id">
-          <Card :product="product"></Card>
+    <div class="row" style="margin-top:30px">
+      <div class="col" style="display:flex;justify-content:center;align-items:center">
+        <h3 style="font-weight:700 ;color:#E51500;text-align:center">Categories</h3>
+      </div>
+      <div
+        class="row"
+        style="display:flex;margin-top: 10px;justify-content:center;padding-left:50px;padding-right:50px"
+      >
+        <div v-for="category in categories" :key="category" style>
+          <button
+            @click="FETCH_ALL_PRODUCTS(category)"
+            type="button"
+            style="margin:5px;width:100px;border-radius:10px"
+            class="btn btn-secondary"
+          >{{ category }}</button>
         </div>
       </div>
     </div>
-    <div class="col-3" v-if="islogin">
-      <h2 style="text-align:center">Categories</h2>
-      <div class="card text-white bg-dark mb-3" style="width: 18rem;margin-top:30px">
-        <ul class="list-group list-group-flush" style="padding:20px">
-          <div v-for="category in categories" :key="category">
-            <li
-              class="list-group-item"
-              style="border-radius:10px;margin-bottom:5px;"
-              @click="FETCH_ALL_PRODUCTS(category)"
-            >
-              <div style="cursor:pointer;color:black">{{ category }}</div>
-            </li>
-          </div>
-        </ul>
+
+    <div class="col" style="margin-top:10px">
+      <br />
+      <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
+        <div class="" v-for="product in products" :key="product._id">
+          <Card :product="product"></Card>
+        </div>
       </div>
     </div>
   </div>
@@ -145,6 +162,9 @@ export default {
     Card
   },
   computed: {
+    searchs() {
+      return this.$store.state.search;
+    },
     products() {
       return this.$store.state.products;
     },
