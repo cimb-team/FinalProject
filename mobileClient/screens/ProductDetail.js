@@ -9,7 +9,8 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  KeyboardAvoidingView
 } from "react-native";
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
@@ -21,11 +22,11 @@ import * as Animatable from "react-native-animatable";
 import formatCash from "../helpers";
 
 function ProductDetail(props) {
-  const [bid, setbid] = useState("");
+  const [bid, setbid] = useState("0");
   const [bidDariFirebase, setbidDariFirebase] = useState("");
   const [warningMessage, setWarningMessage] = useState("");
-  handleChange = e => {
-    setbid(e);
+  handleChange = text => {
+    setbid(String(Number(text.replace(/[^0-9]+/g, ''))));
   };
   postbid = () => {
     let isLargerThan = false;
@@ -98,7 +99,8 @@ function ProductDetail(props) {
   }, [props.ProductDetailfunction]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
+    keyboardVerticalOffset={330}>
       <ScrollView>
         {!props.productDetailLoading && props.productDetailData && (
           <Fragment>
@@ -382,7 +384,7 @@ function ProductDetail(props) {
           </Fragment>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

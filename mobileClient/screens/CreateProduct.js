@@ -67,7 +67,8 @@ class CreateProduct extends Component {
       details: "",
       imageMentah: "",
       dateText: moment(tomorrow).format("dddd, MMMM Do YYYY"),
-      loading: false
+      loading: false,
+      KeyboardView: false
     };
     this.setDate = this.setDate.bind(this);
   }
@@ -218,7 +219,8 @@ class CreateProduct extends Component {
         ref={this.handleViewRef}
         style={styles.container}
         behavior="padding"
-        keyboardVerticalOffset={230}
+        keyboardVerticalOffset={270}
+        enabled={this.state.KeyboardView}
       >
         <NavigationEvents
           onWillBlur={this.animation}
@@ -279,7 +281,7 @@ class CreateProduct extends Component {
                       placeholder="Initial Prize"
                       keyboardType="numeric"
                       onChangeText={text =>
-                        this.setState({ initialPrize: String(Number(text)) })
+                        this.setState({ initialPrize: String(Number(text.replace(/[^0-9]+/g, ''))) })
                       }
                       value={this.state.initialPrize}
                     />
@@ -311,6 +313,8 @@ class CreateProduct extends Component {
                       rowSpan={5}
                       bordered
                       placeholder="Description"
+                      onFocus={() => this.setState({ KeyboardView: true })}
+                      onBlur={() => this.setState({ KeyboardView: false })}
                     />
                   </Item>
                   <Item style={{ width: "100%", marginTop: 10 }}>
