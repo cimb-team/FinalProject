@@ -25,7 +25,7 @@ const height = width * 0.6;
 
 function Product(props) {
 
-  
+  const [HCarousel, setHCarousel] = useState(34.5)
   const [images, setImage] = useState([
     {
       id: 1,
@@ -55,13 +55,22 @@ function Product(props) {
   useEffect(() => {
     props.getAllProducts(props.token);
   }, []);
+  
+
 
   return (
     <View style={styles.container}>
       <View style={{ width: "100%" }}>
         <TopBar navigation={props.navigation} screen={'products'} />
       </View>
-      <View style={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={{justifyContent : 'center', alignItems:'center'}}  showsVerticalScrollIndicator={false} style={{
+          // height: "100%",
+          width:"100%",
+          // marginTop: 6,
+          // marginBottom: "25%"
+          
+        }}>
+    
         <ScrollView
           horizontal
           pagingEnabled
@@ -69,7 +78,7 @@ function Product(props) {
         > 
           {images.map(image => (
             <View style={{ width: "33.35%", height: "100%" }} key={image.id}>
-              <View style={{backgroundColor:'white', width:width, height:height, justifyContent:'center', alignItems:'center'}}>
+              <View style={{backgroundColor:'#DEDEDE', width:width, height:height, justifyContent:'center', alignItems:'center'}}>
                 <Image style={{width : "45%", height:'75%'}}  source={image.uri}></Image></View>
               <View
                 style={{
@@ -78,7 +87,7 @@ function Product(props) {
                   width: "100%",
                   marginTop: "25%",
                   position: "absolute"
-                }}
+                }} 
               >
                 
                   <Text
@@ -101,22 +110,18 @@ function Product(props) {
               </View>
             </View>
           ))}
-        </ScrollView>
-      </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={{
-          // height: "100%",
-          width: "90%",
-          // marginTop: 6,
-          // marginBottom: "25%"
-        }}>
+        </ScrollView> 
+        
           {props.allProductsLoading ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> : (
             <Fragment>
               {props.allProductsData.map(product => (
+                <View style={{width:'90%'}} key={product._id}>
                 <Card
-                  key={product._id}
+                  
                   product={product}
                   navigation={props.navigation}
                 />
+                </View>
               ))}
             </Fragment>
           )}
@@ -146,11 +151,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
     backgroundColor: "white"
-  },
-  scrollContainer: {
-    height: "34.5%",
-    width: "100%",
-    backgroundColor: "transparent"
   },
   image: {
     width,

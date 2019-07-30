@@ -67,16 +67,15 @@ function Signin({ navigation, getProfile, setToken }) {
         setloading(false);
         Toast.show({
           style: {
-            marginBottom: "11%",
+            marginBottom: "20%",
             marginHorizontal: "5%",
             borderRadius: 10,
-            backgroundColor: "rgba(236, 232, 232, 0.5)"
+            backgroundColor : 'transparent'
           },
           text: response.data.message,
-          buttonText: "OK",
           duration: 3000,
           type: "danger",
-          textStyle: { color: "black", marginBottom: 20 },
+          textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
           // buttonTextStyle: { color: "black" },
           buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
         });
