@@ -34,7 +34,7 @@ function Signin({ navigation, getProfile, setToken }) {
   const { width } = Dimensions.get("window");
   const { height } = Dimensions.get("window");
 
-  function submitForm(email, password, navigation) {
+  function submitForm(email, password) {
     setloading(true);
     axios({
       method: "post",

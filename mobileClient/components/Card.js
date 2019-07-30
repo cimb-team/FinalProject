@@ -21,7 +21,8 @@ import {
   Platform,
   ScrollView,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from "react-native";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
@@ -43,8 +44,8 @@ export default function eachCard(props) {
         })
       }
     >
-      <Card>
-        <CardItem>
+      <Card style={{borderRadius:10, borderColor:'#EE5537'}}> 
+        <CardItem style={{borderTopLeftRadius:10,borderTopRightRadius:10,borderBottomLeftRadius:10,borderBottomRightRadius:10}} >
           <Body style={{ flexDirection: "row", width: "100%", }}>
             <View style={{ width: "35%",height:'100%',alignItems:'center' }}>
               <Image
@@ -55,28 +56,25 @@ export default function eachCard(props) {
             <View style={{ width: "65%", height: "100%", flex: 1 }}>
               <View style={{ height: height*0.12, paddingLeft:10 }}>
                 <Text
-                  style={{ fontSize: 22, fontWeight: "bold", marginTop: 3 }}
+                  style={{ fontSize: 22, fontWeight: "bold", marginTop: 3, color:'#EE5537' }}
                 >
                   {props.product.title}
                 </Text>
-                <Text style={{ fontSize: 13 }}>{props.product.details}</Text>
+                <Text style={{ fontSize: 13 }}>{`${props.product.details.substring(1, 80)}....`}</Text>
               </View>
               <View
                 style={{
                   width: "100%",
-                  height: height*0.03,
-                  flexDirection: "row",
-                  alignItems: "flex-end",
-                  justifyContent : 'space-around'
+                  flexDirection: "column",
+                  paddingLeft:10
                 }}
               >
-                <View style={{ width: "40%" }}>
-                  <Text style={{ fontSize: 11 }}> category : {props.product.category}</Text>
+                <View style={{  }}>
+                  <Text style={{ fontSize: 11 }}>Artist : <Text style={{ color: "#EE5537"}}> {props.product.userId.name}</Text></Text>
+                  
                 </View>
-                <View style={{ width: "40%" }}>
-                  <Text style={{ fontSize: 11 }}>
-                   Artist :  {props.product.userId.name}
-                  </Text>
+                <View style={{ }}>
+                  <Text style={{ fontSize: 11 }}>Category :<Text style={{ color: "#EE5537"}}> {props.product.category}</Text></Text>
                 </View>
               </View>
             </View>

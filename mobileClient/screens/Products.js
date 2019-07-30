@@ -6,6 +6,7 @@ import {
   Dimensions,
   Platform,
   Text,
+  ActivityIndicator
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Card from "../components/Card";
@@ -20,86 +21,35 @@ import * as Animatable from 'react-native-animatable';
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
-const ProductDummy = [
-  {
-    id: 1,
-    title: "Street Art Grafity",
-    price: "1.000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "Rendy",
-    uri: require("../assets/productDummy/illustrator1.jpg")
-  },
-  {
-    id: 2,
-    title: "Mario Characther Design",
-    price: "1.500.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "sukma",
-    uri: require("../assets/productDummy/character1.jpg")
-  },
-  {
-    id: 3,
-    title: "Angry Face Illustration",
-    price: "6.000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "Jani",
-    uri: require("../assets/productDummy/illustrator2.jpg")
-  },
-  {
-    id: 4,
-    title: "Lion Face Illustrator",
-    price: "3.000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "Karin",
-    uri: require("../assets/productDummy/illustrator4.jpg")
-  },
-  {
-    id: 5,
-    title: "Monkey Astronaut",
-    price: "2.000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    uri: require("../assets/productDummy/illustrator7.jpg")
-  },
-  {
-    id: 6,
-    title: "Street Art Grafity",
-    price: "1.000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "Garin",
-    uri: require("../assets/productDummy/illustrator1.jpg")
-  },
-  {
-    id: 7,
-    title: "Street Art Grafity",
-    price: "5000.000",
-    desc: "Now lets try for a Horizontal gradient. gradient...",
-    artist: "Kevin",
-    uri: require("../assets/productDummy/illustrator6.jpg")
-  }
-];
+
 
 function Product(props) {
+
+  
   const [images, setImage] = useState([
     {
       id: 1,
-      title: "Street Art Grafity",
+      title: "Astronaut",
+      artist : 'Rendy Prayoga',
       price: "12000",
       desc: "Now lets try for a Horizontal gradient. gradient...",
-      uri: "https://i.ibb.co/p1QwTC7/illustrator7.jpg"
+      uri: require('../assets//productDummy/1.png')
     },
     {
       id: 2,
-      title: "Floral",
+      title: "Mario",
       price: "12000",
+      artist : 'Sandy',
       desc: "Now lets try for a Horizontal gradient. gradient...",
-      uri: "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
+      uri: require('../assets//productDummy/13.png')
     },
     {
       id: 3,
-      title: "Nature Food Logo",
+      title: "Mysterius",
       price: "12000",
+      artist : 'Merry',
       desc: "Now lets try for a Horizontal gradient. gradient...",
-      uri: "https://i.ibb.co/prP4KkY/illustrator1.jpg"
+      uri: require('../assets//productDummy/14.png')
     }
   ]);
   useEffect(() => {
@@ -116,38 +66,38 @@ function Product(props) {
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={true}
-        >
+        > 
           {images.map(image => (
             <View style={{ width: "33.35%", height: "100%" }} key={image.id}>
-              <Image style={styles.image} source={{ uri: image.uri }} />
+              <View style={{backgroundColor:'white', width:width, height:height, justifyContent:'center', alignItems:'center'}}>
+                <Image style={{width : "45%", height:'75%'}}  source={image.uri}></Image></View>
               <View
                 style={{
                   backgroundColor: "transparent",
-                  height: "35%",
+                  height: "55%",
                   width: "100%",
-                  marginTop: "45%",
+                  marginTop: "25%",
                   position: "absolute"
                 }}
               >
-                <LinearGradient
-                  colors={["transparent", "#524F4F"]}
-                  style={{ flex: 1 }}
-                >
+                
                   <Text
                     style={{
-                      color: "black",
+                      color: "#EE5537",
                       fontWeight: "bold",
-                      fontSize: 18,
-                      marginTop: 10,
-                      marginLeft: 10
+                      fontSize: 25,
+                      marginTop: '12%',
+                      marginLeft: '5%'
                     }}
                   >
                     {image.title}
                   </Text>
-                  <Text style={{ color: "black", marginLeft: 10 }}>
+                  <Text style={{ color: "#EE5537", marginLeft: '5%' }}>
+                    {`by : ${image.artist}`}
+                  </Text>
+                  <Text style={{ color: "#EE5537", marginLeft: '5%' }}>
                     {image.desc}
                   </Text>
-                </LinearGradient>
               </View>
             </View>
           ))}
@@ -159,7 +109,7 @@ function Product(props) {
           // marginTop: 6,
           // marginBottom: "25%"
         }}>
-          {!props.allProductsLoading && (
+          {props.allProductsLoading ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> : (
             <Fragment>
               {props.allProductsData.map(product => (
                 <Card

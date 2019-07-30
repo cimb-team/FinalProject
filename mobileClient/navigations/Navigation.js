@@ -218,16 +218,13 @@ const MainNavigator = createMaterialBottomTabNavigator(
   },
   {
     initialRouteName: "Products",
-    tabBarOptions: {
-      activeTintColor: "lightblue",
-      inactiveTintColor: "white",
+      activeTintColor: "#EE5537",
+      inactiveTintColor: "grey",
       labelStyle: {
         fontSize: 14
       },
-      style: {
-        backgroundColor: "#1F1F1F"
-      }
-    }
+      barStyle: { backgroundColor: "#FFFFFF" }
+    
   }
 );
 
@@ -273,6 +270,7 @@ const Auth = createMaterialBottomTabNavigator(
     initialRouteName: "Signin",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
+    
     barStyle: { backgroundColor: "#F3411E" },
     // transitionConfig: () => fromTop(1000)
   }
