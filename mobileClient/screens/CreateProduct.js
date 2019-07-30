@@ -118,6 +118,7 @@ class CreateProduct extends Component {
     console.log(errorMessage);
     console.log(this.state);
     if (errorMessage.length > 0) {
+      this.setState({ loading: false });
       Toast.show({
         style: {
           marginBottom: "11%",
