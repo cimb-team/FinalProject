@@ -183,8 +183,6 @@ Nusantara Art Team`;
               }
             })
           })
-          Product.deleteMany({})
-          Bid.deleteMany({})
         })
         .catch(err => {
           console.log(err)
