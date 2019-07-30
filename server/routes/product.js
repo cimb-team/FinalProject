@@ -20,5 +20,6 @@ routes.get("/:id", ProductController.findById);
 routes.get("/", ProductController.findAll);
 routes.delete("/:id", Authorization, ProductController.deleteOne);
 routes.patch("/:id/addbid", ProductController.addBid);
+routes.patch("/:id/quickcountdown", ProductController.quickcountdown)
 
 module.exports = routes;
