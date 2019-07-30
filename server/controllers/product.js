@@ -8,7 +8,9 @@ class ProductController {
 
   static create(req, res, next) {
     let product;
-    console.log(req.body)
+    // let event = new Date()
+    // event.setSeconds(event.getSeconds()+30);
+
     Product.create({
       userId: req.decoded.id,
       title: req.body.title,
@@ -128,36 +130,58 @@ class ProductController {
    * PATCH /product/:id/addbid
    */
   static addBid(req, res, next) {
-    console.log(req.body, '==')
-    Bid.findOneAndUpdate(
-      {
+    Promise.all([
+      User.findById(
+        req.decoded.id,
+      ),
+      Bid.findOne({
         productId: req.params.id
-      },
-      {
-        $push: {
-          bids: {
-            bidderId: req.decoded.id,
-            price: req.body.price,
-            dateIssued: new Date()
-          }
-        }
-      },
-      { new: true }
-    )
+      })
+    ])
+    .then(results => {
+      let [userData, bidData] = results
+      let adding = 0
+      if(bidData.bids.length === 0){
+        adding = req.body.price
+      }
+      else {
+        let lastBid = bidData.bids.filter(bid => bid.bidderId.equals(req.decoded.id))
+        if(lastBid.length > 0)
+          adding = req.body.price - lastBid[lastBid.length - 1].price
+        else
+          adding = req.body.price
+      }
+      if(userData.balance - adding >= 0){
+        bidData.bids.push({
+          bidderId: req.decoded.id,
+          price: req.body.price,
+          dateIssued: new Date()
+        })
+        userData.balance -= adding
+        return Promise.all([bidData.save({ validateBeforeSave: false }),userData.save({ validateBeforeSave: false })])
+      }
+      else  
+        throw {code: 400, message: 'Your balance is not enough'}
+    })
+    .then(results2 => {
+      res.status(201).json(results2[0]);
+      // let { _id, balance } = userData;
+      // res.status(200).json({ ...r, user: { _id, balance } });
+    })
+    .catch(next);
+  }
+
+  // QUICK TIMER FOR PRESENTATION
+  static quickcountdown(req, res, next){
+    let event = new Date()
+    event.setSeconds(event.getSeconds()+90);
+
+    Product.findByIdAndUpdate(req.params.id, {
+      status: "open",
+      closedDate: event
+    }, { new: true })
       .then(row => {
-        let final;
-        let r = row;
-        res.status(201).json(row);
-        User.findByIdAndUpdate(
-          req.decoded.id,
-          { $inc: { balance: -Math.abs(req.body.price) } },
-          { new: true, useFindAndModify: true }
-        )
-          .then(userData => {
-            let { _id, balance } = userData;
-            res.status(200).json({ ...r, user: { _id, balance } });
-          })
-          .catch(next);
+        res.status(201).json(row)
       })
       .catch(next);
   }
