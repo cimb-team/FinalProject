@@ -7,6 +7,9 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { mapActions } from "vuex";
+
+console.log(THREE, "=============")
+console.log("masuk")
 export default {
   name: "app",
   data() {

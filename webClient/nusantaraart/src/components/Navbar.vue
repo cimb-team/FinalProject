@@ -68,6 +68,8 @@ export default {
       localStorage.clear();
     },
     ...mapActions(["FETCH_ALL_PRODUCTS"])
+  },
+  created (){
   }
 };
 </script>

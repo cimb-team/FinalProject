@@ -12,9 +12,12 @@
     "babel-polyfill": "^6.26.0",
     "core-js": "^2.6.5",
     "firebase": "^6.3.3",
+    "three": "^0.106.2",
+    "three-mtl-loader": "^1.0.2",
     "vue": "^2.6.10",
     "vue-picture-input": "^2.1.6",
     "vue-router": "^3.0.3",
+    "vue-threejs": "^0.2.0-alpha.1",
     "vuetify": "^2.0.2",
     "vuex": "^3.0.1"
   },
