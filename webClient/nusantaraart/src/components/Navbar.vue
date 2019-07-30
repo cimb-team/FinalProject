@@ -22,7 +22,14 @@
         <li class="nav-item active">
           <router-link v-if="islogin" to="/myproducts">
             <a class="navbar-brand" style="font-size: 18px; color: white"
-              > <i class="fa fa-fw fa-camera-retro"></i> My Products <span class="sr-only">(current)</span></a
+              > <i class="fa fa-fw fa-camera-retro"></i> My Arts <span class="sr-only">(current)</span></a
+            >
+          </router-link>
+        </li>
+                <li class="nav-item active">
+          <router-link v-if="islogin" to="/sell">
+            <a class="navbar-brand" style="font-size: 18px; color: white"
+              > <i class="fa fa-fw fa-plus-square"></i> Sell <span class="sr-only">(current)</span></a
             >
           </router-link>
         </li>

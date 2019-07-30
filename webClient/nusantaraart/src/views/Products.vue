@@ -12,9 +12,9 @@
           <h1 style="font-weight:700 ;color:#F7B8B2">a</h1>
           <h1 style="font-weight:700 ;color:#F7BFB9">r</h1>
           <h1 style="font-weight:700 ;color:#FCE9E7">a &nbsp;</h1>
-          <h1 style="font-weight:700 ;color:#FCE9E7">A</h1>
-          <h1 style="font-weight:700 ;color:#FCE9E7">r</h1>
-          <h1 style="font-weight:700 ;color:#FCE9E7">t</h1>
+          <h1 style="font-weight:700 ;color:#FFFFFF">A</h1>
+          <h1 style="font-weight:700 ;color:#FFFFFF">r</h1>
+          <h1 style="font-weight:700 ;color:#FFFFFF">t</h1>
         </div>
         <img
           src="https://storage.googleapis.com/orvin-savero/15644071751275856e9c3-7102-479c-9d89-b7f83f228562.png"
@@ -117,11 +117,11 @@
     </div>
     <div class="row" style="margin-top:30px">
       <div class="col" style="display:flex;justify-content:center;align-items:center">
-        <h3 style="font-weight:700 ;color:#E51500;text-align:center">Categories</h3>
+        <h3 style="font-weight:700 ;color:white;text-align:center">Categories</h3>
       </div>
       <div
         class="row"
-        style="display:flex;margin-top: 10px;justify-content:center;padding-left:50px;padding-right:50px"
+        style="display:flex;margin-top: 10px;justify-content:center;padding-left:80px;padding-right:80px"
       >
         <div v-for="category in categories" :key="category" style>
           <button
@@ -133,8 +133,10 @@
         </div>
       </div>
     </div>
-
-    <div class="col" style="margin-top:10px">
+     <div class="col" style="display:flex;justify-content:center;align-items:center;margin-top:20px">
+        <h3 style="font-weight:700 ;color:white;text-align:center">Arts</h3>
+      </div>
+    <div class="col" style="margin-top:0px">
       <br />
       <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
         <div class="" v-for="product in products" :key="product._id">

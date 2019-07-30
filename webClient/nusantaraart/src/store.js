@@ -86,7 +86,7 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data);
+          console.log(data, "historryyyyyy");
           commit("HISTORY", data);
         })
         .catch(error => {
