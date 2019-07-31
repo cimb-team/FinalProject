@@ -64,25 +64,22 @@ const Filter = props => {
   }, []);
 
   return (
-
+    <ScrollView>
       <>
         {list.length === 0
         ?  <View style={{width:'100%', alignItems:'center'}}><Image style={{width:200, height:80, marginTop:'20%'}} source={require('../assets/notfound.png')}></Image></View>
         : list.length >= 1 
         ?
-
           list.map(product => (
             <Card
               key={product._id}
               product={product}
               navigation={props.navigation}
             />
-
           ))
           :  <Image style={{width:300, height:200, marginTop:'20%'}} source={require('../assets/error.png')}></Image>
           }
       </>
-
     </ScrollView>
   );
 };

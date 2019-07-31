@@ -162,6 +162,8 @@ class CreateProduct extends Component {
         }
       })
         .then(({ data }) => {
+          console.log("Masuk axios create Product");
+          
           this.setState({ loading: false });
           this.props.getAllProducts(this.props.token);
           this.props.getMyProducts(this.props.token);
