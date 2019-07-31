@@ -86,15 +86,6 @@ const MyProductNav = createStackNavigator({
 });
 
 const ProductsNav = createStackNavigator({
-  ProductDetail: {
-    screen: ProductDetail,
-    navigationOptions: {
-      header: null,
-      headerStyle: {
-        backgroundColor: "white"
-      }
-    }
-  },
   Products: {
     screen: Products,
     navigationOptions: {
@@ -104,7 +95,15 @@ const ProductsNav = createStackNavigator({
       }
     }
   },
-  
+  ProductDetail: {
+    screen: ProductDetail,
+    navigationOptions: {
+      header: null,
+      headerStyle: {
+        backgroundColor: "white"
+      }
+    }
+  },
   FilterProduct: {
     screen: Filter,
     navigationOptions: {

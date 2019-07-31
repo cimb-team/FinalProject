@@ -1,7 +1,7 @@
 export default function formatCash(num) {
   var p = num.toFixed(2).split(".");
   return (
-    "Rp" +
+    "Rp " +
     p[0]
       .split("")
       .reverse()

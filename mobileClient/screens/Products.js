@@ -63,13 +63,10 @@ function Product(props) {
       <View style={{ width: "100%" }}>
         <TopBar navigation={props.navigation} screen={'products'} />
       </View>
-      <ScrollView contentContainerStyle={{justifyContent : 'center', alignItems:'center'}}  showsVerticalScrollIndicator={false} style={{
-          // height: "100%",
-          width:"100%",
-          // marginTop: 6,
-          // marginBottom: "25%"
-          
-        }}>
+      <ScrollView 
+      contentContainerStyle={{justifyContent : 'center', alignItems:'center'}}  
+      showsVerticalScrollIndicator={false} 
+      style={{ width:"100%"}}>
     
         <ScrollView
           horizontal

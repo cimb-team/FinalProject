@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
   Text,
   View,
   Image,
@@ -14,6 +13,7 @@ import {
   ActivityIndicator,
   Slider
 } from "react-native";
+import { Container, Header,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body } from 'native-base';
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
@@ -22,8 +22,9 @@ import { NavigationEvents } from "react-navigation";
 import * as Animatable from "react-native-animatable";
 
 import formatCash from "../helpers";
+import Products from "./Products";
 
-function ProductDetail(props) {
+function ProductDetail(props) { 
   const [bid, setbid] = useState("");
   const [bidSlider, setbidslider] = useState(0)
   const [bidDariFirebase, setbidDariFirebase] = useState("");
@@ -31,14 +32,16 @@ function ProductDetail(props) {
   const { width } = Dimensions.get("window");
   const { height } = Dimensions.get("window");
   handleChange = e => {
+    console.log(e);
+    
     setbid(e);
   };
 
-  setBidValue = (er) => {
-      console.log(er);
-      
-  }
   postbid = () => {
+    console.log(bid, "<<<<<<<<<<<Bid")
+    console.log(props.productDetailData.initialPrice, "<<<<<<<<<<< bid")
+    console.log()
+    
     let isLargerThan = false;
     if (bid > props.productDetailData.initialPrice) {
       if (bidDariFirebase) {
@@ -51,9 +54,14 @@ function ProductDetail(props) {
         }
       }
     }
+    console.log(isLargerThan, "<<< large ");
+    console.log(props.currentBalance, "<<<<<<<<<<<< duit gue");
+    
+    
 
     if (isLargerThan) {
       if (bid <= props.currentBalance) {
+        console.log("Masuk");
         let arr1 = bidDariFirebase.bids;
         arr1.unshift({
           bidderId: props.bidderId,
@@ -90,57 +98,68 @@ function ProductDetail(props) {
 
 
 
-  useEffect(() => {
-    props.getProductDetail(props.token, '5d3f6a3b33e440292c43a52b');
-    dbh
-    .collection("biding")
-    .doc(`5d3f6a3b33e440292c43a52c`)
-    .onSnapshot(function(doc) {
-      console.log("XXXXX", doc.data(), "====");
-      setbidDariFirebase(doc.data());
-    });
-  }, []);
-
-
-
-
   // useEffect(() => {
-  //   if (props.productDetailData._id != props.navigation.state.params.id) {
-  //     props.getProductDetail(props.token, props.navigation.state.params.id);
-  //   } else if (props.ProductDetailfunction) {
-  //     dbh
-  //       .collection("biding")
-  //       .doc(`${props.productDetailData.bid._id}`)
-  //       .onSnapshot(function(doc) {
-  //         console.log("XXXXX", doc.data(), "====");
-  //         setbidDariFirebase(doc.data());
-  //       });
-  //   } else {
-  //     console.log(
-  //       props.navigation.state.params.id,
-  //       "++++++++++++++++++++++++++++"
-  //     );
+  //   console.log(props.bidderId, "ini dari sstore login=========================")
+  //   props.getProductDetail(props.token, '5d3f6a3b33e440292c43a52b');
+  //   dbh
+  //   .collection("biding")
+  //   .doc(`5d3f6a3b33e440292c43a52c`)
+  //   .onSnapshot(function(doc) {
+  //     console.log("XXXXX", doc.data(), "===="); 
+  //     const dataBaru = doc.data()
+  //     setbidDariFirebase(doc.data());
+  //     setbid(Number(dataBaru.bids[0].price + 1))
+  //   });
+  // }, []);
 
-  //     props.getProductDetail(props.token, props.navigation.state.params.id);
-  //   }
-  // }, [props.ProductDetailfunction]);
+
+
+
+  useEffect(() => {
+    if (props.productDetailData._id != props.navigation.state.params.id) {
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    } else if (props.ProductDetailfunction) {
+      dbh
+        .collection("biding")
+        .doc(`${props.productDetailData.bid._id}`)
+        .onSnapshot(function(doc) {
+          console.log("XXXXX", doc.data(), "====");
+          const dataBaru = doc.data()
+          setbidDariFirebase(doc.data());
+          if(dataBaru.bids.length !== 0) {
+            setbid(Number(dataBaru.bids[0].price + 1))
+          } else {
+            setbid(Number(props.productDetailData.initialPrice))
+          }
+        });
+    } else {
+      console.log(
+        props.navigation.state.params.id,
+        "++++++++++++++++++++++++++++"
+      );
+
+      props.getProductDetail(props.token, props.navigation.state.params.id);
+    }
+  }, [props.ProductDetailfunction]);
 
   return (
     <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={{justifyContent:'center', alignItems:'center'}}>
-          <View style={{width:width*1, height:height*2, backgroundColor : 'white',marginTop:height*0.4, alignItem:'center', }}>
-             <View style={{width: width*1,height: 132,alignItems: "center",justifyContent: "center"}}>
+        <ScrollView contentContainerStyle={{ alignItems:'center'}}>
+          <View style={{width:width*1, backgroundColor : 'white',marginTop:height*0.4, alignItem:'center',flex:1 }}>
+             <View style={{width: width*1,alignItems: "center",justifyContent: "center"}}>
                   <View style={{width:"85%", alignItems:'center',marginTop:'22%'}}>
-                      <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>ASTRONOUT</Text>
+                      <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>{props.productDetailData.title}</Text>
                   </View>
-                  <View style={{width:"85%", alignItems:'center'}}>
-                      <Text style={{fontSize:14, fontWeight:'bold', color:'#EE5537'}}>Andhika Mahesa</Text>
+                  {props.productDetailData.userId &&
+                    <View style={{width:"85%", alignItems:'center'}}>
+                      <Text style={{fontSize:14, fontWeight:'bold', color:'#8B8B8B'}}>{props.productDetailData.userId.name}</Text>
                   </View>
+                  }
              </View> 
 
 
 
-             <View style={{width: width*1,marginTop:30,alignItems: "center",justifyContent: "center", }}>
+             <View style={{width: width*1,  marginTop:30,marginBottom : 10, alignItems: "center",justifyContent: "center", }}>
                   <View style={{width:"85%",}}>
                       <Text  style={{fontSize:12,textAlign:'justify', color:'#8B8B8B', fontWeight:'bold'}}>
                       The expression or application of human creative skill and imagination, typically in a visual form such as painting or sculpture, producing works to be appreciated primarily for their beauty or emotional power
@@ -148,7 +167,7 @@ function ProductDetail(props) {
                       The expression or application of human creative skill and imagination, typically in a visual form such as painting or sculpture, producing works to be appreciated primarily for their beauty or emotional power
 
                       </Text>
-                  </View>
+                  </View> 
              </View> 
 
 
@@ -164,29 +183,131 @@ function ProductDetail(props) {
              </View> 
 
 
-             <View style={{width: width*1,height: 132,alignItems: "center",justifyContent: "center"}}>
-                  <View style={{width:"85%", alignItems:'center'}}>
-                      <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>PLACE YOUR BID</Text>
-                      <Text>{bidSlider}</Text>
-        <Slider
-          minimumValue={1}
-          maximumValue={700}
-          minimumTrackTintColor="#1EB1FC"
-          maximumTractTintColor="#1EB1FC"
-          step={1}
-          value={4}
-          onValueChange={value => setBidValue(value)}
-          style={styles.slider}
-          thumbTintColor="#1EB1FC"
-        />
+            {
+              props.productDetailData.userId && 
+               props.productDetailData.userId._id !== props.bidderId &&
+
+              <View style={{width: width*1,height: 225,alignItems: "center"}}>
+                  <View style={{width:"85%",height:'100%', alignItems:'center', }}>
+                      <Card style={{width:'100%', height:'100%', }}>
+                          <CardItem>
+                            <Body>
+                                  <View style={{width:'100%',height:'100%', alignItems:'center'}}>
+                                  {bidDariFirebase.bids ? 
+                              <React.Fragment>
+                              <View style={{width:"100%", alignItems:'center',}}>
+                                <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>PLACE YOUR BID</Text>
+                              </View>
+                              <View style={{width:'100%', flexDirection:'row', marginTop:10, marginBottom:10,}}>
+                              <View style={{width:'50%',alignItems:'center',  }}>
+                              <Text>{`Current Price`}</Text>
+                             {
+                               bidDariFirebase.bids.length !== 0 ?
+                               <Text> {formatCash(Number(bidDariFirebase.bids[0].price))}</Text>
+                               :
+                               <Text> {9090}</Text>
+                             }
+                              
+                                </View>
+                                <View style={{width:'50%',alignItems:'center'}}>
+                                <Text>{`Your Bid`}</Text>
+                                <Text> {formatCash(Number(bid))}</Text>
+                                </View>
+                              </View>
+                              <View style={{width:'100%',height:50, alignItems:'center'}}>
+                              <Slider
+                                minimumValue={12000000}
+                                maximumValue={45000000}
+                                minimumTrackTintColor="#FF0000"
+                                maximumTractTintColor="#F62020"
+                                step={2}
+                                value={4}
+                                onValueChange={value => handleChange(value)}
+                                style={styles.slider}
+                                thumbTintColor="#EE5537"
+                              /> 
+                              </View>
+
+                              <View>
+                                <Button rounded 
+                                style={{backgroundColor:'#EE5537', padding:20}}
+                                onPress={postbid}
+                                > 
+                                    <Text style={{color:'white'}}>Place Bid</Text>
+                                </Button>
+                              </View>
+
+                              </React.Fragment> : <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View>
+                              }
+                                  </View>
+                            </Body>
+                          </CardItem>
+                      </Card>
                   </View>
-             </View> 
-             
-             
+              </View>
+            }
+
+
+            <View style={{width: width*1,marginTop:'15%', alignItems: "center",justifyContent: "center"}}>
+                <View style={{width:'85%',marginTop:'5%'}}>
+                    <Card style={{width:'100%',alignItems:'center'}}>
+                       <CardItem>
+                         <Body>
+                            <View style={{width:'100%', alignItems:'center'}}>
+                                <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>BID HISTORY</Text>
+                            </View>
+                            <View style={{width:'100%'}}>
+                              <Content>
+                                  <Card>
+                                    <List> 
+                                
+                                  {
+                                    bidDariFirebase.bids  ? (
+                                      bidDariFirebase.bids.map((product, index) => (
+                                        <ListItem key={index}>
+                                          <Left>
+                                            <Text>{formatCash(Number(product.price))}</Text>
+                                          </Left>
+                                          <Right style={{width:100}}>
+                                            {
+                                              product.bidderId === props.bidderId ? 
+                                              <Badge style={{justifyContent:'center', backgroundColor:'#EE5537'}}>
+                                              <Text style={{color:'white'}}>You</Text>
+                                            </Badge>
+                                            :
+                                              <Text style={{color:'black'}}>{`User Id : ${product.bidderId.substring(18)}`}</Text>
+                                            }
+                                          </Right>
+                                        </ListItem>
+                                      ))
+                                    ) : <View style={{justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> 
+                                  }
+                                        
+
+                                    </List>
+                                  </Card>
+                                </Content>
+                            </View>
+                            {
+                               props.productDetailData ?
+                            <View style={{width:'100%', alignItems:'center'}}>
+                                <Text style={{fontSize:15, fontWeight:'bold', color:'#8B8B8B'}}>{`Initial Prize : ${formatCash(Number(props.productDetailData.initialPrice))}`}</Text>
+                            </View>
+                            : <Text>0</Text>
+                             }
+                              
+                          </Body>
+                      </CardItem>
+                    </Card>
+               </View>
+            </View>
+
+
+
           </View>
           </ScrollView>
         
-          <View style={{width:width*1, height:height*0.5, borderBottomLeftRadius:70, backgroundColor : '#D7D7D7', position:'absolute'}}>
+         <View style={{width:width*1, height:height*0.5, borderBottomLeftRadius:70, backgroundColor : '#D7D7D7', position:'absolute'}}>
           {props.productDetailLoading ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> :
            props.productDetailData ? <View style={{width: width*1,height: height*0.5,alignItems: "center",justifyContent: "center"}}>
            <Image style={{width: "80%",height: "80%",}} source={{ uri: props.productDetailData.images[0]}}/>
@@ -225,8 +346,7 @@ const styles = StyleSheet.create({
     alignItems : 'center'
   },
   slider: {
-    position: 'absolute',
-    marginTop: 100,
+    marginTop: 10,
     width: 200,
   },
   text: {
@@ -251,3 +371,12 @@ const styles = StyleSheet.create({
     width: 150
   }
 });
+
+
+
+
+
+
+
+
+
