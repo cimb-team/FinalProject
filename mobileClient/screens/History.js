@@ -5,25 +5,59 @@ import {
   Text,
   View,
   Image,
-  ScrollView
+  Modal,
+  WebView,
+  ScrollView,
+  TouchableHighlight
 } from "react-native";
 import { connect } from "react-redux";
 import { getHistory } from "../store/action";
 import formatCash from "../helpers";
-
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
     console.log(props.historyData.bids);
   }, []);
-
+  const [modalVisible, setModalVisible] = useState(false);
   const handleViewRef = ref => (this.view = ref);
   const animation = () => this.view.fadeInUp(300);
-
   return (
     <SafeAreaView style={styles.container}>
       {!props.historyLoading && (
         <ScrollView>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+            }}
+          >
+            <View style={{ marginTop: 22 }}>
+              <WebView
+                originWhitelist={["*"]}
+                source={{ html: "<h1>Hello world</h1>" }}
+              />
+              <View>
+                <TouchableHighlight
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "black",
+                      fontWeight: "600",
+                      marginBottom: 10
+                    }}
+                  >
+                    Hide Modal
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
           {props.historyData.map((history, index) => (
             <View key={history._id + "history"} style={styles.card}>
               <Text
@@ -41,6 +75,13 @@ function History(props) {
                     : "You lose"
                   : "Bid is still on going"}
               </Text>
+              <TouchableHighlight
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
+                <Text>Show Modal</Text>
+              </TouchableHighlight>
               <View style={{ flexWrap: "wrap" }}>
                 <View
                   style={{
@@ -109,7 +150,6 @@ function History(props) {
           ))}
         </ScrollView>
       )}
-
       {props.allProductsError && (
         <ScrollView style>
           <Text>Sorry, error occured. Please try again later.</Text>
@@ -134,7 +174,6 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(History);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

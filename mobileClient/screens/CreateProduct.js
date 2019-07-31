@@ -34,6 +34,7 @@ import {
   Spinner
 } from "native-base";
 import { ImagePicker, Permissions } from "expo";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import axios from "../axios";
 // import * as firebase from 'firebase';
 import { connect } from "react-redux";
@@ -55,6 +56,8 @@ const AnimatedKeyboardAvoiding = Animatable.createAnimatableComponent(
   KeyboardAvoidingView
 );
 
+
+
 class CreateProduct extends Component {
   constructor(props) {
     super(props);
@@ -68,10 +71,29 @@ class CreateProduct extends Component {
       imageMentah: "",
       dateText: moment(tomorrow).format("dddd, MMMM Do YYYY"),
       loading: false,
-      KeyboardView: false
+      KeyboardView: false,
+      isDateTimePickerVisible: false,
+      dateAnddTime : null,
     };
     this.setDate = this.setDate.bind(this);
+
   }
+
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
+ 
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+ 
+  handleDatePicked = date => {
+    
+    this.setState({
+      dateAnddTime : moment(date).format()
+    })
+    this.hideDateTimePicker();
+  };
 
   setDate(newDate) {
     // let day = newDate.getDate();
@@ -85,6 +107,8 @@ class CreateProduct extends Component {
   componentDidMount() {
     this.getPermissionAsync();
   }
+
+
 
   submitCreate = () => {
     this.setState({ loading: true });
@@ -146,12 +170,16 @@ class CreateProduct extends Component {
         type: "image/jpeg",
         name: imageFilename
       });
+      console.log(this.state.dateAnddTime, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<RRRRRRRRRRRRTTTT");
+      console.log(this.state.chosenDate, "<<<<<<<<<<<<<<<<<EREREREERER");
+      
+      
       data.append("title", this.state.title);
       data.append("category", this.state.category);
       data.append("details", this.state.details);
       data.append("initialPrice", this.state.initialPrize);
-      data.append("closedDate", this.state.chosenDate);
-      // console.log(data, '@@@@')
+      data.append("closedDate", this.state.dateAnddTime.toString());
+      console.log(data, '@@@@')
       axios({
         method: "post",
         url: "/product",
@@ -162,6 +190,10 @@ class CreateProduct extends Component {
         }
       })
         .then(({ data }) => {
+          console.log(data);
+          
+          console.log("Masuk axios create Product");
+          
           this.setState({ loading: false });
           this.props.getAllProducts(this.props.token);
           this.props.getMyProducts(this.props.token);
@@ -286,6 +318,30 @@ class CreateProduct extends Component {
                       value={this.state.initialPrize}
                     />
                   </Item>
+
+                  <Item>
+
+
+                  <TouchableHighlight style={{flexDirection:'row'}} onPress={this.showDateTimePicker}>
+                      {
+                        this.state.dateAnddTime
+                        ? 
+                        <>
+                          
+                          <Text style={{marginTop:10, marginLeft:12}}>{this.state.dateAnddTime}</Text>
+                        </>
+                        :
+                        <>
+                        <Ionicons name="md-calendar" size={32} color="black" style={{marginVertical : 10}}/>
+                        <Text style={{marginTop:10, marginLeft:12}}>Set Close Bid Date</Text>
+                        </>
+                      }
+                  </TouchableHighlight>
+                  </Item>
+                
+        
+      
+                
                   <Item>
                     <Content>
                       <DatePicker
@@ -331,6 +387,12 @@ class CreateProduct extends Component {
                       )}
                     </Button>
                   </Item>
+                  <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this.handleDatePicked}
+          onCancel={this.hideDateTimePicker}
+          mode={'datetime'}
+        />
                 </Form>
               </Content>
             </Container>
