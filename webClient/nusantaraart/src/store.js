@@ -6,8 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    url: `http://localhost:3000`,
-    // url: "http://35.187.231.14",
+    // url: `http://localhost:3000`,
+    url: "http://35.187.231.14",
     islogin: false,
     user: {},
     token: "",
