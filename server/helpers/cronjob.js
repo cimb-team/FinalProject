@@ -56,13 +56,13 @@ module.exports = () => {
           rows.forEach((row, i) => {
             row.status = 'close'
             if (row.bid.bids.length > 0) {
-              row.bid.winnerId = row.bid.bids[row.bid.bids.length - 1].bidderId
+              row.bid.winnerId = row.bid.bids[row.bid.bids.length - 1].bidderId._id
               userMutations.push(User.findByIdAndUpdate(row.userId._id, { $inc: { balance: row.bid.bids[row.bid.bids.length - 1].price } }))
               let returned = [row.bid.winnerId._id.toString()]
 
               for (let i = row.bid.bids.length - 2; i >= 0; i--) {
                 if (!returned.includes(row.bid.bids[i].bidderId._id.toString())) {
-                  userMutations.push(User.findByIdAndUpdate(row.bid.bids[i].bidderId, { $inc: { balance: row.bid.bids[i].price } }, { new: true }))
+                  userMutations.push(User.findByIdAndUpdate(row.bid.bids[i].bidderId._id, { $inc: { balance: row.bid.bids[i].price } }, { new: true }))
                   console.log('returned to ' + row.bid.bids[i].bidderId.name + ' with amount : ' + row.bid.bids[i].price)
                   updatedUsers.push({
                     ...row.bid.bids[i].bidderId.toObject(),

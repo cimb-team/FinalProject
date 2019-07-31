@@ -15,7 +15,7 @@
           v-if="product.userId != undefined"
         >
           <div class="card-header" style="height:47px;color:black;text-align:center;font-size:17px">
-            <strong>{{ product.title }}</strong>
+            <strong>{{ product.title }} </strong>
           </div>
           <div style="margin:20px;display:flex;align-items:center;justify-content:center">
             <img
@@ -36,6 +36,7 @@
             </p>
             <blockquote class="blockquote mb-0">
               <p style="color:black;text-align:justify">{{ product.details }}</p>
+
               <footer class="blockquote-footer">
                 <small style="color:black">
                   By {{ product.userId.name }} at
@@ -78,16 +79,21 @@
     >
       <div class style="padding:35px;max-width:600px;">
         <div class="card" style="background-color:#FFFFFF;padding:30px">
+
           <h4
             style="color:black;text-align:center;margin-bottom:0px"
           >Initial Price: {{ format(Number(product.initialPrice)) }}</h4>
+                                     <br>             <div
+            style="color:blue;text-align:center;"
+          ><strong>Bid closed: {{countdownText}}</strong></div>
         </div>
+
         <div
           class="card"
           style="background-color:#FFFFFF;padding:30px"
-          v-if="user._id != product.userId._id"
+          v-if="user._id != product.userId._id && bidClosed == true"
         >
-          <div v-if="user._id != product.userId._id">
+          <div v-if="user._id != product.userId._id ">
             <h4 style="color:black;text-align:center;margin-bottom:30px">Start Bidding!</h4>
             <p v-if="err" style="color:red;margin-top:5px">{{err}}</p>
             <input
@@ -146,12 +152,20 @@ import { mapActions } from "vuex";
 import axios from "axios";
 import dbh from "../../FBConfig.js";
 import Swal from "sweetalert2";
+import moment from "moment";
+import momentDurationFormatSetup from "moment-duration-format";
+
+momentDurationFormatSetup(moment);
+      var mili = new Date();
+        mili.setSeconds(mili.getSeconds() + 10);
 
 export default {
   name: "product-detail",
   props: ["islogin"],
   data() {
     return {
+      countdownText: "",
+      bidClosed: true,
       err: false,
       value: "",
       choosenImage:
@@ -190,10 +204,39 @@ export default {
         console.log(this.product.images[0]);
         console.log("ALVINNN");
         this.showShirt();
+  
+        const interval = setInterval(() => {
+          let closedDate = moment(this.product.closedDate);
+          let now = moment();
+          let countdown = moment.duration(closedDate.diff(now));
+
+          if (closedDate.diff(now) <= 0) {
+            this.countdownText = closedDate.calendar(null, {
+              sameDay: () => "[" + now.to(closedDate) + "]",
+              sameElse: () => "[" + now.to(closedDate) + "]"
+            });
+                   this.bidClosed = false;
+                   console.log(this.bidClosed)
+              Swal.fire({
+                title: "Time's up!",
+                text: `Bid Closed!`
+              });
+            clearInterval(interval);
+     
+          } else {
+            this.countdownText = closedDate.calendar(null, {
+              sameDay: () => "[" + countdown.format() + "]",
+
+              sameElse: () => "[" + now.to(closedDate) + "]"
+            });
+          }
+
+        }, 1000);
       }
     }
   },
   methods: {
+
     format(num) {
       var p = num.toFixed(2).split(".");
       return (
@@ -239,10 +282,10 @@ export default {
               winnerId: this.product.bid.winnerId
             })
             .then(() => {
-                        Swal.fire({  title: 'Success!',
-  text: `Bid ${this.format(Number(this.value))} Success!`}
-            
-          );
+              Swal.fire({
+                title: "Success!",
+                text: `Bid ${this.format(Number(this.value))} Success!`
+              });
 
               this.value = "";
               this.err = "";
@@ -252,7 +295,7 @@ export default {
         .catch(error => {
           Swal.fire({
             type: "error",
-            title: error.response.data.message,
+            title: error.response.data.message
           });
         });
     },
