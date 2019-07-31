@@ -2,8 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
-  Text,
   View,
   Image,
   Platform,
@@ -12,19 +10,62 @@ import {
   TouchableHighlight,
   KeyboardAvoidingView
 } from "react-native";
+import { Button, Text, Spinner } from 'native-base'
 import { connect } from "react-redux";
-import { getProductDetail, bidding } from "../store/action";
+import { getProductDetail, bidding, quickbid } from "../store/action";
 import Title from "../components/Title";
 import dbh from "../FBConfig";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from "react-native-animatable";
-
 import formatCash from "../helpers";
+import moment from 'moment'
+import momentDurationFormatSetup from "moment-duration-format"
+
+momentDurationFormatSetup(moment);
+// import 'moment-round'
+
+// var mili = new Date()
+// mili.setSeconds(mili.getSeconds()+10)
 
 function ProductDetail(props) {
   const [bid, setbid] = useState("0");
   const [bidDariFirebase, setbidDariFirebase] = useState("");
   const [warningMessage, setWarningMessage] = useState("");
+  const [countdownText, setcountdownText] = useState("");
+  const [bidClosed, setbidClosed] = useState(true)
+  const [loadingClosedDate, setloadingClosedDate] = useState(true)
+
+  useEffect(() => {
+    if (props.productDetailData.status === 'open')
+      setbidClosed(false)
+
+    if (props.productDetailData.closedDate) {
+      const interval = setInterval(() => {
+        // let closedDate = moment(mili)
+        let closedDate = moment(props.productDetailData.closedDate)
+        let now = moment()
+        let countdown = moment.duration(closedDate.diff(now))
+
+        if (closedDate.diff(now) <= 0) {
+          setbidClosed(true)
+          setcountdownText(closedDate.calendar(null, {
+            sameDay: () => '[' + now.to(closedDate) + ']',
+            sameElse: () => '[' + now.to(closedDate) + ']'
+          }))
+          clearInterval(interval)
+        }
+        else {
+          setcountdownText(closedDate.calendar(null, {
+            sameDay: () => '[' + countdown.format() + ']',
+            // sameDay: () => '[' + moment.duration(closedDate.diff(now)).format('HH:mm:ss.SSS') + ']',
+            sameElse: () => '[' + now.to(closedDate) + ']'
+          }))
+        }
+        setloadingClosedDate(false)
+      }, 1000)
+    }
+  }, [props.productDetailData])
+
   handleChange = text => {
     setbid(String(Number(text.replace(/[^0-9]+/g, ''))));
   };
@@ -75,32 +116,22 @@ function ProductDetail(props) {
   };
   useEffect(() => {
     if (props.productDetailData._id != props.navigation.state.params.id) {
-      console.log(
-        props.navigation.state.params.id,
-        "++++++++++++++++++++++++++++"
-      );
       props.getProductDetail(props.token, props.navigation.state.params.id);
     } else if (props.ProductDetailfunction) {
       dbh
         .collection("biding")
         .doc(`${props.productDetailData.bid._id}`)
-        .onSnapshot(function(doc) {
-          console.log("XXXXX", doc.data(), "====");
+        .onSnapshot(function (doc) {
           setbidDariFirebase(doc.data());
         });
     } else {
-      console.log(
-        props.navigation.state.params.id,
-        "++++++++++++++++++++++++++++"
-      );
-
       props.getProductDetail(props.token, props.navigation.state.params.id);
     }
   }, [props.ProductDetailfunction]);
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
-    keyboardVerticalOffset={330}>
+      keyboardVerticalOffset={330}>
       <ScrollView>
         {!props.productDetailLoading && props.productDetailData && (
           <Fragment>
@@ -215,6 +246,11 @@ function ProductDetail(props) {
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <Text>{warningMessage}</Text>
+              {!loadingClosedDate
+                ? <Text>
+                  {countdownText}
+                </Text>
+                : <Spinner />}
               <View
                 style={{
                   flexDirection: "row",
@@ -223,41 +259,95 @@ function ProductDetail(props) {
                   marginVertical: 20
                 }}
               >
-                {props.productDetailData.userId._id !== props.bidderId && (
-                  <>
-                    <TextInput
-                      keyboardType="numeric"
-                      style={styles.search}
-                      placeholder="Place your bid"
-                      onChangeText={handleChange}
-                      value={bid}
-                    />
+                {!bidClosed
+                  ? (props.productDetailData.userId._id !== props.bidderId ? (
+                    <>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={styles.search}
+                        placeholder="Place your bid"
+                        onChangeText={handleChange}
+                        value={bid}
+                      />
 
-                    <TouchableHighlight onPress={() => postbid()}>
-                      <View
-                        style={{
-                          padding: 10,
-                          backgroundColor: "#3399ff",
-                          width: 100,
-                          borderRadius: 10,
-                          marginLeft: 10
-                        }}
-                      >
-                        <Text
+                      <TouchableHighlight onPress={() => postbid()}>
+                        <View
                           style={{
-                            color: "white",
-                            fontWeight: "600",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            textAlign: "center"
+                            padding: 10,
+                            backgroundColor: "#3399ff",
+                            width: 100,
+                            borderRadius: 10,
+                            marginLeft: 10
                           }}
                         >
-                          BID
-                        </Text>
-                      </View>
-                    </TouchableHighlight>
-                  </>
-                )}
+                          <Text
+                            style={{
+                              color: "white",
+                              fontWeight: "600",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              textAlign: "center"
+                            }}
+                          >
+                            BID
+                            </Text>
+                        </View>
+                      </TouchableHighlight>
+                    </>
+                  )
+                    : (<Button onPress={props.quickbid}>
+                      <Text>
+                        QUICK BID
+                  </Text>
+                    </Button>)
+                  )
+                  : (<Button block disabled>
+                    <Text>BID CLOSED</Text>
+                  </Button>)
+                }
+                {/* {props.productDetailData.userId._id !== props.bidderId && (
+                  !bidClosed
+                    ?
+                    <>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={styles.search}
+                        placeholder="Place your bid"
+                        onChangeText={handleChange}
+                        value={bid}
+                      />
+
+                      <TouchableHighlight onPress={() => postbid()}>
+                        <View
+                          style={{
+                            padding: 10,
+                            backgroundColor: "#3399ff",
+                            width: 100,
+                            borderRadius: 10,
+                            marginLeft: 10
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              fontWeight: "600",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              textAlign: "center"
+                            }}
+                          >
+                            BID
+                            </Text>
+                        </View>
+                      </TouchableHighlight>
+                    </>
+                    : (
+                      <Button block disabled>
+                        <Text>BID CLOSED</Text>
+                      </Button>
+                    )
+                )
+                } */}
               </View>
               <View />
               <View>
@@ -335,47 +425,47 @@ function ProductDetail(props) {
                           </Text>
                         </View>
                       ) : (
-                        <>
-                          {index === 5 && <Text>Other bids ..</Text>}
-                          {index >= 5 && (
-                            <View
-                              key={index}
-                              style={{
-                                padding: 10,
-                                backgroundColor: "#f5f5f5",
-                                width: 200,
-                                borderRadius: 10,
-                                margin: 2.5
-                              }}
-                            >
-                              <Text
+                          <>
+                            {index === 5 && <Text>Other bids ..</Text>}
+                            {index >= 5 && (
+                              <View
+                                key={index}
                                 style={{
-                                  color: "black",
-                                  fontWeight: "400",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  textAlign: "center"
+                                  padding: 10,
+                                  backgroundColor: "#f5f5f5",
+                                  width: 200,
+                                  borderRadius: 10,
+                                  margin: 2.5
                                 }}
                               >
-                                # {index + 1}: ${formatCash(Number(bid.price))}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: "black",
-                                  fontWeight: "400",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  textAlign: "center"
-                                }}
-                              >
-                                {props.bidderId === bid.bidderId
-                                  ? "You"
-                                  : "Other user"}
-                              </Text>
-                            </View>
-                          )}
-                        </>
-                      )}
+                                <Text
+                                  style={{
+                                    color: "black",
+                                    fontWeight: "400",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    textAlign: "center"
+                                  }}
+                                >
+                                  # {index + 1}: ${formatCash(Number(bid.price))}
+                                </Text>
+                                <Text
+                                  style={{
+                                    color: "black",
+                                    fontWeight: "400",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    textAlign: "center"
+                                  }}
+                                >
+                                  {props.bidderId === bid.bidderId
+                                    ? "You"
+                                    : "Other user"}
+                                </Text>
+                              </View>
+                            )}
+                          </>
+                        )}
                     </Fragment>
                   ))}
                 </>
@@ -401,7 +491,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   getProductDetail,
-  bidding
+  bidding,
+  quickbid
 };
 
 export default connect(
