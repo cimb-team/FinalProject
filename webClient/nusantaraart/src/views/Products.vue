@@ -59,7 +59,7 @@
                 <img
                   :src="'https://i.pinimg.com/originals/5a/76/4e/5a764e1ec61b41b0dd664b00bfc1fcc3.jpg'"
                   class="d-block w-100"
-                  style="width:200px;height: 400px"
+                  style="width:200px;max-height: 400px"
                   alt="..."
                 />
                 <div class="carousel-caption d-none d-md-block">
@@ -71,7 +71,7 @@
                 <img
                   :src="'https://pm1.narvii.com/6855/cfd7568fbf550bc8f40a8d55cd6f4d7eb3311ad3v2_hq.jpg'"
                   class="d-block w-100"
-                  style="width:200px;height: 400px"
+                  style="width:200px;max-height: 400px"
                   alt="..."
                 />
                 <div class="carousel-caption d-none d-md-block">
@@ -83,7 +83,7 @@
                 <img
                   :src="'https://image.freepik.com/free-vector/logo-ninja-assasin_60267-219.jpg'"
                   class="d-block w-100"
-                  style="width:200px;height: 400px"
+                  style="width:200px;max-height: 400px"
                   alt="..."
                 />
                 <div class="carousel-caption d-none d-md-block">

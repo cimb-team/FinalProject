@@ -12,7 +12,9 @@
         ><i class="fa fa-fw fa-home"></i> Home</a
       >
     </router-link>
-
+  <button style="background-color:white" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
     <div
       v-if="islogin"
       class="collapse navbar-collapse"

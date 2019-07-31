@@ -1,63 +1,109 @@
 <template>
-  <div>
-    <div class="overlay">
-      <button @click="showMug">MUG</button>
-      <button @click="showShirt">SHIRT</button>
-    </div>
-
-    <canvas  style="width: 600px;height:300px" width='600' height='300' id="hasilthreejs"></canvas>
- <canvas  style="width: 600px;height:300px" width='600' height='300' id="hasilthreejs2"></canvas>
-
-   
-    <div style="display:flex" v-if="product.userId != 0">
+  <div style="padding:20px">
+    <div class="row" style="display:flex;justify-content:space-around;align-items:flex-start">
       <div
-        class="card text-white bg-dark mb-3"
-        style="width: 600px;"
-        v-if="product.userId != undefined"
+        class
+        style="display:flex;flex-direction:column;justify-content:center;max-height:1200px"
+        v-if="product.userId != 0"
       >
-        <div style="margin:20px">
-          <img
-            style="max-width:100%;height:auto;width:auto;max-height:230px"
-            class="card-img-top"
-            v-bind:src="product.images[0]"
-            alt="Card image cap"
-          />
-        </div>
+        <div
+          class="card"
+          style="padding:35px;max-width:600px;background-color:#FFFFFF30"
+          v-if="product.userId != undefined"
+        >
+          <div
+            class="card-header"
+            style="height:47px;color:white;text-align:center"
+          >{{ product.title }}</div>
+          <div style="margin:20px;display:flex;align-items:center;justify-content:center">
+            <img
+              style="max-width:100%;height:auto;width:auto;max-height:230px"
+              class="card-img-top"
+              v-bind:src="product.images[0]"
+              alt="Card image cap"
+            />
+          </div>
 
-        <div class="card-header" style="height:47px">Category: {{ product.category }}</div>
-        <div class="card-body">
-          <blockquote class="blockquote mb-0">
-            <p>{{ product.details }}</p>
-            <footer class="blockquote-footer">
-              <small style="color:white">
-                By {{ product.userId.name }} at
-                {{ product.createdAt.slice(0, 10) }}
-              </small>
-            </footer>
-          </blockquote>
+          <div
+            class="card-header"
+            style="height:47px;color:white;text-align:center"
+          >Category: {{ product.category }}</div>
+          <div class="card-body">
+            <p style="color:white;text-align:center">
+              <strong>Details</strong>
+            </p>
+            <blockquote class="blockquote mb-0">
+              <p style="color:white;text-align:justify">{{ product.details }}</p>
+              <footer class="blockquote-footer">
+                <small style="color:white">
+                  By {{ product.userId.name }} at
+                  {{ product.createdAt.slice(0, 10) }}
+                </small>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+
+      <div class>
+        <div
+          class="card"
+          style="padding:35px;width:600px;background-color:#FFFFFF30;display:flex;justify-content:center;flex-direction:column;"
+          v-if="product.userId != undefined"
+        >
+          <div
+            class="card-header"
+            style="height:47px;color:white;text-align:center;margin-bottom:20px"
+          >3D Model</div>
+
+          <div style="display:flex;justify-content:center;flex-direction:column;padding:19px">
+            <div style="display:flex;width:500px">
+              <button class="btn btn-outline-light" style="width:50%" @click="showShirt">SHIRT</button>
+              <button class="btn btn-outline-light" style="width:50%" @click="showMug">MUG</button>
+            </div>
+
+            <canvas id="hasilthreejs"></canvas>
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="product.userId">
-      <div v-if="user._id != product.userId._id">
-        <input
-          v-model="value"
-          type="text
-    "
-          class="form-control"
-          id="exampleInputPassword1"
-          placeholder="$"
-        />
-        <button @click="addBid" type="button" class="btn btn-primary">BID</button>
-      </div>
-    </div>
-    <div v-if="product.bid">
-      <div v-for="bid in product.bid.bids" :key="bid._id">
-        <div v-if="bid.bidderId !== user._id">
-          <p style="color:white">{{ bid.bidderId}} BID ${{ bid.price }}</p>
+    <div v-if="product.bid.bids" class="row" style="display:flex;justify-content:center;">
+
+      <div class style="padding:35px;max-width:600px;">
+        <div class="card" style="background-color:#FFFFFF30;padding:30px" v-if="user._id != product.userId._id">
+          <div v-if="user._id != product.userId._id">
+            <h4 style="color:white;text-align:center;margin-bottom:30px">Start Bidding!</h4>
+            <input
+              v-model="value"
+              type="text"
+              class="form-control"
+              id="exampleInputPassword1"
+              placeholder="$"
+            />
+            <div style="display:flex;justify-content:center">
+              <button
+                style="margin-top:20px;width:120px;border-radius:5px"
+                @click="addBid"
+                type="button"
+                class="btn btn-primary"
+              >BID</button>
+            </div>
+          </div>
         </div>
-        <div v-if="bid.bidderId == user._id">
-          <p style="color:white">YOU BID ${{ bid.price }}</p>
+        <div class="card" style="background-color:#FFFFFF30;padding:30px;" v-if="product.bid.bids.length !== 0">
+                 <h4 style="color:white;text-align:center;margin-bottom:30px">Bid Lists</h4>
+          <div v-for="bid in product.bid.bids" :key="bid._id">
+            <div class="card" style="min-width:22rem;max-width:28rem;padding:20px">
+              <h5 v-if="bid.bidderId == user._id" style="color:black" class="card-title">YOU</h5>
+              <h5
+                v-if="bid.bidderId !== user._id"
+                style="color:black"
+                class="card-title"
+              >{{ bid.bidderId}}</h5>
+              <p style="color:black" class="card-text">BID ${{ bid.price }}</p>
+              <p style="color:black" class="card-text">Date ${{ bid.dateIssued }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,6 +139,13 @@ export default {
     },
     user() {
       return this.$store.state.user;
+    }
+  },
+  watch: {
+    product(newValue) {
+      if (this.product.details) {
+        this.showShirt();
+      }
     }
   },
   methods: {
@@ -133,6 +186,13 @@ export default {
             });
         });
     },
+    clear() {
+      console.log("clearrrrr ==");
+      var canvas = document.getElementById("hasilthreejs");
+
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    },
     showShirt() {
       this.objectVisualizer("shirt.json", "hasilthreejs2").initApp();
     },
@@ -140,7 +200,7 @@ export default {
       this.objectVisualizer("mug.json", "hasilthreejs").initApp();
     },
     objectVisualizer: function(assetName, el) {
-      el = "hasilthreejs"
+      el = "hasilthreejs";
       var octx = {};
       var canvas = document.getElementById(el);
       var userRotation = new THREE.Vector3();
@@ -172,10 +232,10 @@ export default {
       }
       function initGraph() {
         canvas = document.getElementById("hasilthreejs");
-        console.log(canvas, '==')
+        console.log(canvas, "==");
 
         renderer = new THREE.WebGLRenderer({
-          antialias: true,
+          antialias: false,
           canvas: canvas
         });
         renderer.setClearColor(0xdddddd, 1);
@@ -211,7 +271,7 @@ export default {
         scene.add(light);
         var geometry = new THREE.BoxGeometry(90, 90, 90);
         var material = new THREE.MeshLambertMaterial({
-          color: 0, //0x808080,//0xdddddd,//0x808080,//0xdddddd,
+          color: 0xff0000, //0x808080,//0xdddddd,//0x808080,//0xdddddd,
           side: THREE.DoubleSide
         });
         var skycube = new THREE.Mesh(geometry, material);
@@ -299,9 +359,9 @@ export default {
           texPath: this.product.images[0]
         };
         THREE.ImageUtils.crossOrigin = "";
-          console.log('/' + params.meshPath)
-        loader.load('/' + params.meshPath, function(geometry) {
-          console.log("!!!!!!!!!!!!!!!!!!!!")
+        console.log("/" + params.meshPath);
+        loader.load("/" + params.meshPath, function(geometry) {
+          console.log("!!!!!!!!!!!!!!!!!!!!");
           var texture = THREE.ImageUtils.loadTexture(
             //url texture
             params.texPath,
@@ -315,11 +375,11 @@ export default {
                 shininess: params.shininess,
                 side: THREE.DoubleSide
               });
-              var cdim = 600;
+              var cdim = 2048;
               var canvas = document.createElement("canvas");
-            
+
               canvas.width = canvas.height = cdim;
-                console.log(canvas)
+              console.log(canvas);
               var compositeTexture = new THREE.Texture(canvas);
               compositeTexture.wrapS = compositeTexture.wrapT =
                 THREE.RepeatWrapping;
@@ -375,8 +435,8 @@ export default {
       var animRequestID;
       function renderFrame() {
         animRequestID = window.requestAnimationFrame(renderFrame);
-        var width = '300';
-        var height = '600';
+        var width = "500";
+        var height = "500";
         renderer.setSize(width, height);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
@@ -415,7 +475,7 @@ export default {
     <style>
 .canv {
   position: absolute;
-    width: 300px;
+  width: 300px;
   height: 200px;
 }
 .overlay {
