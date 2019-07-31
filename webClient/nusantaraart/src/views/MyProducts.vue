@@ -2,12 +2,13 @@
   <div class="row" style="display:flex; flex-wrap:wrap;flex-direction:row;">
 
     <div class="col" style v-if="islogin">
-      <h2 style="text-align:center;color:white;margin-bottom:30px;margin-top:5%">My Arts</h2>
+      <h2 style="text-align:center;color:white;margin-bottom:30px;margin-top:5%;text-shadow:1px 1px black">My Arts</h2>
 
       <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
         <div class v-for="product in myProducts" :key="product._id">
           <Card :product="product"></Card>
         </div>
+        <p v-if="myProducts.length == 0" style="color:white;text-align:center">No Arts Yet</p>
       </div>
     </div>
   </div>
@@ -49,6 +50,7 @@ export default {
 
   },
   created() {
+    console.log('MY PRODUCTS')
     this.FETCH_MY_PRODUCTS();
   }
 };

@@ -12,6 +12,8 @@
     "babel-polyfill": "^6.26.0",
     "core-js": "^2.6.5",
     "firebase": "^6.3.3",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^8.14.0",
     "three": "^0.106.2",
     "three-mtl-loader": "^1.0.2",
     "vue": "^2.6.10",

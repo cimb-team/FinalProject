@@ -1,7 +1,7 @@
 <template>
   <div style="display:flex;justify-content:center">
     <div class style="width:600px;margin-top:5%" v-if="islogin">
-      <h2 style="color:white;text-align:center;margin-bottom:30px">Let's sell!</h2>
+      <h2 style="color:white;text-align:center;margin-bottom:30px;text-shadow:1px 1px black">Let's sell!</h2>
       <div
         class="card text-black mb-3"
         style="width: 100%;cursor:pointer;border-radius:5px;padding:50px;background-color:#FFFFFF"
@@ -91,6 +91,8 @@
 import axios from "axios";
 import { mapActions } from "vuex";
 import PictureInput from "vue-picture-input";
+import Swal from "sweetalert2";
+import dbh from "../../FBConfig.js";
 export default {
   name: "home",
   props: ["islogin"],
@@ -139,7 +141,7 @@ export default {
       newImage.append("title", this.product.title);
       newImage.append("initialPrice", this.product.initialPrice);
       newImage.append("details", this.product.details);
-      newImage.append("closeDate", this.product.closedDate);
+      newImage.append("closedDate", this.product.closedDate);
       newImage.append("category", this.product.category);
       newImage.append("images", this.$refs.pictureInput.file);
       console.log(this.token)
@@ -152,7 +154,7 @@ export default {
         },
         data: newImage
       }).then(({ data }) => {
-          console.log('=====')
+          console.log(data, 'data create')
           this.product.title = "";
           this.product.category = "";
           this.product.image = "";
@@ -177,7 +179,19 @@ export default {
             });
         })
         .catch(error => {
-          console.log(error.response);
+          if(!error.response){
+                        Swal.fire({
+            type: "error",
+            title: error,
+          });
+          } else {
+                    Swal.fire({
+            type: "error",
+            title: error.response.data.message,
+          });
+          }
+
+
         });
     }
   },

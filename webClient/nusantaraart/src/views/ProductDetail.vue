@@ -95,7 +95,7 @@
               type="text"
               class="form-control"
               id="exampleInputPassword1"
-              placeholder="$"
+              placeholder="Rp."
             />
             <div style="display:flex;justify-content:center">
               <button
@@ -145,6 +145,7 @@
 import { mapActions } from "vuex";
 import axios from "axios";
 import dbh from "../../FBConfig.js";
+import Swal from "sweetalert2";
 
 export default {
   name: "product-detail",
@@ -219,7 +220,6 @@ export default {
         headers: { token: this.token }
       })
         .then(({ data }) => {
- 
           // this.FETCHPRODUCT(this.$route.params.id);
           let arr1 = this.product.bid.bids;
           arr1.unshift({
@@ -239,14 +239,21 @@ export default {
               winnerId: this.product.bid.winnerId
             })
             .then(() => {
-                       this.value = "";
-                       this.err =""
+                        Swal.fire({  title: 'Success!',
+  text: `Bid ${this.format(Number(this.value))} Success!`}
+            
+          );
+
+              this.value = "";
+              this.err = "";
             })
             .catch(err => console.log(err));
         })
         .catch(error => {
-          console.log(error.response.data.message);
-          this.err = error.response.data.message
+          Swal.fire({
+            type: "error",
+            title: error.response.data.message,
+          });
         });
     },
     clear() {

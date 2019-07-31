@@ -1,26 +1,10 @@
 <template>
   <div style="">
-    <div class="row" style="margin-top:5%">
-      <div class="col-sm" style="display:flex;justify-content:center;align-items:center">
-        <div style="display:flex;text-align:center;color:white;margin-top:10px">
-          <h1 style="font-weight:700 ;color:#FF8C00">N</h1>
-          <h1 style="font-weight:700 ;color:#FF9A1F">u</h1>
-          <h1 style="font-weight:700 ;color:#FFA83F">s</h1>
-          <h1 style="font-weight:700 ;color:#FFB75F">a</h1>
-          <h1 style="font-weight:700 ;color:#FFC57F">n</h1>
-          <h1 style="font-weight:700 ;color:#FFD39F">t</h1>
-          <h1 style="font-weight:700 ;color:#FFE2BF">a</h1>
-          <h1 style="font-weight:700 ;color:#FFF0DF">r</h1>
-          <h1 style="font-weight:700 ;color:#FFFFFF">a &nbsp;</h1>
-          <h1 style="font-weight:700 ;color:#FFFFFF">A</h1>
-          <h1 style="font-weight:700 ;color:#FFFFFF">r</h1>
-          <h1 style="font-weight:700 ;color:#FFFFFF">t</h1>
-        </div>
-        <img
-          src="https://storage.googleapis.com/orvin-savero/15644071751275856e9c3-7102-479c-9d89-b7f83f228562.png"
-          style="margin-left:20px;width:60px;height:60px;border-radius:20px"
-        />
-      </div>
+    <div class="row" style="margin-top:5%;display:flex;justify-content:center;margin-bottom:2%">
+<div style="">
+    <img src="	
+https://storage.cloud.google.com/orvin-savero/merah.png" style="width:400px;height:170px;min-width:350px;min-height:15px"/>
+</div>
     </div>
 
     <div class="row" style="margin-top: 15px">
@@ -117,7 +101,7 @@
     </div>
     <div class="row" style="margin-top:30px">
       <div class="col" style="display:flex;justify-content:center;align-items:center">
-        <h3 style="font-weight:700 ;color:white;text-align:center">Categories</h3>
+        <h3 style="font-weight:700 ;color:white;text-align:center; text-shadow: 1px 2px black;">Categories</h3>
       </div>
 
     </div>
@@ -135,7 +119,7 @@
         </div>
       </div>
      <div class="col" style="display:flex;justify-content:center;align-items:center;margin-top:20px">
-        <h3 style="font-weight:700 ;color:white;text-align:center">Arts</h3>
+        <h3 style="font-weight:700 ;color:white;text-align:center;text-shadow: 1px 2px black">Arts</h3>
       </div>
     <div class="col" style="margin-top:0px">
       <br />
