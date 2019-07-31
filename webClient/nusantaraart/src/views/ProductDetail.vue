@@ -1,6 +1,9 @@
 <template>
   <div style="padding:20px">
-    <div class="row" style="display:flex;justify-content:space-around;align-items:flex-start;margin-top:5%">
+    <div
+      class="row"
+      style="display:flex;justify-content:space-around;align-items:flex-start;margin-top:5%"
+    >
       <div
         class
         style="display:flex;flex-direction:column;justify-content:center;max-height:1200px"
@@ -68,13 +71,16 @@
         </div>
       </div>
     </div>
-    <div v-if="product.bid.bids" class="row" style="display:flex;justify-content:center;">
+    <div
+      v-if="product.bid.bids"
+      class="row"
+      style="display:flex;justify-content:center;margin-top:5%"
+    >
       <div class style="padding:35px;max-width:600px;">
-                <div
-          class="card"
-          style="background-color:#FFFFFF;padding:30px"
-        >
-            <h4 style="color:black;text-align:center;margin-bottom:0px">Initial Price: {{ product.initialPrice }}</h4>
+        <div class="card" style="background-color:#FFFFFF;padding:30px">
+          <h4
+            style="color:black;text-align:center;margin-bottom:0px"
+          >Initial Price: {{ format(Number(product.initialPrice)) }}</h4>
         </div>
         <div
           class="card"
@@ -83,6 +89,7 @@
         >
           <div v-if="user._id != product.userId._id">
             <h4 style="color:black;text-align:center;margin-bottom:30px">Start Bidding!</h4>
+            <p v-if="err" style="color:red;margin-top:5px">{{err}}</p>
             <input
               v-model="value"
               type="text"
@@ -118,7 +125,7 @@
                 class="card-title"
               >User *****{{ bid.bidderId.slice(17,23)}} Bid :</h5>
               <p style="color:black" class="card-text">
-                <strong>{{ bid.price }}</strong>
+                <strong>{{ format(Number(bid.price)) }}</strong>
               </p>
               <p
                 v-if="bid.dateIssued"
@@ -135,7 +142,6 @@
 <script>
 // import THREE from 'three'
 // import MTLLoader from 'three-mtl-loader';
-import format from "../../helpers/format"
 import { mapActions } from "vuex";
 import axios from "axios";
 import dbh from "../../FBConfig.js";
@@ -145,6 +151,7 @@ export default {
   props: ["islogin"],
   data() {
     return {
+      err: false,
       value: "",
       choosenImage:
         "http://cdn.shopify.com/s/files/1/0257/6087/products/Pikachu_Single_Front_dc998741-c845-43a8-91c9-c1c97bec17a4.png?v=1523938908"
@@ -156,17 +163,18 @@ export default {
       return this.$store.state.url;
     },
     product() {
-      let temp = this.$store.state.product;
-       console.log(temp, '====')
-      temp.initialPrice = format(Number(temp.initialPrice))
-      if (this.$store.state.product.bid.bids.length != 0){
-        this.$store.state.product.bid.bids.forEach((x,i) => {
-          temp.bid.bids[i].price = format(Number(x.price))
-        })
-      }
-      console.log(temp, '====')
-      return temp
-
+      return this.$store.state.product;
+      //       let temp = this.$store.state.product;
+      //  console.log(temp, '====')
+      // temp.initialPrice = format(Number(temp.initialPrice))
+      // if (this.$store.state.product.bid.bids.length != 0){
+      //   this.$store.state.product.bid.bids.forEach((x,i) => {
+      //     console.log(x, 'xx')
+      //     temp.bid.bids[i].price = format(Number(x.price))
+      //   })
+      // }
+      // console.log(temp, '====')
+      // return temp
     },
     token() {
       return this.$store.state.token;
@@ -185,44 +193,61 @@ export default {
     }
   },
   methods: {
+    format(num) {
+      var p = num.toFixed(2).split(".");
+      return (
+        "Rp. " +
+        p[0]
+          .split("")
+          .reverse()
+          .reduce(function(acc, num, i, orig) {
+            return num == "-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
+          }, "") +
+        "," +
+        p[1]
+      );
+    },
     setImage(params) {
       this.choosenImage = params;
     },
     ...mapActions(["FETCHPRODUCT"]),
     addBid() {
-      let arr1 = this.product.bid.bids;
-      arr1.unshift({
-        bidderId: this.user._id,
-        dateIssued: new Date(),
-        price: this.value
-      });
-      console.log(arr1, "arr");
-      dbh
-        .collection("biding")
-        .doc(`${this.product.bid._id}`)
-        .set({
-          bids: arr1,
-          createdAt: this.product.bid.createdAt,
-          productId: this.product.bid.productId,
-          updatedAt: this.product.bid.updatedAt,
-          winnerId: this.product.bid.winnerId
-        })
-        .then(() => {
-          axios({
-            method: "PATCH",
-            url: `${this.url}/product/${this.product._id}/addbid`,
-            data: { price: this.value },
-            headers: { token: this.token }
-          })
-            .then(({ data }) => {
-              this.value = "";
-              // this.FETCHPRODUCT(this.$route.params.id);
+      axios({
+        method: "PATCH",
+        url: `${this.url}/product/${this.product._id}/addbid`,
+        data: { price: this.value },
+        headers: { token: this.token }
+      })
+        .then(({ data }) => {
+ 
+          // this.FETCHPRODUCT(this.$route.params.id);
+          let arr1 = this.product.bid.bids;
+          arr1.unshift({
+            bidderId: this.user._id,
+            dateIssued: new Date(),
+            price: this.value
+          });
+          console.log(arr1, "arr");
+          dbh
+            .collection("biding")
+            .doc(`${this.product.bid._id}`)
+            .set({
+              bids: arr1,
+              createdAt: this.product.bid.createdAt,
+              productId: this.product.bid.productId,
+              updatedAt: this.product.bid.updatedAt,
+              winnerId: this.product.bid.winnerId
             })
-            .catch(error => {
-              console.log(error);
-            });
+            .then(() => {
+                       this.value = "";
+                       this.err =""
+            })
+            .catch(err => console.log(err));
         })
-        .catch(err => console.log(err));
+        .catch(error => {
+          console.log(error.response.data.message);
+          this.err = error.response.data.message
+        });
     },
     clear() {
       console.log("clearrrrr ==");

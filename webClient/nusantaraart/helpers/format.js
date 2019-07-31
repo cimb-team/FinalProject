@@ -1,4 +1,10 @@
 export default function formatCash(num) {
+  console.log(num)
+  if (num[0] == 'R' && num[1] == 'p') {
+    return num
+  } else {
+
+
     var p = num.toFixed(2).split(".");
     return (
       "Rp. " +
@@ -11,4 +17,5 @@ export default function formatCash(num) {
       "," +
       p[1]
     );
+  }
   }
