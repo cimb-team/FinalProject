@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Slider
 } from "react-native";
-import { Container, Header,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body } from 'native-base';
+import { Container, Toast,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body } from 'native-base';
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
@@ -31,16 +31,24 @@ function ProductDetail(props) {
   const [warningMessage, setWarningMessage] = useState("");
   const { width } = Dimensions.get("window");
   const { height } = Dimensions.get("window");
+  const [MinBid, setMinBid] = useState(0)
+  const [MaxBid, setMaxBid] = useState(0)
+
   handleChange = e => {
-    console.log(e);
+
+    
+    
     
     setbid(e);
   };
 
   postbid = () => {
-    console.log(bid, "<<<<<<<<<<<Bid")
-    console.log(props.productDetailData.initialPrice, "<<<<<<<<<<< bid")
-    console.log()
+    // console.log(bid, "<<<<<<<<<<<Bid")
+    // console.log(props.productDetailData.initialPrice, "<<<<<<<<<<< ")
+    // console.log()
+    console.log(bid, "<<<<<<<< bid");
+    console.log(MinBid, "<<<<<<<<min Bid");
+    console.log(MaxBid, "<<<<<< maxbid");
     
     let isLargerThan = false;
     if (bid > props.productDetailData.initialPrice) {
@@ -83,15 +91,40 @@ function ProductDetail(props) {
           });
         setbid("");
       } else {
-        setWarningMessage("Saldo Anda tidak mencukupi! Harap lakukan Top Up!");
+
+        Toast.show({
+          style: {
+            marginBottom: "70%",
+            marginHorizontal: "5%",
+            borderRadius: 10,
+            backgroundColor : 'background-color: rgba(238, 85, 55, 0.7)'
+          },
+          text: 'Saldo Anda tidak mencukupi! Harap lakukan Top Up!',
+          duration: 3000,
+          type: "danger",
+          textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
+          // buttonTextStyle: { color: "black" },
+          buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
+        });
       }
     } else {
-      setWarningMessage(
-        "Penawaran harus lebih besar dari yang terbesar dan harga awal!"
-      );
+      Toast.show({
+        style: {
+          marginBottom: "70%",
+          marginHorizontal: "5%",
+          borderRadius: 10,
+          backgroundColor : 'background-color: rgba(238, 85, 55, 0.7)'
+        },
+        text: 'Penawaran harus lebih besar dari yang terbesar dan harga awal!',
+        duration: 3000,
+        type: "danger",
+        textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
+        // buttonTextStyle: { color: "black" },
+        buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
+      });
     }
-  };
-
+  }; 
+ 
 
  
 
@@ -127,9 +160,13 @@ function ProductDetail(props) {
           const dataBaru = doc.data()
           setbidDariFirebase(doc.data());
           if(dataBaru.bids.length !== 0) {
-            setbid(Number(dataBaru.bids[0].price + 1))
+            setbid(Number(dataBaru.bids[0].price)+1)
+            setMinBid(Number(dataBaru.bids[0].price))
+            setMaxBid(Number(dataBaru.bids[0].price)*2)
           } else {
             setbid(Number(props.productDetailData.initialPrice))
+            setMinBid(Number(props.productDetailData.initialPrice)+1)
+            setMaxBid(Number(props.productDetailData.initialPrice)*3)
           }
         });
     } else {
@@ -205,7 +242,7 @@ function ProductDetail(props) {
                                bidDariFirebase.bids.length !== 0 ?
                                <Text> {formatCash(Number(bidDariFirebase.bids[0].price))}</Text>
                                :
-                               <Text> {9090}</Text>
+                               <Text> {formatCash(props.productDetailData.initialPrice)}</Text>
                              }
                               
                                 </View>
@@ -216,12 +253,12 @@ function ProductDetail(props) {
                               </View>
                               <View style={{width:'100%',height:50, alignItems:'center'}}>
                               <Slider
-                                minimumValue={12000000}
-                                maximumValue={45000000}
+                                minimumValue={MinBid}
+                                maximumValue={MaxBid}
                                 minimumTrackTintColor="#FF0000"
                                 maximumTractTintColor="#F62020"
                                 step={2}
-                                value={4}
+                                value={(bid*0.05)}
                                 onValueChange={value => handleChange(value)}
                                 style={styles.slider}
                                 thumbTintColor="#EE5537"
@@ -235,6 +272,10 @@ function ProductDetail(props) {
                                 > 
                                     <Text style={{color:'white'}}>Place Bid</Text>
                                 </Button>
+                               
+                              </View>
+                              <View>
+                              <Text style={{color:'#EE5537'}}>{warningMessage}</Text>
                               </View>
 
                               </React.Fragment> : <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View>
@@ -246,7 +287,7 @@ function ProductDetail(props) {
                   </View>
               </View>
             }
-
+  
 
             <View style={{width: width*1,marginTop:'15%', alignItems: "center",justifyContent: "center"}}>
                 <View style={{width:'85%',marginTop:'5%'}}>

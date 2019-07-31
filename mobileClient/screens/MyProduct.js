@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   TouchableHighlight,
+  ActivityIndicator,
   StatusBar
 } from "react-native";
 import Constants from "expo-constants";
@@ -40,43 +41,31 @@ function MyProduct(props) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
-              marginVertical: 10,
-              borderRadius: 20,
-              margin: 10,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 25,
-                fontWeight: "bold",
-                color: "black"
-              }}
-            >
-              My Products
-          </Text>
-          </View>
-          <View
-            style={{
               height: "100%",
-              width: "90%",
+              width: "100%",
               marginTop: 6,
-              marginBottom: "25%"
+              marginBottom: "25%",
+              alignItems: 'center'
             }}
           >
-            {!props.myProductsLoading && (
-              <Fragment>
+            {props.myProductsLoading 
+            ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> 
+            : props.myProductsData.length === 0
+            ? <Image style={{marginTop:'10%', width:250, height:250}} source={require('../assets/kosong.png')}></Image>
+            : props.myProductsData
+            ?<Fragment>
                 {props.myProductsData.map(product => (
+                  <View style={{width:"85%"}}>
                   <Card
                     key={product._id}
                     product={product}
                     navigation={props.navigation}
                   />
+                  </View>
                 ))}
               </Fragment>
-            )}
+            : <Text>Error</Text>
+            }
           </View>
         </ScrollView>
       </Animatable.View>
