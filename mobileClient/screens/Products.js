@@ -161,13 +161,15 @@ function Product(props) {
         }}>
           {!props.allProductsLoading && (
             <Fragment>
-              {props.allProductsData.map(product => (
+              {props.allProductsData.map(product => {
+                console.log(product)
+                return (
                 <Card
                   key={product._id}
                   product={product}
                   navigation={props.navigation}
                 />
-              ))}
+              )})}
             </Fragment>
           )}
         </ScrollView>

@@ -3,6 +3,7 @@ const Product = require("../models/product");
 const Bid = require("../models/bid");
 const User = require("../models/user");
 const nodemailer = require("nodemailer");
+const db = require('../FBConfig')
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -32,6 +33,12 @@ module.exports = () => {
   cron.schedule(
     "*/1 * * * * *",
     () => {
+      // Product.deleteMany({})
+      // .then(()=>console.log('deleted products'))
+      // .catch(err =>console.log(err))
+      // Bid.deleteMany({})
+      // .then(()=>console.log('deleted bids'))
+      // .catch(err =>console.log(err))
       let updatedProducts = []
       let updatedUsers = []
       Product.find({ closedDate: { $lte: new Date() }, status: 'open' })
@@ -52,8 +59,7 @@ module.exports = () => {
               row.bid.winnerId = row.bid.bids[row.bid.bids.length - 1].bidderId
               userMutations.push(User.findByIdAndUpdate(row.userId._id, { $inc: { balance: row.bid.bids[row.bid.bids.length - 1].price } }))
               let returned = [row.bid.winnerId._id.toString()]
-              console.log(returned)
-              console.log('PERTAMAXXXXXX')
+
               for (let i = row.bid.bids.length - 2; i >= 0; i--) {
                 if (!returned.includes(row.bid.bids[i].bidderId._id.toString())) {
                   userMutations.push(User.findByIdAndUpdate(row.bid.bids[i].bidderId, { $inc: { balance: row.bid.bids[i].price } }, { new: true }))
@@ -64,7 +70,6 @@ module.exports = () => {
                     product: row.toObject()
                   })
                   returned.push(row.bid.bids[i].bidderId._id.toString())
-                  console.log(returned)
                 }
               }
             }
@@ -82,21 +87,42 @@ module.exports = () => {
           // console.log(JSON.stringify(updatedProducts, null, 3))
           // console.log(JSON.stringify(updatedUsers, null, 3))
           updatedProducts.forEach(product => {
+            db.collection("biding").doc(product.bid._id.toString())
+            .update({
+              closed: true
+            })
+            .then(function() {
+                console.log("Document updated :" + product.title);
+            })
+            .catch(function(error) {
+              // The document probably doesn't exist.
+                console.error("Error updating document: " + product.title);
+            })
+            
             // Send email to product owner
-            console.log(product)
             if (product.bid.winnerId) {
-              var emailCont = `Hi ${product.userId.name}, your product "${product.title}" has been sold to ${product.bid.winnerId.name} with highest bid of Rp. ${product.bid.bids[product.bid.bids.length - 1].price},- and has been added to your account balance, please check your app for more details.
+              var emailCont = `
+<div style="display: flex; justify-content: center; align-items: center;">
+  <img src="cid:logo@nusantara-art.com" width="200"/>
+</div>
+<h2><b>Hi ${product.userId.name},</b></h2>
+Your product "${product.title}" has been sold to ${product.bid.winnerId.name} with highest bid of Rp. ${product.bid.bids[product.bid.bids.length - 1].price},- and has been added to your account balance, please check your app for more details.
   
-  Best regards,
-  Nusantara Art Team`;
+Best regards,
+Nusantara Art Team`;
               var mailOptions = {
                 from: process.env.GOOGLE_EMAIL,
                 to: `${product.userId.email}`,
                 subject: "Your product has been sold - Nusantara Art",
-                text: emailCont
+                html: emailCont,
+                attachments: [{
+                  filename: 'logo.png',
+                  path: __dirname + '/logo.png',
+                  cid: 'logo@nusantara-art.com' //same cid value as in the html img src
+                }]
               };
 
-              console.log(emailCont)
+              
               transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                   console.log('ERROR OWNER')
@@ -108,7 +134,12 @@ module.exports = () => {
               })
 
               // Send email to bid winner
-              var emailCont = `Hi ${product.bid.winnerId.name}, we would like to inform you that you've won your bid for product "${product.title}" with highest bid of Rp. ${product.bid.bids[product.bid.bids.length - 1].price},-. We've included file attachment of your product in this email. Thank you very much for your purchase, please check your app for more details.
+              var emailCont = `
+<div style="display: flex; justify-content: center; align-items: center;">
+  <img src="cid:logo@nusantara-art.com" width="200"/>
+</div>
+<h2><b>Hi ${product.bid.winnerId.name},</b></h2>
+We would like to inform you that you've won your bid for product "${product.title}" with highest bid of Rp. ${product.bid.bids[product.bid.bids.length - 1].price},-. We've included file attachment of your product in this email. Thank you very much for your purchase, please check your app for more details.
 
 Best regards,
 Nusantara Art Team`;
@@ -117,13 +148,18 @@ Nusantara Art Team`;
                 from: process.env.GOOGLE_EMAIL,
                 to: `${product.bid.winnerId.email}`,
                 subject: "Congrats, you've won a product bid' - Nusantara Art",
-                text: emailCont,
+                html: emailCont,
                 attachments: [{   // use URL as an attachment
                   filename: product.title + '.' + extensionImage[extensionImage.length - 1],
                   path: product.images[0]
+                },
+                {
+                  filename: 'logo.png',
+                  path: __dirname + '/logo.png',
+                  cid: 'logo@nusantara-art.com' //same cid value as in the html img src
                 }]
               };
-              console.log(emailCont)
+              
               transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                   console.log('ERROR WINNER')
@@ -135,18 +171,28 @@ Nusantara Art Team`;
               })
             }
             else {
-              var emailCont = `Hi ${product.userId.name}, we're sorry to inform that your product "${product.title}" has been due with no bidders, please check your app for more details.
+              var emailCont = `
+<div style="display: flex; justify-content: center; align-items: center;">
+  <img src="cid:logo@nusantara-art.com" width="200"/>
+</div>
+<h2><b>Hi ${product.userId.name},</b></h2>
+We're sorry to inform that your product "${product.title}" has been due with no bidders, please check your app for more details.
   
-  Best regards,
-  Nusantara Art Team`;
+Best regards,
+Nusantara Art Team`;
               var mailOptions = {
                 from: process.env.GOOGLE_EMAIL,
                 to: `${product.userId.email}`,
                 subject: "Your product has been due - Nusantara Art",
-                text: emailCont
+                html: emailCont,
+                attachments: [{
+                  filename: 'logo.png',
+                  path: __dirname + '/logo.png',
+                  cid: 'logo@nusantara-art.com' //same cid value as in the html img src
+                }]
               }
 
-              console.log(emailCont)
+              
               transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                   console.log('ERROR OWNER')
@@ -161,7 +207,12 @@ Nusantara Art Team`;
 
           updatedUsers.forEach((user, i) => {
             // Send email to bid losers, except owner
-            var emailCont = `Hi ${user.name}, we would like to inform you that you've lost your bid for product "${user.product.title}", Rp. ${user.refunded},- of your bid has been fully refunded to your account balance, please check your app for more details.     
+            var emailCont = `
+<div style="display: flex; justify-content: center; align-items: center;">
+  <img src="cid:logo@nusantara-art.com" width="200"/>
+</div>
+<h2><b>Hi ${user.name},</b></h2>
+We would like to inform you that you've lost your bid for product "${user.product.title}", Rp. ${user.refunded},- of your bid has been fully refunded to your account balance, please check your app for more details.     
 
 Best regards,
 Nusantara Art Team`;
@@ -169,9 +220,14 @@ Nusantara Art Team`;
               from: process.env.GOOGLE_EMAIL,
               to: `${user.email}`,
               subject: "Your bid has been refunded - Nusantara Art",
-              text: emailCont
+              html: emailCont,
+              attachments: [{
+                filename: 'logo.png',
+                path: __dirname + '/logo.png',
+                cid: 'logo@nusantara-art.com' //same cid value as in the html img src
+              }]
             };
-            console.log(emailCont)
+            
 
             transporter.sendMail(mailOptions, function (err, info) {
               if (err) {

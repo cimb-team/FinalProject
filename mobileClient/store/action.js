@@ -184,3 +184,24 @@ export function bidding(value, token, id) {
       });
   };
 }
+
+export function quickbid() {
+  return (dispatch, state) => {
+    let { productDetail, token } = state()
+    return axios({
+      method: "PATCH",
+      url: `/product/${productDetail.data._id}/quickcountdown`,
+      data: {},
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        dispatch(getProductDetail(token, productDetail.data._id));
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}

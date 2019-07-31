@@ -10,7 +10,7 @@ class ProductController {
     let product;
     // let event = new Date()
     // event.setSeconds(event.getSeconds()+30);
-
+    console.log(req.body)
     Product.create({
       userId: req.decoded.id,
       title: req.body.title,
@@ -22,6 +22,7 @@ class ProductController {
       closedDate: req.body.closedDate
     })
       .then(result => {
+        console.log(result)
         product = result;
         return Bid.create({
           bids: [],
@@ -29,6 +30,7 @@ class ProductController {
           productId: product._id
         })
           .then(bid => {
+            console.log(bid)
             Product.findByIdAndUpdate(
               product._id,
               { bid: bid._id },
@@ -137,14 +139,22 @@ class ProductController {
       Bid.findOne({
         productId: req.params.id
       })
+      .populate('productId')
     ])
     .then(results => {
       let [userData, bidData] = results
       let adding = 0
+      if(bidData.productId.userId.equals(req.decoded.id))
+        throw { code: 400, message: 'You cannot bid on your own product'}
       if(bidData.bids.length === 0){
+        if(req.body.price <= bidData.productId.initialPrice)
+          throw { code: 400, message: 'Your bid cannot be less than initial price : ' + bidData.productId.initialPrice }
         adding = req.body.price
       }
       else {
+        let highestBid = bidData.bids[bidData.bids.length - 1].price
+        if(req.body.price < highestBid)
+          throw { code: 400, message: 'Your bid cannot be less than current highest bid : ' + highestBid }
         let lastBid = bidData.bids.filter(bid => bid.bidderId.equals(req.decoded.id))
         if(lastBid.length > 0)
           adding = req.body.price - lastBid[lastBid.length - 1].price
@@ -174,14 +184,22 @@ class ProductController {
   // QUICK TIMER FOR PRESENTATION
   static quickcountdown(req, res, next){
     let event = new Date()
-    event.setSeconds(event.getSeconds()+90);
+    event.setSeconds(event.getSeconds()+5);
 
-    Product.findByIdAndUpdate(req.params.id, {
-      status: "open",
-      closedDate: event
-    }, { new: true })
+    Product.findById(req.params.id)
       .then(row => {
-        res.status(201).json(row)
+        if(row.userId.equals(req.decoded.id)){
+          row.status = 'open'
+          row.closedDate = event
+          return row.save()
+          
+        }
+        else{
+          throw {code: 400, message: 'Unauthorized product update'}
+        }
+      })
+      .then(row2 =>{
+        res.status(201).json(row2)
       })
       .catch(next);
   }
