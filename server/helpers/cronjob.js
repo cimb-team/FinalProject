@@ -68,6 +68,8 @@ module.exports = () => {
               
         
               for (let i = row.bid.bids.length - 2; i >= 0; i--) {
+                console.log(row.bid.bids[i], 'cronnnn')
+                if (row.bid.bids[i].bidderId != null){
                 if (!returned.includes(row.bid.bids[i].bidderId._id.toString())) {
                   userMutations.push(User.findByIdAndUpdate(row.bid.bids[i].bidderId._id, { $inc: { balance: row.bid.bids[i].price } }, { new: true }))
                   console.log('returned to ' + row.bid.bids[i].bidderId.name + ' with amount : ' + row.bid.bids[i].price)
@@ -78,6 +80,7 @@ module.exports = () => {
                   })
                   returned.push(row.bid.bids[i].bidderId._id.toString())
                 }
+              }
               }
             }
             productMutations.push(row.save())
