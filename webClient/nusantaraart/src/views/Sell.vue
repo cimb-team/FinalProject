@@ -1,7 +1,7 @@
 <template>
   <div style="display:flex;justify-content:center">
     <div class style="width:600px;margin-top:5%" v-if="islogin">
-      <h2 style="color:white;text-align:center;margin-bottom:30px">Let's sell!</h2>
+      <h2 style="color:white;text-align:center;margin-bottom:30px;text-shadow:1px 1px black">Let's sell!</h2>
       <div
         class="card text-black mb-3"
         style="width: 100%;cursor:pointer;border-radius:5px;padding:50px;background-color:#FFFFFF"

@@ -95,7 +95,7 @@
               type="text"
               class="form-control"
               id="exampleInputPassword1"
-              placeholder="$"
+              placeholder="Rp."
             />
             <div style="display:flex;justify-content:center">
               <button

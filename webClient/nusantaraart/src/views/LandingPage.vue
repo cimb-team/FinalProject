@@ -2,15 +2,15 @@
   <div v-if="!islogin">
 <div style=" display:flex;justify-content:center;margin-top:5%">
     <img src="	
-https://storage.cloud.google.com/orvin-savero/merah.png" style="width:600px;height:250px"/>
+https://storage.cloud.google.com/orvin-savero/merah.png" style="width:600px;height:250px;min-width:350px;min-height:15px"/>
 </div>
-    <div id="loginRegister" style="margin-bottom:200px;margin-top:5%">
-      <div class="register">
-        <h3 style="color:white">Register</h3>
+    <div class="row" style="margin-bottom:200px;margin-top:5%;display:flex;justify-content: center">
+      <div class="" style="margin-right:20px;margin-left:20px;margin-bottom:30px">
+        <h3 style="color:white;">Register</h3>
         <Register></Register>
       </div>
-      <div class="login">
-        <h3 style="color:white">Login</h3>
+      <div class="" style="margin-right:20px;margin-left:20px;margin-bottom:30px">
+        <h3 style="color:white;">Login</h3>
         <Login></Login>
       </div>
     </div>
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style>
-#loginRegister {
+/* #loginRegister {
   margin-top: 50px;
   display: flex;
   justify-content: center;
@@ -50,5 +50,5 @@ export default {
   text-align: center;
   margin-top: 50px;
   font-weight: 600;
-}
+} */
 </style>

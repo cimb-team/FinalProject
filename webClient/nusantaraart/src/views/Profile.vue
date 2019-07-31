@@ -4,7 +4,7 @@
       <div class>
         <div>
           <h2
-            style="color:white;margin-top:30px;display:flex;justify-content:center;text-align:center"
+            style="text-shadow:1px 1px black;color:white;margin-top:30px;display:flex;justify-content:center;text-align:center"
           >Profile</h2>
         </div>
         <div style="display:flex;justify-content:center">
@@ -35,7 +35,7 @@
               <p class="card-text">
                 <strong>Balance:</strong>
                 <br />
-                {{ profile.balance }}
+                {{ format(Number(profile.balance)) }}
               </p>
             </div>
           </div>
@@ -44,7 +44,7 @@
       <div class style="display:flex;justify-content:center;flex-direction:column">
         <div>
           <h2
-            style="color:white;margin-top:30px;display:flex;justify-content:center;text-align:center"
+            style="text-shadow:1px 1px black;color:white;margin-top:30px;display:flex;justify-content:center;text-align:center"
           >Top-Up</h2>
         </div>
 
@@ -56,7 +56,7 @@
             <h4 style="text-align:center">
               <strong>Balance:</strong>
               <br />
-              {{ profile.balance }}
+              {{ format(Number(profile.balance)) }}
             </h4>
           </div>
         </div>
@@ -97,7 +97,7 @@
           <div v-for="data in history" :key="data._id">
             <div
               class="card text-black mb-3"
-              style="width: 18rem;height:29rem;padding:15px;margin-top:10px;background-color:#FFFFFF;border-radius:5px;color:black"
+              style="width: 18rem;padding:15px;margin-top:10px;background-color:#FFFFFF;border-radius:5px;color:black"
             >
               <h5 class="card-title" style="text-align:center">{{ data.productId.title }}</h5>
                             <div class>
@@ -105,11 +105,11 @@
                   class="list-group-item"
                   style="border-radius:5px;background-color:white;color:black"
                 >
-                  <p class="card-text">Initial Price: Rp. {{ data.productId.initialPrice }}</p>
+                  <p class="card-text">Initial Price: {{format(Number( data.productId.initialPrice)) }}</p>
                   <p
                     v-if="data.bids"
                     class="card-text"
-                  >Last Price: Rp. {{ data.bids[data.bids.length-1].price }}</p>
+                  >Last Price: {{ format(Number(data.bids[data.bids.length-1].price)) }}</p>
                   <p class="card-text">Status: {{ data.productId.status }}</p>
                 </li>
               </div>
@@ -125,7 +125,6 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
-import format from "../../helpers/format"
 export default {
   name: "home",
   props: ["islogin"],
@@ -137,9 +136,7 @@ export default {
   components: {},
   computed: {
     profile() {
-            let temp = this.$store.state.profile;
-      temp.balance = format(Number(temp.balance))
-      return temp
+      return this.$store.state.profile
     },
     history() {
       return this.$store.state.history;
@@ -152,6 +149,20 @@ export default {
     }
   },
   methods: {
+        format(num) {
+      var p = num.toFixed(2).split(".");
+      return (
+        "Rp. " +
+        p[0]
+          .split("")
+          .reverse()
+          .reduce(function(acc, num, i, orig) {
+            return num == "-" ? acc : num + (i && !(i % 3) ? "." : "") + acc;
+          }, "") +
+        "," +
+        p[1]
+      );
+    },
     ...mapActions(["FETCH_PROFILE"]),
     ...mapActions(["FETCH_HISTORY"]),
     add() {
