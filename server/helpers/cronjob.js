@@ -53,13 +53,20 @@ module.exports = () => {
         .then(rows => {
           let productMutations = []
           let userMutations = []
+          let bidMutations = []
           rows.forEach((row, i) => {
             row.status = 'close'
             if (row.bid.bids.length > 0) {
               row.bid.winnerId = row.bid.bids[row.bid.bids.length - 1].bidderId._id
+              bidMutations.push(Bid.findByIdAndUpdate(row.bid._id, {winnerId: row.bid.winnerId}, {new: true}))
+
+              console.log(row.bid.winnerId, 'WINNER ID')
               userMutations.push(User.findByIdAndUpdate(row.userId._id, { $inc: { balance: row.bid.bids[row.bid.bids.length - 1].price } }))
+
               let returned = [row.bid.winnerId._id.toString()]
 
+              
+        
               for (let i = row.bid.bids.length - 2; i >= 0; i--) {
                 if (!returned.includes(row.bid.bids[i].bidderId._id.toString())) {
                   userMutations.push(User.findByIdAndUpdate(row.bid.bids[i].bidderId._id, { $inc: { balance: row.bid.bids[i].price } }, { new: true }))
@@ -77,7 +84,7 @@ module.exports = () => {
             updatedProducts.push(row.toObject())
           })
           if (productMutations.length > 0)
-            return Promise.all([Promise.all(productMutations), Promise.all(userMutations)])
+            return Promise.all([Promise.all(productMutations), Promise.all(userMutations), Promise.all(bidMutations)])
           else
             throw 'Nothing to update'
         })
