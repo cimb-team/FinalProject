@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
   Text,
   View,
   Image,
@@ -10,26 +9,46 @@ import {
   ScrollView,
   TextInput,
   TouchableHighlight,
-  KeyboardAvoidingView
+  Dimensions,
+  ActivityIndicator,
+  Slider
 } from "react-native";
+import { Container, Toast,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body } from 'native-base';
+
 import { connect } from "react-redux";
-import { getProductDetail, bidding } from "../store/action";
+import { getProductDetail, bidding, quickbid } from "../store/action";
 import Title from "../components/Title";
 import dbh from "../FBConfig";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from "react-native-animatable";
-
 import formatCash from "../helpers";
 
-function ProductDetail(props) {
-  const [bid, setbid] = useState("0");
+import Products from "./Products";
+function ProductDetail(props) { 
+  const [bid, setbid] = useState("");
+  const [bidSlider, setbidslider] = useState(0)
   const [bidDariFirebase, setbidDariFirebase] = useState("");
   const [warningMessage, setWarningMessage] = useState("");
-  handleChange = text => {
-    setbid(String(Number(text.replace(/[^0-9]+/g, ''))));
+  const { width } = Dimensions.get("window");
+  const { height } = Dimensions.get("window");
+  const [MinBid, setMinBid] = useState(0)
+  const [MaxBid, setMaxBid] = useState(0)
+
+  handleChange = e => {
+
+    setbid(e);
   };
+
   postbid = () => {
+    // console.log(bid, "<<<<<<<<<<<Bid")
+    // console.log(props.productDetailData.initialPrice, "<<<<<<<<<<< ")
+    // console.log()
+    console.log(bid, "<<<<<<<< bid");
+    console.log(MinBid, "<<<<<<<<min Bid");
+    console.log(MaxBid, "<<<<<< maxbid");
+    
     let isLargerThan = false;
+    console.log(bid, bidDariFirebase)
     if (bid > props.productDetailData.initialPrice) {
       if (bidDariFirebase) {
         if (bidDariFirebase.bids.length > 0) {
@@ -42,8 +61,11 @@ function ProductDetail(props) {
       }
     }
 
+    
+ 
     if (isLargerThan) {
       if (bid <= props.currentBalance) {
+        console.log("Masuk");
         let arr1 = bidDariFirebase.bids;
         arr1.unshift({
           bidderId: props.bidderId,
@@ -65,20 +87,61 @@ function ProductDetail(props) {
           });
         setbid("");
       } else {
-        setWarningMessage("Saldo Anda tidak mencukupi! Harap lakukan Top Up!");
+
+        Toast.show({
+          style: {
+            marginBottom: "70%",
+            marginHorizontal: "5%",
+            borderRadius: 10,
+            backgroundColor : 'background-color: rgba(238, 85, 55, 0.7)'
+          },
+          text: 'Saldo Anda tidak mencukupi! Harap lakukan Top Up!',
+          duration: 3000,
+          type: "danger",
+          textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
+          // buttonTextStyle: { color: "black" },
+          buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
+        });
       }
     } else {
-      setWarningMessage(
-        "Penawaran harus lebih besar dari yang terbesar dan harga awal!"
-      );
+      Toast.show({
+        style: {
+          marginBottom: "70%",
+          marginHorizontal: "5%",
+          borderRadius: 10,
+          backgroundColor : 'background-color: rgba(238, 85, 55, 0.7)'
+        },
+        text: 'Penawaran harus lebih besar dari yang terbesar dan harga awal!',
+        duration: 3000,
+        type: "danger",
+        textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
+        // buttonTextStyle: { color: "black" },
+        buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
+      });
     }
-  };
+
+  }; 
+ 
+
+  // useEffect(() => {
+  //   console.log(props.bidderId, "ini dari sstore login=========================")
+  //   props.getProductDetail(props.token, '5d3f6a3b33e440292c43a52b');
+  //   dbh
+  //   .collection("biding")
+  //   .doc(`5d3f6a3b33e440292c43a52c`)
+  //   .onSnapshot(function(doc) {
+  //     console.log("XXXXX", doc.data(), "===="); 
+  //     const dataBaru = doc.data()
+  //     setbidDariFirebase(doc.data());
+  //     setbid(Number(dataBaru.bids[0].price + 1))
+  //   });
+  // }, []);
+
+
+
+
   useEffect(() => {
     if (props.productDetailData._id != props.navigation.state.params.id) {
-      console.log(
-        props.navigation.state.params.id,
-        "++++++++++++++++++++++++++++"
-      );
       props.getProductDetail(props.token, props.navigation.state.params.id);
     } else if (props.ProductDetailfunction) {
       dbh
@@ -86,7 +149,17 @@ function ProductDetail(props) {
         .doc(`${props.productDetailData.bid._id}`)
         .onSnapshot(function(doc) {
           console.log("XXXXX", doc.data(), "====");
+          const dataBaru = doc.data()
           setbidDariFirebase(doc.data());
+          if(dataBaru.bids.length !== 0) {
+            setbid(Number(dataBaru.bids[0].price)+1)
+            setMinBid(Number(dataBaru.bids[0].price))
+            setMaxBid(Number(dataBaru.bids[0].price)*2)
+          } else {
+            setbid(Number(props.productDetailData.initialPrice))
+            setMinBid(Number(props.productDetailData.initialPrice)+1)
+            setMaxBid(Number(props.productDetailData.initialPrice)*3)
+          }
         });
     } else {
       console.log(
@@ -99,292 +172,188 @@ function ProductDetail(props) {
   }, [props.ProductDetailfunction]);
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
-    keyboardVerticalOffset={330}>
-      <ScrollView>
-        {!props.productDetailLoading && props.productDetailData && (
-          <Fragment>
-            <View style={styles.card}>
-              <View
-                style={{
-                  marginVertical: 10,
-                  borderRadius: 10
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 25,
-                    fontWeight: "bold",
-                    color: "black",
-                    marginBottom: 10
-                  }}
-                >
-                  {props.productDetailData.title}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "right",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                  {props.productDetailData.category}
-                </Text>
-              </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Image
-                  style={{
-                    width: "90%",
-                    height: 200,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 10
-                  }}
-                  source={{
-                    uri: props.productDetailData.images[0]
-                  }}
-                />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "600"
-                  }}
-                >
-                  Artist
-                </Text>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "400"
-                  }}
-                >
-                  {props.productDetailData.userId.name}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "600"
-                  }}
-                >
-                  Auction closed at :
-                </Text>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "400"
-                  }}
-                >
-                  {new Date(
-                    String(props.productDetailData.closedDate).split("T")[0]
-                  ).toDateString() + " at 00.00"}
-                </Text>
-              </View>
-              <View style={{ padding: 15 }}>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "600",
-                    textAlign: "center",
-                    marginHorizontal: 15
-                  }}
-                >
-                  Details
-                </Text>
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "400",
-                    textAlign: "justify",
-                    margin: 15
-                  }}
-                >
-                  {props.productDetailData.details}
-                </Text>
-              </View>
-            </View>
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Text>{warningMessage}</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  width: 412,
-                  marginVertical: 20
-                }}
-              >
-                {props.productDetailData.userId._id !== props.bidderId && (
-                  <>
-                    <TextInput
-                      keyboardType="numeric"
-                      style={styles.search}
-                      placeholder="Place your bid"
-                      onChangeText={handleChange}
-                      value={bid}
-                    />
+    <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={{ alignItems:'center'}}>
+          <View style={{width:width*1, backgroundColor : 'white',marginTop:height*0.4, alignItem:'center',flex:1 }}>
+             <View style={{width: width*1,alignItems: "center",justifyContent: "center"}}>
+                  <View style={{width:"85%", alignItems:'center',marginTop:'22%'}}>
+                      <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>{props.productDetailData.title}</Text>
+                  </View>
+                  {props.productDetailData.userId &&
+                    <View style={{width:"85%", alignItems:'center'}}>
+                      <Text style={{fontSize:14, fontWeight:'bold', color:'#8B8B8B'}}>{props.productDetailData.userId.name}</Text>
+                  </View>
+                  }
+             </View> 
 
-                    <TouchableHighlight onPress={() => postbid()}>
-                      <View
-                        style={{
-                          padding: 10,
-                          backgroundColor: "#3399ff",
-                          width: 100,
-                          borderRadius: 10,
-                          marginLeft: 10
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "600",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            textAlign: "center"
-                          }}
-                        >
-                          BID
-                        </Text>
-                      </View>
-                    </TouchableHighlight>
-                  </>
-                )}
-              </View>
-              <View />
-              <View>
-                <Text>Current Balance : </Text>
-                <Text>{formatCash(Number(props.currentBalance))}</Text>
-              </View>
+  
 
-              <View
-                style={{
-                  padding: 10,
-                  backgroundColor: "#f5f5f5",
-                  width: 200,
-                  borderRadius: 10,
-                  marginTop: 10,
-                  marginBottom: 2.5
-                }}
-              >
-                <Text
-                  style={{
-                    color: "black",
-                    fontWeight: "600",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center"
-                  }}
-                >
-                  Initial Price:{" "}
-                  {formatCash(props.productDetailData.initialPrice)}
-                </Text>
-              </View>
 
-              {bidDariFirebase.bids && (
-                <>
-                  {bidDariFirebase.bids.map((bid, index) => (
-                    <Fragment key={index + "fragment"}>
-                      {index === 0 && (
-                        <View>
-                          <Text>Top 5 Bids</Text>
+
+
+             <View style={{width: width*1,  marginTop:30,marginBottom : 10, alignItems: "center",justifyContent: "center", }}>
+                  <View style={{width:"85%",}}>
+                      <Text  style={{fontSize:12,textAlign:'justify', color:'#8B8B8B', fontWeight:'bold'}}>
+                      The expression or application of human creative skill and imagination, typically in a visual form such as painting or sculpture, producing works to be appreciated primarily for their beauty or emotional power
+                      The expression or application of human creative skill and imagination, typically in a visual form such as painting or sculpture, producing works to be appreciated primarily for their beauty or emotional power
+                      The expression or application of human creative skill and imagination, typically in a visual form such as painting or sculpture, producing works to be appreciated primarily for their beauty or emotional power
+
+                      </Text>
+                  </View> 
+             </View> 
+
+
+             <View style={{width: width*1,marginTop:10,alignItems: "center",justifyContent: "center", }}>
+                  <View style={{width:"85%",flexDirection:'row', alignItems: "center",justifyContent: "center"}}>
+                        <View style={{width:"50%",alignItems: "center",justifyContent: "center"}}>
+                            <Text  style={{fontSize:12, color:'#EE5537', fontWeight:'bold'}}>Starting Bid : 12/12/2019</Text>
+
                         </View>
-                      )}
-                      {index < 5 ? (
-                        <View
-                          key={index}
-                          style={{
-                            padding: 10,
-                            backgroundColor: "#f5f5f5",
-                            width: 200,
-                            borderRadius: 10,
-                            margin: 2.5
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "black",
-                              fontWeight: "400",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              textAlign: "center"
-                            }}
-                          >
-                            # {index + 1}: ${formatCash(Number(bid.price))}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "black",
-                              fontWeight: "400",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              textAlign: "center"
-                            }}
-                          >
-                            {props.bidderId === bid.bidderId
-                              ? "You"
-                              : "Other user"}
-                          </Text>
+                        <View style={{width:"50%",alignItems: "center",justifyContent: "center"}}>
+                            <Text  style={{fontSize:12, color:'#EE5537', fontWeight:'bold'}}>Closing Bid : 12/12/2019</Text>
                         </View>
-                      ) : (
-                        <>
-                          {index === 5 && <Text>Other bids ..</Text>}
-                          {index >= 5 && (
-                            <View
-                              key={index}
-                              style={{
-                                padding: 10,
-                                backgroundColor: "#f5f5f5",
-                                width: 200,
-                                borderRadius: 10,
-                                margin: 2.5
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  color: "black",
-                                  fontWeight: "400",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  textAlign: "center"
-                                }}
-                              >
-                                # {index + 1}: ${formatCash(Number(bid.price))}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: "black",
-                                  fontWeight: "400",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  textAlign: "center"
-                                }}
-                              >
-                                {props.bidderId === bid.bidderId
-                                  ? "You"
-                                  : "Other user"}
-                              </Text>
+
+                  </View>
+             </View> 
+
+
+            {
+              props.productDetailData.userId && 
+               props.productDetailData.userId._id !== props.bidderId &&
+
+              <View style={{width: width*1,height: 225,alignItems: "center"}}>
+                  <View style={{width:"85%",height:'100%', alignItems:'center', }}>
+                      <Card style={{width:'100%', height:'100%', }}>
+                          <CardItem>
+                            <Body>
+                                  <View style={{width:'100%',height:'100%', alignItems:'center'}}>
+                                  {bidDariFirebase.bids ? 
+                              <React.Fragment>
+                              <View style={{width:"100%", alignItems:'center',}}>
+                                <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>PLACE YOUR BID</Text>
+                              </View>
+                              <View style={{width:'100%', flexDirection:'row', marginTop:10, marginBottom:10,}}>
+                              <View style={{width:'50%',alignItems:'center',  }}>
+                              <Text>{`Current Price`}</Text>
+                             {
+                               bidDariFirebase.bids.length !== 0 ?
+                               <Text> {formatCash(Number(bidDariFirebase.bids[0].price))}</Text>
+                               :
+                               <Text> {formatCash(props.productDetailData.initialPrice)}</Text>
+                             }
+                              
+                                </View>
+                                <View style={{width:'50%',alignItems:'center'}}>
+                                <Text>{`Your Bid`}</Text>
+                                <Text> {formatCash(Number(bid))}</Text>
+                                </View>
+                              </View>
+                              <View style={{width:'100%',height:50, alignItems:'center'}}>
+                              <Slider
+                                minimumValue={MinBid}
+                                maximumValue={MaxBid}
+                                minimumTrackTintColor="#FF0000"
+                                maximumTractTintColor="#F62020"
+                                step={2}
+                                value={(bid*0.05)}
+                                onValueChange={value => handleChange(value)}
+                                style={styles.slider}
+                                thumbTintColor="#EE5537"
+                              /> 
+                              </View>
+
+                              <View>
+                                <Button rounded 
+                                style={{backgroundColor:'#EE5537', padding:20}}
+                                onPress={postbid}
+                                > 
+                                    <Text style={{color:'white'}}>Place Bid</Text>
+                                </Button>
+                               
+                              </View>
+                              <View>
+                              <Text style={{color:'#EE5537'}}>{warningMessage}</Text>
+                              </View>
+
+                              </React.Fragment> : <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View>
+                              }
+                                  </View>
+                            </Body>
+                          </CardItem>
+                      </Card>
+                  </View>
+              </View>
+            }
+  
+
+            <View style={{width: width*1,marginTop:'15%', alignItems: "center",justifyContent: "center"}}>
+                <View style={{width:'85%',marginTop:'5%'}}>
+                    <Card style={{width:'100%',alignItems:'center'}}>
+                       <CardItem>
+                         <Body>
+                            <View style={{width:'100%', alignItems:'center'}}>
+                                <Text style={{fontSize:30, fontWeight:'bold', color:'#EE5537'}}>BID HISTORY</Text>
                             </View>
-                          )}
-                        </>
-                      )}
-                    </Fragment>
-                  ))}
-                </>
-              )}
+                            <View style={{width:'100%'}}>
+                              <Content>
+                                  <Card>
+                                    <List> 
+                                
+                                  {
+                                    bidDariFirebase.bids  ? (
+                                      bidDariFirebase.bids.map((product, index) => (
+                                        <ListItem key={index}>
+                                          <Left>
+                                            <Text>{formatCash(Number(product.price))}</Text>
+                                          </Left>
+                                          <Right style={{width:100}}>
+                                            {
+                                              product.bidderId === props.bidderId ? 
+                                              <Badge style={{justifyContent:'center', backgroundColor:'#EE5537'}}>
+                                              <Text style={{color:'white'}}>You</Text>
+                                            </Badge>
+                                            :
+                                              <Text style={{color:'black'}}>{`User Id : ${product.bidderId.substring(18)}`}</Text>
+                                            }
+                                          </Right>
+                                        </ListItem>
+                                      ))
+                                    ) : <View style={{justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> 
+                                  }
+                                        
+
+                                    </List>
+                                  </Card>
+                                </Content>
+                            </View>
+                            {
+                               props.productDetailData ?
+                            <View style={{width:'100%', alignItems:'center'}}>
+                                <Text style={{fontSize:15, fontWeight:'bold', color:'#8B8B8B'}}>{`Initial Prize : ${formatCash(Number(props.productDetailData.initialPrice))}`}</Text>
+                            </View>
+                            : <Text>0</Text>
+                             }
+                              
+                          </Body>
+                      </CardItem>
+                    </Card>
+               </View>
             </View>
-          </Fragment>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+
+
+          </View>
+          </ScrollView>
+        
+         <View style={{width:width*1, height:height*0.5, borderBottomLeftRadius:70, backgroundColor : '#D7D7D7', position:'absolute'}}>
+          {props.productDetailLoading ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> :
+           props.productDetailData ? <View style={{width: width*1,height: height*0.5,alignItems: "center",justifyContent: "center"}}>
+           <Image style={{width: "80%",height: "80%",}} source={{ uri: props.productDetailData.images[0]}}/>
+             </View> : <Text>amsyonh</Text>  }
+          </View>
+      
+    </SafeAreaView>
+
   );
 }
 
@@ -401,7 +370,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   getProductDetail,
-  bidding
+  bidding,
+  quickbid
 };
 
 export default connect(
@@ -413,7 +383,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    justifyContent: "center"
+    alignItems : 'center'
+  },
+  slider: {
+    marginTop: 10,
+    width: 200,
   },
   text: {
     textAlign: "center",
@@ -433,8 +407,16 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     backgroundColor: "white",
     borderRadius: 10,
-    padding: 10,
     borderWidth: 0.5,
     width: 150
   }
 });
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@
   <div id="register">
     <form @submit.prevent="registerUser">
       <div class="form-group">
-        <label for="registerName">Name</label>
+        <label style="color:white" for="registerName">Name</label>
         <input
           v-model="register.name"
           type="text"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="registerEmail">Email address</label>
+        <label style="color:white" for="registerEmail">Email address</label>
         <input
           v-model="register.email"
           type="email"
@@ -24,7 +24,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="registerPassword">Password</label>
+        <label style="color:white" for="registerPassword">Password</label>
         <input
           v-model="register.password"
           type="password"
@@ -34,8 +34,8 @@
           required
         />
       </div>
-            <div class="form-group">
-        <label for="registerPhone">Phone Number</label>
+      <div class="form-group">
+        <label style="color:white" for="registerPhone">Phone Number</label>
         <input
           v-model="register.phone"
           type="text"
@@ -48,37 +48,39 @@
       <button
         style="border-radius: 20px;width: 100px;text-align:center"
         type="submit"
-        class="btn btn-primary"
-      >Register</button>
+        class="btn btn-light"
+      >
+        Register
+      </button>
       <p v-if="error.length != 0" style="color:red">{{ error }}</p>
     </form>
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-  name: 'register',
-  data () {
+  name: "register",
+  data() {
     return {
       register: {
-        name: '',
-        email: '',
-        password: '',
-        phone: ''
+        name: "",
+        email: "",
+        password: "",
+        phone: ""
       },
-      error: ''
-    }
+      error: ""
+    };
   },
   components: {},
   computed: {
-    url () {
-      return this.$store.state.url
+    url() {
+      return this.$store.state.url;
     }
   },
   methods: {
-    registerUser () {
+    registerUser() {
       axios({
-        method: 'POST',
+        method: "POST",
         url: `${this.url}/user/signup`,
         data: {
           name: this.register.name,
@@ -88,23 +90,23 @@ export default {
         }
       })
         .then(({ data }) => {
-          console.log(data)
-          this.clearAll()
+          console.log(data);
+          this.clearAll();
         })
         .catch(error => {
-          this.error = error.response.data.message
-          console.log(error)
-        })
+          this.error = error.response.data.message;
+          console.log(error);
+        });
     },
-    clearAll () {
-      this.register.name = ''
-      this.register.email = ''
-      this.register.password = ''
-      this.register.phone = ''
-      this.error = ''
+    clearAll() {
+      this.register.name = "";
+      this.register.email = "";
+      this.register.password = "";
+      this.register.phone = "";
+      this.error = "";
     }
   }
-}
+};
 </script>
 
 <style>

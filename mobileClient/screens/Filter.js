@@ -64,21 +64,25 @@ const Filter = props => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={list.length === 0 ? { flex: 1, justifyContent: 'center', alignItems: 'center' } : {}}>
-        {list.length >= 1 &&
+
+      <>
+        {list.length === 0
+        ?  <View style={{width:'100%', alignItems:'center'}}><Image style={{width:200, height:80, marginTop:'20%'}} source={require('../assets/notfound.png')}></Image></View>
+        : list.length >= 1 
+        ?
+
           list.map(product => (
             <Card
               key={product._id}
               product={product}
               navigation={props.navigation}
             />
-          ))}
-        {list.length === 0 && 
-            <View style={{ height: '15%', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Image source={require('../assets/magnifier.png')} style={{ width: 50, height: 50 }}/>
-              <Text>No result found for "{props.navigation.getParam("search")}"</Text>
-            </View>
-        } 
+
+          ))
+          :  <Image style={{width:300, height:200, marginTop:'20%'}} source={require('../assets/error.png')}></Image>
+          }
+      </>
+
     </ScrollView>
   );
 };

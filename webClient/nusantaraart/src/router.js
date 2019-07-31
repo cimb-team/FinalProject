@@ -34,14 +34,14 @@ export default new Router({
       component: () => import("./views/Profile.vue")
     },
     {
-      path: "/topup",
+      path: "/sell",
       name: "my-product-detail",
-      component: () => import("./views/Topup.vue")
+      component: () => import("./views/Sell.vue")
     },
     {
-      path: "/history",
-      name: "my-product-detail",
-      component: () => import("./views/History.vue")
-    }
+      path: "/3d/:id",
+      name: "my-3d-detail",
+      component: () => import("./views/3d.vue")
+    },
   ]
 });

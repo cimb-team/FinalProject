@@ -7,7 +7,8 @@ import {
   StyleSheet,
   View,
   Animated,
-  Image
+  Image,
+  Dimensions
 } from "react-native";
 import { getProfile, setToken } from "../store/action";
 import { connect } from "react-redux";
@@ -19,6 +20,9 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 function SplashScreen({ navigation, getProfile, setToken }) {
   // buat ntar loading screen
@@ -49,13 +53,13 @@ function SplashScreen({ navigation, getProfile, setToken }) {
 
   //   setTimeout(() => {
   //     getUserInfo();
-  //   }, 3000);
+  //   }, 100);
   // }, []);
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/splashScreen.png')} style={{width: '50%', height: '30%'}}/>
-      { loading && <ActivityIndicator size="large" />}
+      <Image source={require('../assets/splashScreen.png')} style={{width: width*0.4, height: height*0.1}}/>
+      { loading && <ActivityIndicator color='#EE5537' size="large" />}
       <StatusBar barStyle="default" />
     </View>
   );
