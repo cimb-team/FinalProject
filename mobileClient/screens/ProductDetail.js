@@ -14,16 +14,16 @@ import {
   Slider
 } from "react-native";
 import { Container, Toast,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body } from 'native-base';
+
 import { connect } from "react-redux";
-import { getProductDetail, bidding } from "../store/action";
+import { getProductDetail, bidding, quickbid } from "../store/action";
 import Title from "../components/Title";
 import dbh from "../FBConfig";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from "react-native-animatable";
-
 import formatCash from "../helpers";
-import Products from "./Products";
 
+import Products from "./Products";
 function ProductDetail(props) { 
   const [bid, setbid] = useState("");
   const [bidSlider, setbidslider] = useState(0)
@@ -36,9 +36,6 @@ function ProductDetail(props) {
 
   handleChange = e => {
 
-    
-    
-    
     setbid(e);
   };
 
@@ -51,6 +48,7 @@ function ProductDetail(props) {
     console.log(MaxBid, "<<<<<< maxbid");
     
     let isLargerThan = false;
+    console.log(bid, bidDariFirebase)
     if (bid > props.productDetailData.initialPrice) {
       if (bidDariFirebase) {
         if (bidDariFirebase.bids.length > 0) {
@@ -62,11 +60,9 @@ function ProductDetail(props) {
         }
       }
     }
-    console.log(isLargerThan, "<<< large ");
-    console.log(props.currentBalance, "<<<<<<<<<<<< duit gue");
-    
-    
 
+    
+ 
     if (isLargerThan) {
       if (bid <= props.currentBalance) {
         console.log("Masuk");
@@ -123,13 +119,9 @@ function ProductDetail(props) {
         buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
       });
     }
+
   }; 
  
-
- 
-
-
-
 
   // useEffect(() => {
   //   console.log(props.bidderId, "ini dari sstore login=========================")
@@ -194,6 +186,9 @@ function ProductDetail(props) {
                   }
              </View> 
 
+  
+
+
 
 
              <View style={{width: width*1,  marginTop:30,marginBottom : 10, alignItems: "center",justifyContent: "center", }}>
@@ -212,10 +207,12 @@ function ProductDetail(props) {
                   <View style={{width:"85%",flexDirection:'row', alignItems: "center",justifyContent: "center"}}>
                         <View style={{width:"50%",alignItems: "center",justifyContent: "center"}}>
                             <Text  style={{fontSize:12, color:'#EE5537', fontWeight:'bold'}}>Starting Bid : 12/12/2019</Text>
+
                         </View>
                         <View style={{width:"50%",alignItems: "center",justifyContent: "center"}}>
                             <Text  style={{fontSize:12, color:'#EE5537', fontWeight:'bold'}}>Closing Bid : 12/12/2019</Text>
                         </View>
+
                   </View>
              </View> 
 
@@ -356,6 +353,7 @@ function ProductDetail(props) {
           </View>
       
     </SafeAreaView>
+
   );
 }
 
@@ -372,7 +370,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   getProductDetail,
-  bidding
+  bidding,
+  quickbid
 };
 
 export default connect(

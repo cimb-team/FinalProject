@@ -143,7 +143,7 @@ function Signup({ navigation, getProfile, setToken }) {
               style={{color : "white"}}
               placeholderTextColor='white'
               value={phonenumber}
-              onChangeText={text => setphonenumber(text)}
+              onChangeText={text => setphonenumber(text.replace(/[^0-9]+/g, ''))}
             />
             {/* <Icon active name='call'/> */}
           </Item>

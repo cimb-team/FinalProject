@@ -23,9 +23,9 @@ import { NavigationEvents } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
 
 function MyProduct(props) {
-  useEffect(() => {
-    props.getMyProducts(props.token);
-  }, []);
+  // useEffect(() => {
+  //   props.getMyProducts(props.token);
+  // }, []);
 
   const handleViewRef = ref => this.view = ref;
   const animation = () => this.view.fadeInUp(300)
@@ -34,7 +34,11 @@ function MyProduct(props) {
     <SafeAreaView style={styles.container}>
       <NavigationEvents
         onWillBlur={animation}
-        onWillFocus={animation}
+        onWillFocus={() => {
+          props.getMyProducts(props.token)
+          animation()
+          
+        }}
       />
       <Animatable.View ref={handleViewRef}>
         <TopBar navigation={props.navigation} />

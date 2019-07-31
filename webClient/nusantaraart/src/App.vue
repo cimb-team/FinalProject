@@ -1,40 +1,48 @@
 <template>
   <div id="app">
-    <Navbar :islogin="islogin"></Navbar>
-    <router-view style="margin:50px" :islogin="islogin" />
+    <Navbar v-if="this.$router.history.current.name !== 'my-3d-detail'" :islogin="islogin"></Navbar>
+    <router-view style="margin:0px" :islogin="islogin" />
   </div>
 </template>
 <script>
-import Navbar from '@/components/Navbar.vue'
-import { mapActions } from 'vuex'
+import Navbar from "@/components/Navbar.vue";
+import { mapActions } from "vuex";
+
 export default {
-  name: 'app',
-  data () {
-    return {}
+  name: "app",
+  data() {
+    return {};
   },
   components: {
     Navbar
   },
   computed: {
-    islogin () {
-      return this.$store.state.islogin
+    islogin() {
+      return this.$store.state.islogin;
     }
   },
   watch: {},
   methods: {
-    ...mapActions(['FETCHQUESTIONS'])
+    ...mapActions(["FETCHQUESTIONS"])
   },
-  created () {
-    if (localStorage.getItem('@nusantara-token')) {
-      this.$store.commit('USERLOGIN', JSON.parse(localStorage.getItem('user')))
-      this.$router.push('/products')
+  created() {
+    console.log(this.$route.params)
+
+        console.log(this.$route)
+    console.log(this.$router)
+    if (localStorage.getItem("@nusantara-token")) {
+      console.log('@@@@@')
+      this.$store.commit("USERLOGIN", JSON.parse(localStorage.getItem("user")));
+      console.log(this.$router.history.fullPath)
+
+      this.$router.push(this.$router.history.fullPath);
     } else {
-      localStorage.clear()
-      this.$store.commit('USERLOGOUT', localStorage)
-      this.$router.push('/')
+      localStorage.clear();
+      this.$store.commit("USERLOGOUT", localStorage);
+      this.$router.push("/");
     }
   }
-}
+};
 </script>
 <style>
 #app {

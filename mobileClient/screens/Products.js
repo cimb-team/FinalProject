@@ -52,14 +52,19 @@ function Product(props) {
       uri: require('../assets//productDummy/14.png')
     }
   ]);
+
   useEffect(() => {
     props.getAllProducts(props.token);
   }, []);
   
 
 
+
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onWillFocus={() => props.getAllProducts(props.token)}
+      />
       <View style={{ width: "100%" }}>
         <TopBar navigation={props.navigation} screen={'products'} />
       </View>
@@ -111,15 +116,19 @@ function Product(props) {
         
           {props.allProductsLoading ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> : (
             <Fragment>
+
               {props.allProductsData.map(product => (
                 <View style={{width:'90%'}} key={product._id}>
+
                 <Card
                   
                   product={product}
                   navigation={props.navigation}
                 />
+
                 </View>
               ))}
+
             </Fragment>
           )}
         </ScrollView>
