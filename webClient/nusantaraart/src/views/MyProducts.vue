@@ -8,6 +8,7 @@
         <div class v-for="product in myProducts" :key="product._id">
           <Card :product="product"></Card>
         </div>
+        <p v-if="myProducts.length == 0" style="color:white;text-align:center">No Arts Yet</p>
       </div>
     </div>
   </div>
@@ -49,6 +50,7 @@ export default {
 
   },
   created() {
+    console.log('MY PRODUCTS')
     this.FETCH_MY_PRODUCTS();
   }
 };

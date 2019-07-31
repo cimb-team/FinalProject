@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="row" style="display:flex;justify-content:space-evenly;align-items:flex-start;margin-top:5%">
+    <div
+      class="row"
+      style="display:flex;justify-content:space-evenly;align-items:flex-start;margin-top:5%"
+    >
       <div class>
         <div>
           <h2
@@ -100,12 +103,14 @@
               style="width: 18rem;padding:15px;margin-top:10px;background-color:#FFFFFF;border-radius:5px;color:black"
             >
               <h5 class="card-title" style="text-align:center">{{ data.productId.title }}</h5>
-                            <div class>
+              <div class>
                 <li
                   class="list-group-item"
                   style="border-radius:5px;background-color:white;color:black"
                 >
-                  <p class="card-text">Initial Price: {{format(Number( data.productId.initialPrice)) }}</p>
+                  <p
+                    class="card-text"
+                  >Initial Price: {{format(Number( data.productId.initialPrice)) }}</p>
                   <p
                     v-if="data.bids"
                     class="card-text"
@@ -113,8 +118,12 @@
                   <p class="card-text">Status: {{ data.productId.status }}</p>
                 </li>
               </div>
-              <img :src="data.productId.images[0]" style="border:2px solid black;margin-top:10px" class="card-img-top" alt="..." />
-
+              <img
+                :src="data.productId.images[0]"
+                style="border:2px solid black;margin-top:10px"
+                class="card-img-top"
+                alt="..."
+              />
             </div>
           </div>
         </div>
@@ -125,6 +134,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+import Swal from "sweetalert2";
 export default {
   name: "home",
   props: ["islogin"],
@@ -136,7 +146,7 @@ export default {
   components: {},
   computed: {
     profile() {
-      return this.$store.state.profile
+      return this.$store.state.profile;
     },
     history() {
       return this.$store.state.history;
@@ -149,7 +159,7 @@ export default {
     }
   },
   methods: {
-        format(num) {
+    format(num) {
       var p = num.toFixed(2).split(".");
       return (
         "Rp. " +
@@ -175,6 +185,10 @@ export default {
         }
       })
         .then(({ data }) => {
+          Swal.fire({  title: 'Success!',
+  text: `${this.format(Number(this.money))} has been added to you balance!`}
+            
+          );
           this.FETCH_PROFILE();
           this.money = "";
         })

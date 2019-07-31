@@ -110,6 +110,7 @@ export default new Vuex.Store({
         });
     },
     FETCH_MY_PRODUCTS({ commit, state }, payload) {
+      console.log(state.token)
       axios({
         method: "GET",
         url: `${state.url}/product/user`,
@@ -118,6 +119,7 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
+          console.log(data, 'products')
           commit("MYPRODUCTS", data);
         })
         .catch(error => {
