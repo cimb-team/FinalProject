@@ -35,7 +35,24 @@ function ProductDetail(props) {
   const [bidClosed, setbidClosed] = useState(true)
   const [loadingClosedDate, setloadingClosedDate] = useState(true)
 
+  // ADD 1
   useEffect(() => {
+    if(Object.keys(props.productDetailData).length > 0) {
+      dbh
+        .collection("biding")
+        .doc(`${props.productDetailData.bid._id}`)
+        .onSnapshot(function (doc) {
+          // doc.docChanges().forEach(function(change) {
+          //   if (change.type === "modified") {
+          //     props.getProductDetail(props.token, props.navigation.state.params.id)
+          //     console.log("Modified product: ", change.doc.data());
+          //   }
+          // });
+          console.log(doc.data())
+          setbidDariFirebase(doc.data());
+        })
+    }
+
     if (props.productDetailData.status === 'open')
       setbidClosed(false)
     else if(props.productDetailData.status === 'close')
@@ -73,21 +90,21 @@ function ProductDetail(props) {
   };
   postbid = () => {
     let isLargerThan = false;
-    console.log(bid, bidDariFirebase)
-    if (bid > props.productDetailData.initialPrice) {
+    if (Number(bid) > props.productDetailData.initialPrice) {
       if (bidDariFirebase) {
         if (bidDariFirebase.bids.length > 0) {
-          if (bid > bidDariFirebase.bids[0].price) {
+          if (Number(bid) > Number(bidDariFirebase.bids[0].price)) {
             isLargerThan = true;
           }
-        } else {
+        }
+        else {
           isLargerThan = true;
         }
       }
     }
-    console.log(typeof bid, bid)
+    // console.log(typeof bid, typeof props.productDetailData.initialPrice, typeof bidDariFirebase.bids[0].price, typeof props.currentBalance)
     if (isLargerThan) {
-      if (bid <= props.currentBalance) {
+      if (Number(bid) <= props.currentBalance) {
         let arr1 = bidDariFirebase.bids;
         arr1.unshift({
           bidderId: props.bidderId,
@@ -117,6 +134,9 @@ function ProductDetail(props) {
       );
     }
   };
+
+  // ADD 2
+
   // useEffect(() => {
   //   if (props.productDetailData._id != props.navigation.state.params.id) {
   //     props.getProductDetail(props.token, props.navigation.state.params.id);
@@ -142,27 +162,17 @@ function ProductDetail(props) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
       keyboardVerticalOffset={330}>
+        {/* ADD 3 */}
         <NavigationEvents
           onWillFocus={()=>{
+            console.log('token '+props.token)
+            console.log('params '+props.navigation.state.params.id)
             props.getProductDetail(props.token, props.navigation.state.params.id)
             .then(()=> {
-              console.log(props.productDetailData.bid._id)
-              dbh
-                .collection("biding")
-                .doc(`${props.productDetailData.bid._id}`)
-                .onSnapshot(function (doc) {
-                  // doc.docChanges().forEach(function(change) {
-                  //   if (change.type === "modified") {
-                  //     props.getProductDetail(props.token, props.navigation.state.params.id)
-                  //     console.log("Modified product: ", change.doc.data());
-                  //   }
-                  // });
-                  console.log(doc.data())
-                  setbidDariFirebase(doc.data());
-                });
+
             })
             .catch(err =>{
-
+              console.log(err)
             })
           }}
         />
