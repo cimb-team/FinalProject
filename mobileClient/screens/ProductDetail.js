@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   Slider
 } from "react-native";
+import axios from "../axios";
 import { Container, Toast,Button, Content, Card, CardItem, Icon, Right, Badge, List, ListItem, Left, Body, Spinner } from 'native-base';
 
 import { connect } from "react-redux";
@@ -95,10 +96,13 @@ function ProductDetail(props) {
             winnerId: props.productDetailData.bid.winnerId
           })
           .then(() => {
+            console.log("masuk then create bid");
+            
             
             props.bidding(bid, props.token, props.productDetailData._id);
           });
         setbid("");
+
       } else {
 
         Toast.show({
@@ -161,16 +165,17 @@ function ProductDetail(props) {
         
           const dataBaru = doc.data()
           console.log(dataBaru);
-          
           setbidDariFirebase(dataBaru);
-          if(dataBaru.bids.length > 0) {
-            setbid(Number(dataBaru.bids[0].price)+1)
-            setMinBid(Number(dataBaru.bids[0].price)+1)
-            setMaxBid(Number(dataBaru.bids[0].price)*3)
-          } else {
-            setbid(Number(props.productDetailData.initialPrice)+1)
-            setMinBid(Number(props.productDetailData.initialPrice)+1)
-            setMaxBid(Number(props.productDetailData.initialPrice)*3)
+          if(dataBaru){
+            if(dataBaru.bids.length > 0) {
+              setbid(Number(dataBaru.bids[0].price)+1)
+              setMinBid(Number(dataBaru.bids[0].price)+1)
+              setMaxBid(Number(dataBaru.bids[0].price)*3)
+            } else {
+              setbid(Number(props.productDetailData.initialPrice)+1)
+              setMinBid(Number(props.productDetailData.initialPrice)+1)
+              setMaxBid(Number(props.productDetailData.initialPrice)*3)
+            }
           }
         })
     }
@@ -183,8 +188,8 @@ function ProductDetail(props) {
     if (props.productDetailData.closedDate) {
       const interval = setInterval(() => {
         // let closedDate = moment(mili)
-        // let closedDate = moment(props.productDetailData.closedDate)
-        let closedDate = moment(mili)
+        let closedDate = moment(props.productDetailData.closedDate)
+        // let closedDate = moment(mili)
 
         let now = moment()
         let countdown = moment.duration(closedDate.diff(now))
@@ -195,7 +200,6 @@ function ProductDetail(props) {
             sameDay: () => '[' + now.to(closedDate) + ']',
             sameElse: () => '[' + now.to(closedDate) + ']'
           }))
-          clearInterval(interval)
         }
         else {
           setcountdownText(closedDate.calendar(null, {
