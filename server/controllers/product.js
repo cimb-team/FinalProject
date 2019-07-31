@@ -1,6 +1,8 @@
 const Product = require("../models/product.js");
 const Bid = require("../models/bid");
 const User = require("../models/user");
+const db = require('../FBConfig.js')
+
 class ProductController {
   /**
    * POST /products
@@ -185,7 +187,7 @@ class ProductController {
   static quickcountdown(req, res, next){
     let event = new Date()
     event.setSeconds(event.getSeconds()+5);
-
+    let returning
     Product.findById(req.params.id)
       .then(row => {
         if(row.userId.equals(req.decoded.id)){
@@ -199,7 +201,14 @@ class ProductController {
         }
       })
       .then(row2 =>{
-        res.status(201).json(row2)
+        returning = row2
+        return db.collection('bidding').doc(row2._id.toString())
+        .update({
+          updatedAt: row2.updatedAt
+        })
+      })
+      .then(doc =>{
+        res.status(201).json(returning)
       })
       .catch(next);
   }
