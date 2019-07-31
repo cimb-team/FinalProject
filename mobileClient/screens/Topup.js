@@ -2,26 +2,40 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
   Text,
   View,
   Image,
   Platform,
   ScrollView,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  ActivityIndicator
 } from "react-native";
+import { Spinner, Button } from 'native-base'
 import { connect } from "react-redux";
 import { getProfile, toppingUp } from "../store/action";
 import Title from "../components/Title";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from "react-native-animatable";
+import formatCash from "../helpers";
+
 function Topup(props) {
-  [topup, setTopup] = useState("");
-  handleChange = e => {
-    setTopup(e);
-  }; 
+  [topup, setTopup] = useState("0");
+  [loading, setloading] = useState(false);
+
+  handleChange = text => {
+    setTopup(String(Number(text.replace(/[^0-9]+/g, ''))));
+  };
   postTopup = () => {
-    props.toppingUp(topup, props.token);
-    setTopup("");
+    setloading(true)
+    props.toppingUp(topup, props.token)
+    .then(data =>{
+      setloading(false)
+    })
+    .catch(err =>{
+      setloading(false)
+    })
+    setTopup("0");
   };
   useEffect(() => {
     props.getProfile(props.token);
@@ -30,14 +44,13 @@ function Topup(props) {
     <SafeAreaView style={styles.container}>
       <Title title="Top up" style={styles.text} />
 
-      {!props.profileLoading && (
-        <>
-          <Title
-            title={`Balance: $ ${props.profileData.balance}`}
-            style={styles.text}
-          />
-        </>
-      )}
+      {!props.profileLoading
+      ? (
+        <Title
+          title={`Balance: ${formatCash(props.profileData.balance)}`}
+          style={styles.text}
+        />)
+      : <Spinner/>}
       <View
         style={{
           marginVertical: 10,
@@ -51,11 +64,13 @@ function Topup(props) {
         }}
       >
         <TextInput
+          keyboardType="numeric"
           style={styles.search}
           onChangeText={handleChange}
           value={topup}
         />
-        <TouchableHighlight onPress={() => postTopup()}>
+        
+        {/* <TouchableHighlight onPress={postTopup} disabled={loading}>
           <View
             style={{
               padding: 10,
@@ -65,6 +80,21 @@ function Topup(props) {
               marginLeft: 10
             }}
           >
+            {!loading ? (
+              <Text
+              style={{
+                color: "white",
+                fontWeight: "600",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center"
+              }}
+            >
+              Top up
+            </Text>
+            ) : (
+              <Spinner />
+            )}
             <Text
               style={{
                 color: "white",
@@ -77,8 +107,17 @@ function Topup(props) {
               Top up
             </Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
       </View>
+      <Button
+          onPress={postTopup}
+          block
+          primary
+          disabled={loading}
+          style={{ marginTop: 20, marginHorizontal: '2.5%' }}
+        >
+          {!loading ? <Text>Top up</Text> : <Spinner />}
+        </Button>
     </SafeAreaView>
   );
 }
@@ -103,7 +142,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "black",
   },
   text: {
     textAlign: "center",
@@ -118,7 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     borderWidth: 0.5,
-    width: 250
+    width: '100%'
   },
   card: {
     marginVertical: 10,

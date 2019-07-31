@@ -106,11 +106,9 @@ function Signup({ navigation, getProfile, setToken }) {
     >
       <NavigationEvents
         onWillBlur={payload => {
-          // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(0.2)
         }}
         onWillFocus={payload => {
-          // SignupRef.current.transitionTo({ opacity: 0.2 })
           setopacity(1)
         }}
       />
@@ -151,7 +149,7 @@ function Signup({ navigation, getProfile, setToken }) {
             <Input
               keyboardType="numeric"
               value={phonenumber}
-              onChangeText={text => setphonenumber(text)}
+              onChangeText={text => setphonenumber(text.replace(/[^0-9]+/g, ''))}
             />
             {/* <Icon active name='call'/> */}
           </Item>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, Text, FlatList } from "react-native";
+import { ScrollView, View, Text, FlatList, Image } from "react-native";
 import { connect } from "react-redux";
 import { getFilter } from "../store/action";
 import Card from "../components/Card";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 const Filter = props => {
   const [list, setList] = useState([]);
@@ -62,8 +64,7 @@ const Filter = props => {
   }, []);
 
   return (
-    <ScrollView>
-      <>
+    <ScrollView contentContainerStyle={list.length === 0 ? { flex: 1, justifyContent: 'center', alignItems: 'center' } : {}}>
         {list.length >= 1 &&
           list.map(product => (
             <Card
@@ -72,7 +73,12 @@ const Filter = props => {
               navigation={props.navigation}
             />
           ))}
-      </>
+        {list.length === 0 && 
+            <View style={{ height: '15%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Image source={require('../assets/magnifier.png')} style={{ width: 50, height: 50 }}/>
+              <Text>No result found for "{props.navigation.getParam("search")}"</Text>
+            </View>
+        } 
     </ScrollView>
   );
 };

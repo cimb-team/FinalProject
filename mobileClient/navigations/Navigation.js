@@ -24,7 +24,7 @@ const MyProductNav = createStackNavigator({
   
   MyProduct: {
     screen: MyProduct,
-    navigationOptions: {
+    navigationOptions: { 
       header: null,
       headerStyle: {
         backgroundColor: "white"

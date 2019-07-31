@@ -4,15 +4,19 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  Text
+  Platform,
+  Text,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Constants from "expo-constants";
 import Card from "../components/Card";
 import React, { Fragment, useState, useEffect } from "react";
 import { getAllProducts } from "../store/action";
 import { connect } from "react-redux";
 import TopBar from "../components/TopBar";
+import Constants from "expo-constants";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
@@ -101,10 +105,11 @@ function Product(props) {
   useEffect(() => {
     props.getAllProducts(props.token);
   }, []);
+
   return (
     <View style={styles.container}>
       <View style={{ width: "100%" }}>
-        <TopBar navigation={props.navigation} />
+        <TopBar navigation={props.navigation} screen={'products'} />
       </View>
       <View style={styles.scrollContainer}>
         <ScrollView
@@ -148,16 +153,12 @@ function Product(props) {
           ))}
         </ScrollView>
       </View>
-
-      <View
-        style={{
-          height: "100%",
+        <ScrollView showsVerticalScrollIndicator={false} style={{
+          // height: "100%",
           width: "90%",
-          marginTop: 6,
-          marginBottom: "25%"
-        }}
-      >
-        <ScrollView showsVerticalScrollIndicator={false}>
+          // marginTop: 6,
+          // marginBottom: "25%"
+        }}>
           {!props.allProductsLoading && (
             <Fragment>
               {props.allProductsData.map(product => (
@@ -170,7 +171,6 @@ function Product(props) {
             </Fragment>
           )}
         </ScrollView>
-      </View>
     </View>
   );
 }
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: Constants.statusBarHeight,
+    marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
     backgroundColor: "white"
   },
   scrollContainer: {

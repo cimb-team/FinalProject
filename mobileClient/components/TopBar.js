@@ -13,10 +13,13 @@ import {
   ScrollView,
   TouchableHighlight
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 function TopBar(props) {
   const [filter, setFilter] = useState("");
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
   return (
     <View style={styles.flex} opacity={1}>
       <TextInput
@@ -40,17 +43,23 @@ function TopBar(props) {
           }
         }}
       />
+      {props.navigation.state.routeName === "MyProduct" && 
+      <TouchableHighlight
+        onPress={() => {
+          props.navigation.navigate("Create");
+        }}
+      >
+        <Ionicons name="ios-add-circle" color="black" size={28} />
+      </TouchableHighlight>
+      }
       <TouchableHighlight
         onPress={() =>
-          props.navigation.navigate("Create", {
+          props.navigation.navigate("History", {
             id: "sdf"
           })
         }
       >
-        <Ionicons name="ios-add-circle" color="black" size={28} />
-      </TouchableHighlight>
-      <Ionicons name="ios-albums" color="black" size={28} />
-      <Ionicons name="ios-person" color="black" size={28} />
+      <Ionicons name="ios-albums" color="black" size={28} /></TouchableHighlight>
     </View>
   );
 }
@@ -89,10 +98,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     borderWidth: 0.5,
-    width: 250
+    width: '80%'
   },
   flex: {
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     padding: 15,
     flexDirection: "row",
     alignItems: "center"

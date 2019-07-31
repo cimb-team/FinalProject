@@ -3,7 +3,7 @@ import axios from "../axios";
 export function getHistory(token) {
   return (dispatch, state) => {
     dispatch(loadingHistory());
-    axios({
+    return axios({
       method: "GET",
       url: `/user/history`,
       headers: { token: token }
@@ -31,7 +31,7 @@ export function loadingHistory() {
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
-    axios({
+    return axios({
       method: "GET",
       url: `/product`,
       headers: { token: token }
@@ -58,7 +58,7 @@ export function loadingAllProducts() {
 export function getMyProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingMyProducts());
-    axios({
+    return axios({
       method: "GET",
       url: `/product/user`,
       headers: { token: token }
@@ -85,7 +85,7 @@ export function loadingMyProducts() {
 export function getProductDetail(token, id, cb) {
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
-    axios({
+    return axios({
       method: "GET",
       url: `/product/${id}`,
       headers: { token: token }
@@ -147,14 +147,14 @@ export function loadingProfile() {
 
 export function toppingUp(value, token) {
   return (dispatch, state) => {
-    axios({
+    return axios({
       method: "PATCH",
       url: `/user/topup`,
       data: { balance: value },
       headers: { token: token }
     })
       .then(({ data }) => {
-        dispatch(getProfile());
+        return dispatch(getProfile());
       })
       .catch(error => {
         dispatch({
@@ -165,16 +165,16 @@ export function toppingUp(value, token) {
   };
 }
 
-export function bidding(value, token, id) {;
+export function bidding(value, token, id) {
   return (dispatch, state) => {
-    axios({
+    return axios({
       method: "PATCH",
       url: `/product/${id}/addbid`,
       data: { price: value },
       headers: { token: token }
     })
       .then(({ data }) => {
-        // dispatch(getProductDetail(token, id));
+        dispatch(getProfile());
       })
       .catch(error => {
         dispatch({

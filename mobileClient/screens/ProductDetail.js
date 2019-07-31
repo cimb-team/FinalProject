@@ -9,63 +9,100 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  KeyboardAvoidingView
 } from "react-native";
 import { connect } from "react-redux";
 import { getProductDetail, bidding } from "../store/action";
 import Title from "../components/Title";
-import dbh from '../FBConfig'
+import dbh from "../FBConfig";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from "react-native-animatable";
+
+import formatCash from "../helpers";
+
 function ProductDetail(props) {
-  const [bid, setbid] = useState("");
-  const [bidDariFirebase, setbidDariFirebase] = useState("")
-  handleChange = e => {
-    setbid(e);
+  const [bid, setbid] = useState("0");
+  const [bidDariFirebase, setbidDariFirebase] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
+  handleChange = text => {
+    setbid(String(Number(text.replace(/[^0-9]+/g, ''))));
   };
   postbid = () => {
-    let arr1 = bidDariFirebase.bids
-    arr1.unshift({
-      "bidderId": props.bidderId,
-      "dateIssued": new Date(),
-      "price": bid,
-    })
-    dbh.collection("biding").doc(`${props.productDetailData.bid._id}`).set({
-      bids: arr1,
-      createdAt: props.productDetailData.bid.createdAt,
-      productId: props.productDetailData.bid.productId,
-      updatedAt: props.productDetailData.bid.updatedAt,
-      winnerId: props.productDetailData.bid.winnerId,
-    }).then( ()=>{
-      props.bidding(bid, props.token, props.productDetailData._id);
-    })
-    setbid("");
+    let isLargerThan = false;
+    if (bid > props.productDetailData.initialPrice) {
+      if (bidDariFirebase) {
+        if (bidDariFirebase.bids.length > 0) {
+          if (bid > bidDariFirebase.bids[0].price) {
+            isLargerThan = true;
+          }
+        } else {
+          isLargerThan = true;
+        }
+      }
+    }
+
+    if (isLargerThan) {
+      if (bid <= props.currentBalance) {
+        let arr1 = bidDariFirebase.bids;
+        arr1.unshift({
+          bidderId: props.bidderId,
+          dateIssued: new Date(),
+          price: bid
+        });
+        dbh
+          .collection("biding")
+          .doc(`${props.productDetailData.bid._id}`)
+          .set({
+            bids: arr1,
+            createdAt: props.productDetailData.bid.createdAt,
+            productId: props.productDetailData.bid.productId,
+            updatedAt: props.productDetailData.bid.updatedAt,
+            winnerId: props.productDetailData.bid.winnerId
+          })
+          .then(() => {
+            props.bidding(bid, props.token, props.productDetailData._id);
+          });
+        setbid("");
+      } else {
+        setWarningMessage("Saldo Anda tidak mencukupi! Harap lakukan Top Up!");
+      }
+    } else {
+      setWarningMessage(
+        "Penawaran harus lebih besar dari yang terbesar dan harga awal!"
+      );
+    }
   };
   useEffect(() => {
-
     if (props.productDetailData._id != props.navigation.state.params.id) {
-      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
+      console.log(
+        props.navigation.state.params.id,
+        "++++++++++++++++++++++++++++"
+      );
       props.getProductDetail(props.token, props.navigation.state.params.id);
-    }
-
-   else  if (props.ProductDetailfunction) {
-      dbh.collection("biding").doc(`${ props.productDetailData.bid._id}`).onSnapshot(function (doc) {
-        console.log("XXXXX", 
-        doc.data(), '====')
-        setbidDariFirebase(doc.data())
-
-      });
+    } else if (props.ProductDetailfunction) {
+      dbh
+        .collection("biding")
+        .doc(`${props.productDetailData.bid._id}`)
+        .onSnapshot(function(doc) {
+          console.log("XXXXX", doc.data(), "====");
+          setbidDariFirebase(doc.data());
+        });
     } else {
-      console.log(props.navigation.state.params.id, '++++++++++++++++++++++++++++')
+      console.log(
+        props.navigation.state.params.id,
+        "++++++++++++++++++++++++++++"
+      );
+
       props.getProductDetail(props.token, props.navigation.state.params.id);
     }
-
-
-
-
   }, [props.ProductDetailfunction]);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
+    keyboardVerticalOffset={330}>
       <ScrollView>
-        {!props.productDetailLoading && (
+        {!props.productDetailLoading && props.productDetailData && (
           <Fragment>
             <View style={styles.card}>
               <View
@@ -87,7 +124,7 @@ function ProductDetail(props) {
                 </Text>
                 <Text
                   style={{
-                    textAlign: "center",
+                    textAlign: "right",
                     color: "black",
                     fontWeight: "400",
                     marginBottom: 10
@@ -115,6 +152,44 @@ function ProductDetail(props) {
                   }}
                 />
               </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "600"
+                  }}
+                >
+                  Artist
+                </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "400"
+                  }}
+                >
+                  {props.productDetailData.userId.name}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "600"
+                  }}
+                >
+                  Auction closed at :
+                </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "400"
+                  }}
+                >
+                  {new Date(
+                    String(props.productDetailData.closedDate).split("T")[0]
+                  ).toDateString() + " at 00.00"}
+                </Text>
+              </View>
               <View style={{ padding: 15 }}>
                 <Text
                   style={{
@@ -139,6 +214,7 @@ function ProductDetail(props) {
               </View>
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Text>{warningMessage}</Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -147,36 +223,48 @@ function ProductDetail(props) {
                   marginVertical: 20
                 }}
               >
-                <TextInput
-                  style={styles.search}
-                  placeholder="$"
-                  onChangeText={handleChange}
-                  value={bid}
-                />
-                <TouchableHighlight onPress={() => postbid()}>
-                  <View
-                    style={{
-                      padding: 10,
-                      backgroundColor: "#3399ff",
-                      width: 100,
-                      borderRadius: 10,
-                      marginLeft: 10
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center"
-                      }}
-                    >
-                      BID
-                    </Text>
-                  </View>
-                </TouchableHighlight>
+                {props.productDetailData.userId._id !== props.bidderId && (
+                  <>
+                    <TextInput
+                      keyboardType="numeric"
+                      style={styles.search}
+                      placeholder="Place your bid"
+                      onChangeText={handleChange}
+                      value={bid}
+                    />
+
+                    <TouchableHighlight onPress={() => postbid()}>
+                      <View
+                        style={{
+                          padding: 10,
+                          backgroundColor: "#3399ff",
+                          width: 100,
+                          borderRadius: 10,
+                          marginLeft: 10
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            textAlign: "center"
+                          }}
+                        >
+                          BID
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
+                  </>
+                )}
               </View>
+              <View />
+              <View>
+                <Text>Current Balance : </Text>
+                <Text>{formatCash(Number(props.currentBalance))}</Text>
+              </View>
+
               <View
                 style={{
                   padding: 10,
@@ -196,37 +284,99 @@ function ProductDetail(props) {
                     textAlign: "center"
                   }}
                 >
-                  Initial Price: ${props.productDetailData.initialPrice}
+                  Initial Price:{" "}
+                  {formatCash(props.productDetailData.initialPrice)}
                 </Text>
               </View>
-
-
 
               {bidDariFirebase.bids && (
                 <>
                   {bidDariFirebase.bids.map((bid, index) => (
-                    <View
-                      key={index}
-                      style={{
-                        padding: 10,
-                        backgroundColor: "#f5f5f5",
-                        width: 200,
-                        borderRadius: 10,
-                        margin: 2.5
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "black",
-                          fontWeight: "400",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          textAlign: "center"
-                        }}
-                      >
-                        Bid {index + 1}: ${bid.price}
-                      </Text>
-                    </View>
+                    <Fragment key={index + "fragment"}>
+                      {index === 0 && (
+                        <View>
+                          <Text>Top 5 Bids</Text>
+                        </View>
+                      )}
+                      {index < 5 ? (
+                        <View
+                          key={index}
+                          style={{
+                            padding: 10,
+                            backgroundColor: "#f5f5f5",
+                            width: 200,
+                            borderRadius: 10,
+                            margin: 2.5
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "black",
+                              fontWeight: "400",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              textAlign: "center"
+                            }}
+                          >
+                            # {index + 1}: ${formatCash(Number(bid.price))}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "black",
+                              fontWeight: "400",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              textAlign: "center"
+                            }}
+                          >
+                            {props.bidderId === bid.bidderId
+                              ? "You"
+                              : "Other user"}
+                          </Text>
+                        </View>
+                      ) : (
+                        <>
+                          {index === 5 && <Text>Other bids ..</Text>}
+                          {index >= 5 && (
+                            <View
+                              key={index}
+                              style={{
+                                padding: 10,
+                                backgroundColor: "#f5f5f5",
+                                width: 200,
+                                borderRadius: 10,
+                                margin: 2.5
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: "black",
+                                  fontWeight: "400",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  textAlign: "center"
+                                }}
+                              >
+                                # {index + 1}: ${formatCash(Number(bid.price))}
+                              </Text>
+                              <Text
+                                style={{
+                                  color: "black",
+                                  fontWeight: "400",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  textAlign: "center"
+                                }}
+                              >
+                                {props.bidderId === bid.bidderId
+                                  ? "You"
+                                  : "Other user"}
+                              </Text>
+                            </View>
+                          )}
+                        </>
+                      )}
+                    </Fragment>
                   ))}
                 </>
               )}
@@ -234,7 +384,7 @@ function ProductDetail(props) {
           </Fragment>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -245,13 +395,15 @@ const mapStateToProps = state => {
     productDetailLoading: state.productDetail.loading,
     ProductDetailfunction: state.productDetail.function,
     token: state.token,
-    bidderId: state.profile.data._id
+    bidderId: state.profile.data._id,
+    currentBalance: state.profile.data.balance
   };
 };
 const mapDispatchToProps = {
   getProductDetail,
   bidding
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
