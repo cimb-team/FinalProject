@@ -1,13 +1,16 @@
 <template>
   <div v-if="!islogin">
-    <h1 class="header">Nusantara Art</h1>
-    <div id="loginRegister">
+<div style=" display:flex;justify-content:center;margin-top:5%">
+    <img src="	
+https://storage.cloud.google.com/orvin-savero/merah.png" style="width:600px;height:250px"/>
+</div>
+    <div id="loginRegister" style="margin-bottom:200px;margin-top:5%">
       <div class="register">
-        <h3>Register</h3>
+        <h3 style="color:white">Register</h3>
         <Register></Register>
       </div>
       <div class="login">
-        <h3>Login</h3>
+        <h3 style="color:white">Login</h3>
         <Login></Login>
       </div>
     </div>

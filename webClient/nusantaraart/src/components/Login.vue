@@ -2,7 +2,7 @@
   <div id="login">
     <form @submit.prevent="loginUser">
       <div class="form-group">
-        <label for="loginEmail">Email address</label>
+        <label style="color:white" for="loginEmail">Email address</label>
         <input
           v-model="login.email"
           type="email"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="loginPassword">Password</label>
+        <label style="color:white" for="loginPassword">Password</label>
         <input
           v-model="login.password"
           type="password"
@@ -26,7 +26,7 @@
       <button
         style="border-radius: 20px;width: 100px;text-align:center"
         type="submit"
-        class="btn btn-primary"
+        class="btn btn-light"
       >
         Login
       </button>

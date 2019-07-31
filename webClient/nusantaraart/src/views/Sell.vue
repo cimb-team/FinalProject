@@ -1,10 +1,10 @@
 <template>
-<div style="display:flex;justify-content:center">
-    <div class="" style="width:600px;margin-top:20px" v-if="islogin">
+  <div style="display:flex;justify-content:center">
+    <div class style="width:600px;margin-top:5%" v-if="islogin">
       <h2 style="color:white;text-align:center;margin-bottom:30px">Let's sell!</h2>
       <div
         class="card text-black mb-3"
-        style="width: 100%;cursor:pointer;border-radius:5px;padding:50px;background-color:#FFFFFF30"
+        style="width: 100%;cursor:pointer;border-radius:5px;padding:50px;background-color:#FFFFFF"
         v-on:click="detail(product._id)"
       >
         <form @submit.prevent="create">
@@ -36,12 +36,7 @@
           <label for="imageCreate">Upload Image</label>
           <div id="imageCreate" class="container" style="margin-bottom: 30px">
             <div class="container">
-              <picture-input
-                ref="pictureInput"
-                width="100"
-                height="100"
-                :custom-strings="custom"
-              ></picture-input>
+              <picture-input ref="pictureInput" width="100" height="100" :custom-strings="custom"></picture-input>
             </div>
           </div>
           <div class="form-row">
@@ -90,7 +85,7 @@
         </form>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -101,7 +96,7 @@ export default {
   props: ["islogin"],
   data() {
     return {
-            product: {
+      product: {
         title: "",
         category: "",
         image: "",
@@ -113,13 +108,13 @@ export default {
         create: ""
       },
       custom: {
-                upload: '<h1>Bummer!</h1>',
-                drag: `<img
+        upload: "<h1>Bummer!</h1>",
+        drag: `<img
             style='height: 80px;width:80px;'
             src='http://icons.iconarchive.com/icons/dtafalonso/android-lollipop/256/Camera-Next-icon.png'
             alt='Card image cap'
           >`
-              }
+      }
     };
   },
   components: {
@@ -147,6 +142,8 @@ export default {
       newImage.append("closeDate", this.product.closedDate);
       newImage.append("category", this.product.category);
       newImage.append("images", this.$refs.pictureInput.file);
+      console.log(this.token)
+            console.log(this.url)
       axios({
         method: "POST",
         url: `${this.url}/product`,
@@ -154,16 +151,16 @@ export default {
           token: this.token
         },
         data: newImage
-      })
-        .then(({ data }) => {
-      this.product.title = ""
-      this.product.category = ""
-      this.product.image = ""
-      this.product.initialPrice = ""
-      this.product.closedDate = ""
-      this.product.details = ""
-      console.log(this.$refs.pictureInput)
-      this.$refs.pictureInput = null
+      }).then(({ data }) => {
+          console.log('=====')
+          this.product.title = "";
+          this.product.category = "";
+          this.product.image = "";
+          this.product.initialPrice = "";
+          this.product.closedDate = "";
+          this.product.details = "";
+          console.log(this.$refs.pictureInput);
+          this.$refs.pictureInput = null;
           dbh
             .collection("biding")
             .doc(`${data.bid._id}`)
@@ -173,16 +170,18 @@ export default {
               productId: data.bid.productId,
               updatedAt: data.bid.updatedAt,
               winnerId: data.bid.winnerId
+            })
+            .then(() => {
+              console.log('then router')
+              this.$router.push("/products");
             });
-          this.$router.push("/products");
         })
         .catch(error => {
           console.log(error.response);
         });
     }
   },
-  created() {
-  }
+  created() {}
 };
 </script>
 <style>
@@ -191,6 +190,6 @@ export default {
   margin-right: 5px;
 }
 label {
-  color: white;
+  color: black;
 }
 </style>
