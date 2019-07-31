@@ -116,13 +116,25 @@
                     class="card-text"
                   >Last Price: {{ format(Number(data.bids[data.bids.length-1].price)) }}</p>
                   <p class="card-text">Status: {{ data.productId.status }}</p>
-                          <p
+                  <p
                     v-if="data.bids"
                     class="card-text"
                   >Last Price: {{ format(Number(data.bids[data.bids.length-1].price)) }}</p>
-                  <p v-if="data.productId.status == 'close' && data.winnerId != profile._id" class="card-text" style="color:red">You lose</p>
-                                    <p v-if="data.productId.status == 'close' && data.winnerId == profile._id" class="card-text" style="color:green">You won the bid!</p>
-                                                                        <p v-if="data.productId.status == 'open'" class="card-text" style="color:blue">Bid still ongoing</p>
+                  <p
+                    v-if="data.productId.status == 'close' && data.winnerId != profile._id"
+                    class="card-text"
+                    style="color:red"
+                  ><strong>You lose</strong></p>
+                  <p
+                    v-if="data.productId.status == 'close' && data.winnerId == profile._id"
+                    class="card-text"
+                    style="color:green"
+                  ><strong>You won the auction!</strong></p>
+                  <p
+                    v-if="data.productId.status == 'open'"
+                    class="card-text"
+                    style="color:blue"
+                  ><strong>Auction is still ongoing</strong></p>
                 </li>
               </div>
               <img
@@ -192,10 +204,12 @@ export default {
         }
       })
         .then(({ data }) => {
-          Swal.fire({  title: 'Success!',
-  text: `${this.format(Number(this.money))} has been added to you balance!`}
-            
-          );
+          Swal.fire({
+            title: "Success!",
+            text: `${this.format(
+              Number(this.money)
+            )} has been added to you balance!`
+          });
           this.FETCH_PROFILE();
           this.money = "";
         })

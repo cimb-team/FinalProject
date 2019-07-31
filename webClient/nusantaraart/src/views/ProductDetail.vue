@@ -95,7 +95,6 @@
         >
           <div v-if="user._id != product.userId._id ">
             <h4 style="color:black;text-align:center;margin-bottom:30px">Start Bidding!</h4>
-            <p v-if="err" style="color:red;margin-top:5px">{{err}}</p>
             <input
               v-model="value"
               type="text"
@@ -110,6 +109,23 @@
                 type="button"
                 class="btn btn-primary"
               >BID</button>
+            </div>
+          </div>
+        </div>
+                <div
+          class="card"
+          style="background-color:#FFFFFF;padding:30px"
+          v-if="user._id == product.userId._id && bidClosed == true"
+        >
+          <div v-if="user._id == product.userId._id ">
+            <h4 style="color:black;text-align:center;margin-bottom:30px">Close Bid</h4>
+            <div style="display:flex;justify-content:center">
+              <button
+                style="width:120px;border-radius:10px"
+                @click="quick"
+                type="button"
+                class="btn btn-danger"
+              >CLOSE BID</button>
             </div>
           </div>
         </div>
@@ -255,6 +271,23 @@ export default {
       this.choosenImage = params;
     },
     ...mapActions(["FETCHPRODUCT"]),
+    quick(){
+      axios({
+        method: "PATCH",
+        url: `${this.url}/product/${this.product._id}/quickcountdown`,
+        headers: { token: this.token }
+      })
+      .then(({data}) => {
+              Swal.fire({
+                title: "Done",
+                text: `Bid Closed!`
+              });
+                  this.FETCHPRODUCT(this.$route.params.id);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     addBid() {
       axios({
         method: "PATCH",
