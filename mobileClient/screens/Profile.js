@@ -43,7 +43,7 @@ function ProfilePage(props) {
 
   function logout() {
     AsyncStorage.clear()
-      .then(() => props.navigation.navigate("Signin"))
+      .then(() => props.navigation.navigate("SignIn"))
       .catch(err => console.log(err));
   }
 

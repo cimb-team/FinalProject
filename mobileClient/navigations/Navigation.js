@@ -98,13 +98,9 @@ const ProductsNav = createStackNavigator({
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
-      headerTitle: "Product Detail",
+      header: null,
       headerStyle: {
         backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
       }
     }
   },
@@ -218,18 +214,32 @@ const MainNavigator = createMaterialBottomTabNavigator(
   },
   {
     initialRouteName: "Products",
-    tabBarOptions: {
-      activeTintColor: "lightblue",
-      inactiveTintColor: "white",
+      activeTintColor: "#EE5537",
+      inactiveTintColor: "grey",
       labelStyle: {
         fontSize: 14
       },
-      style: {
-        backgroundColor: "#1F1F1F"
-      }
-    }
+      barStyle: { backgroundColor: "#FFFFFF" }
+    
   }
 );
+
+
+
+const auth2 = createStackNavigator({
+  SignIn: {
+    screen: Signin,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SignUp: {
+    screen: Signup,
+    navigationOptions: {
+      header: null,
+    }
+  }
+});
 
 const Auth = createMaterialBottomTabNavigator(
   {
@@ -253,10 +263,11 @@ const Auth = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Signup",
+    initialRouteName: "Signin",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
-    barStyle: { backgroundColor: "#FF943C" },
+    
+    barStyle: { backgroundColor: "#F3411E" },
     // transitionConfig: () => fromTop(1000)
   }
 );
@@ -265,7 +276,7 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Splash: SplashScreen,
-      Auth: Auth,
+      Auth: auth2,
       App: MainNavigator
     },
     {
