@@ -29,7 +29,7 @@ momentDurationFormatSetup(moment);
 
 function ProductDetail(props) {
   const [bid, setbid] = useState("0");
-  const [bidDariFirebase, setbidDariFirebase] = useState("");
+  const [bidDariFirebase, setbidDariFirebase] = useState(null);
   const [warningMessage, setWarningMessage] = useState("");
   const [countdownText, setcountdownText] = useState("");
   const [bidClosed, setbidClosed] = useState(true)
@@ -38,6 +38,8 @@ function ProductDetail(props) {
   useEffect(() => {
     if (props.productDetailData.status === 'open')
       setbidClosed(false)
+    else if(props.productDetailData.status === 'close')
+      setbidClosed(true)
 
     if (props.productDetailData.closedDate) {
       const interval = setInterval(() => {
@@ -71,6 +73,7 @@ function ProductDetail(props) {
   };
   postbid = () => {
     let isLargerThan = false;
+    console.log(bid, bidDariFirebase)
     if (bid > props.productDetailData.initialPrice) {
       if (bidDariFirebase) {
         if (bidDariFirebase.bids.length > 0) {
@@ -82,7 +85,7 @@ function ProductDetail(props) {
         }
       }
     }
-
+    console.log(typeof bid, bid)
     if (isLargerThan) {
       if (bid <= props.currentBalance) {
         let arr1 = bidDariFirebase.bids;
@@ -114,26 +117,57 @@ function ProductDetail(props) {
       );
     }
   };
-  useEffect(() => {
-    if (props.productDetailData._id != props.navigation.state.params.id) {
-      props.getProductDetail(props.token, props.navigation.state.params.id);
-    } else if (props.ProductDetailfunction) {
-      dbh
-        .collection("biding")
-        .doc(`${props.productDetailData.bid._id}`)
-        .onSnapshot(function (doc) {
-          setbidDariFirebase(doc.data());
-        });
-    } else {
-      props.getProductDetail(props.token, props.navigation.state.params.id);
-    }
-  }, [props.ProductDetailfunction]);
+  // useEffect(() => {
+  //   if (props.productDetailData._id != props.navigation.state.params.id) {
+  //     props.getProductDetail(props.token, props.navigation.state.params.id);
+  //   } else if (props.ProductDetailfunction) {
+  //     dbh
+  //     .collection("biding")
+  //     .doc(`${props.navigation.state.params.id}`)
+  //     .onSnapshot(function (doc) {
+  //       setRefresh(true)
+  //       // doc.docChanges().forEach(function(change) {
+  //       //   if (change.type === "modified") {
+  //       //     props.getProductDetail(props.token, props.navigation.state.params.id)
+  //       //     console.log("Modified product: ", change.doc.data());
+  //       //   }
+  //       // });
+  //       setbidDariFirebase(doc.data());
+  //     });
+  //   } else {
+  //     props.getProductDetail(props.token, props.navigation.state.params.id);
+  //   }
+  // }, [props.ProductDetailfunction]);
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "android" ? "position" : null}
       keyboardVerticalOffset={330}>
+        <NavigationEvents
+          onWillFocus={()=>{
+            props.getProductDetail(props.token, props.navigation.state.params.id)
+            .then(()=> {
+              console.log(props.productDetailData.bid._id)
+              dbh
+                .collection("biding")
+                .doc(`${props.productDetailData.bid._id}`)
+                .onSnapshot(function (doc) {
+                  // doc.docChanges().forEach(function(change) {
+                  //   if (change.type === "modified") {
+                  //     props.getProductDetail(props.token, props.navigation.state.params.id)
+                  //     console.log("Modified product: ", change.doc.data());
+                  //   }
+                  // });
+                  console.log(doc.data())
+                  setbidDariFirebase(doc.data());
+                });
+            })
+            .catch(err =>{
+
+            })
+          }}
+        />
       <ScrollView>
-        {!props.productDetailLoading && props.productDetailData && (
+        {(!props.productDetailLoading && props.productDetailData) && (
           <Fragment>
             <View style={styles.card}>
               <View
@@ -246,7 +280,7 @@ function ProductDetail(props) {
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <Text>{warningMessage}</Text>
-              {!loadingClosedDate
+              {loadingClosedDate === false
                 ? <Text>
                   {countdownText}
                 </Text>
@@ -259,7 +293,7 @@ function ProductDetail(props) {
                   marginVertical: 20
                 }}
               >
-                {!bidClosed
+                {bidClosed === false
                   ? (props.productDetailData.userId._id !== props.bidderId ? (
                     <>
                       <TextInput
@@ -379,7 +413,7 @@ function ProductDetail(props) {
                 </Text>
               </View>
 
-              {bidDariFirebase.bids && (
+              {(bidDariFirebase && bidDariFirebase.bids) && (
                 <>
                   {bidDariFirebase.bids.map((bid, index) => (
                     <Fragment key={index + "fragment"}>

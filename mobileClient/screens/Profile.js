@@ -37,9 +37,9 @@ const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
 function ProfilePage(props) {
-  useEffect(() => {
-    props.getProfile(props.token);
-  }, []);
+  // useEffect(() => {
+  //   props.getProfile(props.token);
+  // }, []);
 
   function logout() {
     AsyncStorage.clear()
@@ -52,7 +52,10 @@ function ProfilePage(props) {
 
   return (
     <Animatable.View ref={handleViewRef} style={styles.container}>
-      <NavigationEvents onWillBlur={animation} onWillFocus={animation} />
+      <NavigationEvents onWillBlur={animation} onWillFocus={() => {
+        animation()
+        props.getProfile(props.token);
+      }} />
       <ScrollView
         contentContainerStyle={{ alignItems: "center" }}
         showsVerticalScrollIndicator={false}

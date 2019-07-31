@@ -155,7 +155,7 @@ class ProductController {
       }
       else {
         let highestBid = bidData.bids[bidData.bids.length - 1].price
-        if(req.body.price < highestBid)
+        if(req.body.price <= highestBid)
           throw { code: 400, message: 'Your bid cannot be less than current highest bid : ' + highestBid }
         let lastBid = bidData.bids.filter(bid => bid.bidderId.equals(req.decoded.id))
         if(lastBid.length > 0)
