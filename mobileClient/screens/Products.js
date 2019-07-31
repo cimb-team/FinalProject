@@ -102,12 +102,15 @@ function Product(props) {
       uri: "https://i.ibb.co/prP4KkY/illustrator1.jpg"
     }
   ]);
-  useEffect(() => {
-    props.getAllProducts(props.token);
-  }, []);
+  // useEffect(() => {
+  //   props.getAllProducts(props.token);
+  // }, []);
 
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onWillFocus={() => props.getAllProducts(props.token)}
+      />
       <View style={{ width: "100%" }}>
         <TopBar navigation={props.navigation} screen={'products'} />
       </View>
@@ -162,7 +165,6 @@ function Product(props) {
           {!props.allProductsLoading && (
             <Fragment>
               {props.allProductsData.map(product => {
-                console.log(product)
                 return (
                 <Card
                   key={product._id}
