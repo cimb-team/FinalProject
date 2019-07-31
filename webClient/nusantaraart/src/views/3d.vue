@@ -1,141 +1,17 @@
 <template>
-  <div style="padding:20px">
-    <div class="row" style="display:flex;justify-content:space-around;align-items:flex-start;margin-top:5%">
-      <div
-        class
-        style="display:flex;flex-direction:column;justify-content:center;max-height:1200px"
-        v-if="product.userId != 0"
-      >
-        <div
-          class="card"
-          style="padding:35px;max-width:600px;background-color:#FFFFFF"
-          v-if="product.userId != undefined"
-        >
-          <div class="card-header" style="height:47px;color:black;text-align:center;font-size:17px">
-            <strong>{{ product.title }}</strong>
-          </div>
-          <div style="margin:20px;display:flex;align-items:center;justify-content:center">
-            <img
-              style="max-width:100%;height:auto;width:auto;max-height:230px"
-              class="card-img-top"
-              v-bind:src="product.images[0]"
-              alt="Card image cap"
-            />
-          </div>
-
-          <div
-            class="card-header"
-            style="height:47px;color:black;text-align:center"
-          >Category: {{ product.category }}</div>
-          <div class="card-body">
-            <p style="color:black;text-align:center">
-              <strong>Details</strong>
-            </p>
-            <blockquote class="blockquote mb-0">
-              <p style="color:black;text-align:justify">{{ product.details }}</p>
-              <footer class="blockquote-footer">
-                <small style="color:black">
-                  By {{ product.userId.name }} at
-                  {{ product.createdAt.slice(0, 10) }}
-                </small>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-      </div>
-
-      <div class>
-        <div
-          class="card"
-          style="padding:35px;width:600px;background-color:#FFFFFF;display:flex;justify-content:center;flex-direction:column;"
-          v-if="product.userId != undefined"
-        >
-          <div
-            class="card-header"
-            style="height:47px;color:black;text-align:center;margin-bottom:20px;font-size:17px"
-          >
-            <strong>3D Model</strong>
-          </div>
-
-          <div style="display:flex;justify-content:center;flex-direction:column;padding:19px">
-            <div style="display:flex;width:500px">
-              <button class="btn btn-outline-dark" style="width:50%" @click="showShirt">SHIRT</button>
-              <button class="btn btn-outline-dark" style="width:50%" @click="showMug">MUG</button>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;width:375px">
+              <button class="btn btn-dark" style="width:50%" @click="showShirt">SHIRT</button>
+              <button class="btn btn-dark" style="width:50%" @click="showMug">MUG</button>
             </div>
 
             <canvas id="hasilthreejs"></canvas>
           </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="product.bid.bids" class="row" style="display:flex;justify-content:center;">
-      <div class style="padding:35px;max-width:600px;">
-                <div
-          class="card"
-          style="background-color:#FFFFFF;padding:30px"
-        >
-            <h4 style="color:black;text-align:center;margin-bottom:0px">Initial Price: {{ product.initialPrice }}</h4>
-        </div>
-        <div
-          class="card"
-          style="background-color:#FFFFFF;padding:30px"
-          v-if="user._id != product.userId._id"
-        >
-          <div v-if="user._id != product.userId._id">
-            <h4 style="color:black;text-align:center;margin-bottom:30px">Start Bidding!</h4>
-            <input
-              v-model="value"
-              type="text"
-              class="form-control"
-              id="exampleInputPassword1"
-              placeholder="$"
-            />
-            <div style="display:flex;justify-content:center">
-              <button
-                style="margin-top:20px;width:120px;border-radius:10px"
-                @click="addBid"
-                type="button"
-                class="btn btn-primary"
-              >BID</button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="card"
-          style="background-color:#FFFFFF;padding:30px;"
-          v-if="product.bid.bids.length !== 0"
-        >
-          <h4 style="color:black;text-align:center;margin-bottom:30px">Bid Lists</h4>
-          <div v-for="bid in product.bid.bids" :key="bid._id">
-            <div
-              class="card"
-              style="min-width:22rem;max-width:28rem;padding:20px;background-color:#00000010"
-            >
-              <h5 v-if="bid.bidderId == user._id" style="color:green" class="card-title">You Bid :</h5>
-              <h5
-                v-if="bid.bidderId !== user._id"
-                style="color:blue"
-                class="card-title"
-              >User *****{{ bid.bidderId.slice(17,23)}} Bid :</h5>
-              <p style="color:black" class="card-text">
-                <strong>{{ bid.price }}</strong>
-              </p>
-              <p
-                v-if="bid.dateIssued"
-                style="color:black;font-size:10px"
-                class="card-text"
-              >at {{ bid.dateIssued.toDate().toString().slice(0,24)}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 <script>
 // import THREE from 'three'
 // import MTLLoader from 'three-mtl-loader';
-import format from "../../helpers/format"
+
 import { mapActions } from "vuex";
 import axios from "axios";
 import dbh from "../../FBConfig.js";
@@ -156,17 +32,7 @@ export default {
       return this.$store.state.url;
     },
     product() {
-      let temp = this.$store.state.product;
-       console.log(temp, '====')
-      temp.initialPrice = format(Number(temp.initialPrice))
-      if (this.$store.state.product.bid.bids.length != 0){
-        this.$store.state.product.bid.bids.forEach((x,i) => {
-          temp.bid.bids[i].price = format(Number(x.price))
-        })
-      }
-      console.log(temp, '====')
-      return temp
-
+      return this.$store.state.product;
     },
     token() {
       return this.$store.state.token;
@@ -473,7 +339,7 @@ export default {
       var animRequestID;
       function renderFrame() {
         animRequestID = window.requestAnimationFrame(renderFrame);
-        var width = "500";
+        var width = "375";
         var height = "500";
         renderer.setSize(width, height);
         camera.aspect = width / height;

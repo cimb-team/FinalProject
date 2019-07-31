@@ -1,8 +1,8 @@
 <template>
-  <div class="row" style="display:flex; flex-wrap:wrap;flex-direction:row;padding:50px">
+  <div class="row" style="display:flex; flex-wrap:wrap;flex-direction:row;">
 
     <div class="col" style v-if="islogin">
-      <h2 style="text-align:center;color:white;margin-bottom:30px">My Arts</h2>
+      <h2 style="text-align:center;color:white;margin-bottom:30px;margin-top:5%">My Arts</h2>
 
       <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
         <div class v-for="product in myProducts" :key="product._id">
@@ -15,7 +15,7 @@
 <script>
 import Card from "@/components/Card.vue";
 import { mapActions } from "vuex";
-
+import format from "../../helpers/format"
 import axios from "axios";
 import dbh from "../../FBConfig";
 export default {
@@ -31,7 +31,11 @@ export default {
   },
   computed: {
     myProducts() {
-      return this.$store.state.myProducts;
+                  let temp = this.$store.state.myProducts;
+       temp.forEach((x, i) => {
+         temp[i].initialPrice = format(Number(x.initialPrice))
+       })
+      return temp
     },
     url() {
       return this.$store.state.url;

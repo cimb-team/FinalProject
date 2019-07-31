@@ -1,15 +1,13 @@
 <template>
   <div id="app">
-    <Navbar :islogin="islogin"></Navbar>
-    <router-view style="margin:20px" :islogin="islogin" />
+    <Navbar v-if="this.$router.history.current.name !== 'my-3d-detail'" :islogin="islogin"></Navbar>
+    <router-view style="margin:0px" :islogin="islogin" />
   </div>
 </template>
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { mapActions } from "vuex";
 
-console.log(THREE, "=============")
-console.log("masuk")
 export default {
   name: "app",
   data() {
@@ -28,9 +26,16 @@ export default {
     ...mapActions(["FETCHQUESTIONS"])
   },
   created() {
+    console.log(this.$route.params)
+
+        console.log(this.$route)
+    console.log(this.$router)
     if (localStorage.getItem("@nusantara-token")) {
+      console.log('@@@@@')
       this.$store.commit("USERLOGIN", JSON.parse(localStorage.getItem("user")));
-      this.$router.push("/products");
+      console.log(this.$router.history.fullPath)
+
+      this.$router.push(this.$router.history.fullPath);
     } else {
       localStorage.clear();
       this.$store.commit("USERLOGOUT", localStorage);

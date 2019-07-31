@@ -133,6 +133,7 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
+          console.log(data, 'allproducts')
           commit("ALLPRODUCTS", data);
           let arr = [];
           data.forEach(x => {
@@ -161,15 +162,21 @@ export default new Vuex.Store({
         }
       })
         .then(({ data }) => {
-          console.log(data);
+          console.log('fetch product');
           dbh
             .collection("biding")
             .doc(`${data.bid._id}`)
             .onSnapshot(function(doc) {
-              console.log(doc.data(), "====");
+              console.log(doc.data(), "product");
               // setbidDariFirebase()
               if (doc.data()) {
                 data.bid.bids = doc.data().bids;
+       
+                data.bid.bids.forEach((x,i) => {
+                  // let date = data.bid.bids[i].dateIssued.toDate().toString()
+                  // console.log(data.bid.bids[i].dateIssued.toDate().toString(), '====')
+                  // x.dateIssued = date
+                })
               }
 
               commit("SET_PRODUCT", data);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row" style="display:flex;justify-content:space-evenly;align-items:flex-start">
+    <div class="row" style="display:flex;justify-content:space-evenly;align-items:flex-start;margin-top:5%">
       <div class>
         <div>
           <h2
@@ -10,7 +10,7 @@
         <div style="display:flex;justify-content:center">
           <div
             class="card"
-            style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF30;border-radius:5px;color:white"
+            style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF;border-radius:5px;color:black"
           >
             <div style="display:flex;justify-content:center">
               <img
@@ -50,29 +50,29 @@
 
         <div
           class="card"
-                   style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF30;border-radius:5px;color:white"
+          style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF;border-radius:5px;color:black"
         >
           <div class="card-body">
-            <h3 style="text-align:center">
+            <h4 style="text-align:center">
               <strong>Balance:</strong>
               <br />
-              Rp. {{ profile.balance }}
-            </h3>
+              {{ profile.balance }}
+            </h4>
           </div>
         </div>
 
         <div
           class="card"
-            style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF30;border-radius:5px;color:white"
+          style="width: 18rem;margin-top:10px;padding:30px;text-align:center;background-color:#FFFFFF;border-radius:5px;color:black"
         >
           <div class="card-body">
-            <label for="exampleInputPassword1" style="color:white">Add balance:</label>
+            <label for="exampleInputPassword1" style="color:black">Add balance:</label>
             <input
               v-model="money"
               type="text"
               class="form-control"
               id="exampleInputPassword1"
-              placeholder="$"
+              placeholder="Rp."
             />
             <div style="display:flex;justify-content:center;margin-top:20px">
               <button
@@ -97,18 +97,24 @@
           <div v-for="data in history" :key="data._id">
             <div
               class="card text-black mb-3"
-              style="width: 18rem;height:29rem;padding:15px;margin-top:10px;background-color:#FFFFFF30;border-radius:5px;color:white"
+              style="width: 18rem;height:29rem;padding:15px;margin-top:10px;background-color:#FFFFFF;border-radius:5px;color:black"
             >
               <h5 class="card-title" style="text-align:center">{{ data.productId.title }}</h5>
-              <img :src="data.productId.images[0]" class="card-img-top" alt="..." />
-              <div class="card-body">
-                <p class="card-text">Initial Price: {{ data.productId.initialPrice }}</p>
-                <p
-                  v-if="data.bids"
-                  class="card-text"
-                >Last Price: {{ data.bids[data.bids.length-1].price }}</p>
-                <p class="card-text">Status: {{ data.productId.status }}</p>
+                            <div class>
+                <li
+                  class="list-group-item"
+                  style="border-radius:5px;background-color:white;color:black"
+                >
+                  <p class="card-text">Initial Price: Rp. {{ data.productId.initialPrice }}</p>
+                  <p
+                    v-if="data.bids"
+                    class="card-text"
+                  >Last Price: Rp. {{ data.bids[data.bids.length-1].price }}</p>
+                  <p class="card-text">Status: {{ data.productId.status }}</p>
+                </li>
               </div>
+              <img :src="data.productId.images[0]" style="border:2px solid black;margin-top:10px" class="card-img-top" alt="..." />
+
             </div>
           </div>
         </div>
@@ -119,6 +125,7 @@
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+import format from "../../helpers/format"
 export default {
   name: "home",
   props: ["islogin"],
@@ -130,7 +137,9 @@ export default {
   components: {},
   computed: {
     profile() {
-      return this.$store.state.profile;
+            let temp = this.$store.state.profile;
+      temp.balance = format(Number(temp.balance))
+      return temp
     },
     history() {
       return this.$store.state.history;

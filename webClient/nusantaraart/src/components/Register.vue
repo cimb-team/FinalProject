@@ -2,7 +2,7 @@
   <div id="register">
     <form @submit.prevent="registerUser">
       <div class="form-group">
-        <label for="registerName">Name</label>
+        <label style="color:white" for="registerName">Name</label>
         <input
           v-model="register.name"
           type="text"
@@ -13,7 +13,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="registerEmail">Email address</label>
+        <label style="color:white" for="registerEmail">Email address</label>
         <input
           v-model="register.email"
           type="email"
@@ -24,7 +24,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="registerPassword">Password</label>
+        <label style="color:white" for="registerPassword">Password</label>
         <input
           v-model="register.password"
           type="password"
@@ -35,7 +35,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="registerPhone">Phone Number</label>
+        <label style="color:white" for="registerPhone">Phone Number</label>
         <input
           v-model="register.phone"
           type="text"
@@ -48,7 +48,7 @@
       <button
         style="border-radius: 20px;width: 100px;text-align:center"
         type="submit"
-        class="btn btn-primary"
+        class="btn btn-light"
       >
         Register
       </button>

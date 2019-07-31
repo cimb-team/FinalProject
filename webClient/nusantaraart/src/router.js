@@ -38,5 +38,10 @@ export default new Router({
       name: "my-product-detail",
       component: () => import("./views/Sell.vue")
     },
+    {
+      path: "/3d/:id",
+      name: "my-3d-detail",
+      component: () => import("./views/3d.vue")
+    },
   ]
 });

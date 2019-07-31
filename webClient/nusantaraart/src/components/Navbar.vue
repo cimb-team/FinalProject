@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: red;">
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: 	#FF8C00;">
 
-    <a v-if="!islogin" class="navbar-brand" style="cursor:pointer;color:black"
+    <a v-if="!islogin" class="navbar-brand" style="cursor:pointer;color:white"
       >Nusantara Art</a
     >
     <router-link v-if="islogin" to="/products">

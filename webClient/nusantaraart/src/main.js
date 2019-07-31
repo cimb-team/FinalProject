@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 
 Vue.config.productionTip = false;
-console.log(THREE, '=#@#@aaaaaa=')
+// console.log(THREE, '=#@#@aaaaaa=')
 // Vue.prototype.$three = THREE
 
 // this.$three
