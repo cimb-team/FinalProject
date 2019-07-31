@@ -231,12 +231,15 @@ export default {
               sameDay: () => "[" + now.to(closedDate) + "]",
               sameElse: () => "[" + now.to(closedDate) + "]"
             });
-                   this.bidClosed = false;
+               
                    console.log(this.bidClosed)
-              Swal.fire({
+                   if (this.bidClosed == true){
+             Swal.fire({
                 title: "Time's up!",
                 text: `Bid Closed!`
               });
+                   }
+     this.bidClosed = false;
             clearInterval(interval);
      
           } else {
@@ -272,20 +275,25 @@ export default {
     },
     ...mapActions(["FETCHPRODUCT"]),
     quick(){
+      console.log()
       axios({
         method: "PATCH",
         url: `${this.url}/product/${this.product._id}/quickcountdown`,
         headers: { token: this.token }
       })
       .then(({data}) => {
-              Swal.fire({
-                title: "Done",
-                text: `Bid Closed!`
-              });
-                  this.FETCHPRODUCT(this.$route.params.id);
+              // Swal.fire({
+              //   title: "Done",
+              //   text: `Bid Closed!`
+              // });
+                  // this.FETCHPRODUCT(this.$route.params.id);
       })
       .catch(err => {
-        console.log(err)
+              //         Swal.fire({
+              //   title: "Done",
+              //   text: `Bid Closed!`
+              // });
+                  this.FETCHPRODUCT(this.$route.params.id);
       })
     },
     addBid() {
