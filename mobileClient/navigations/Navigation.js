@@ -141,7 +141,7 @@ const ProfileNav = createStackNavigator({
       },
       headerTintColor: "black",
       headerTitleStyle: {
-        color: "black"
+        color: "#EE5537"
       }
     }
   },
