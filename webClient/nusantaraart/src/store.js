@@ -31,6 +31,9 @@ export default new Vuex.Store({
       state.token = "";
       state.islogin = false;
     },
+    setToken(state, payload) {
+      state.token = payload
+    },
     PROFILE(state, payload) {
       state.profile = payload;
     },
@@ -155,6 +158,9 @@ export default new Vuex.Store({
           console.log(error);
         });
     },
+    TOKENSET({ commit, state }, payload) {
+      commit("setToken", payload)
+    },
     FETCHPRODUCT({ commit, state }, payload) {
       axios({
         method: "GET",
@@ -165,6 +171,9 @@ export default new Vuex.Store({
       })
         .then(({ data }) => {
           console.log('fetch product');
+          console.log(data)
+          commit("SET_PRODUCT", data);
+          console.log(state.product, 'state')
           dbh
             .collection("biding")
             .doc(`${data.bid._id}`)
@@ -184,7 +193,7 @@ export default new Vuex.Store({
                 })
               }
 
-              commit("SET_PRODUCT", data);
+        
             });
         })
         .catch(error => {

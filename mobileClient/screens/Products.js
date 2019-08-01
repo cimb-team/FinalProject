@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
-    backgroundColor: "white"
+    marginTop: '10%',
+    backgroundColor: "white"   
   },
   image: {
     width,

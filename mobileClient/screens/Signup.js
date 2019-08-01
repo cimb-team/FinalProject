@@ -151,7 +151,7 @@ function Signup({ navigation, getProfile, setToken }) {
         </View>
         <View style={{marginTop:height*0.04, justifyContent:"center", alignItems:'center'}}>
           
-          <Text style={{fontWeight:'bold',color:'white'}}>Already have an account ? <Text onPress={() => navigation.navigate("SignIn")} style={{fontWeight:'bold',color:'#F3411E'}}> Sing In </Text> </Text>
+          <Text style={{fontWeight:'bold',color:'white'}}>Already have an account ? <Text onPress={() => navigation.navigate("SignIn")} style={{fontWeight:'bold',color:'#F3411E'}}> Sign In </Text> </Text>
           </View>
     </Animatable.View>
       </Content>

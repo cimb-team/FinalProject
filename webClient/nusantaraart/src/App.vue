@@ -38,8 +38,9 @@ export default {
       this.$router.push(this.$router.history.fullPath);
     } else {
       localStorage.clear();
-      this.$store.commit("USERLOGOUT", localStorage);
-      this.$router.push("/");
+      // this.$store.commit("USERLOGOUT", localStorage);
+      this.$router.push(this.$router.history.fullPath);
+      // this.$router.push("/");
     }
   }
 };

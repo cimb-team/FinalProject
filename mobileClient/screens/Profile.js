@@ -48,7 +48,7 @@ function ProfilePage(props) {
   }
 
   const handleViewRef = ref => (this.view = ref);
-  const animation = () => this.view.fadeInUp(300);
+  const animation = () => this.view.fadeInUp(800);
 
   return (
     <Animatable.View ref={handleViewRef} style={styles.container}>
@@ -62,61 +62,41 @@ function ProfilePage(props) {
       >
         <View
           style={{
-            height: "50%",
+            height: 300,
             width: "100%",
             backgroundColor: "#FFFFFF",
             justifyContent: "center",
             alignItems: "center"
           }}
         >
-          {props.profileLoading && (
-            <Image
-              style={{ width: 200, height: 200, borderRadius: 100 }}
-              source={{
-                uri:
-                  "https://thumbs.gfycat.com/UnitedSmartBinturong-max-1mb.gif"
-              }}
-            />
-          )}
+          
           {!props.profileLoading && (
             <Image
               style={{ width: 200, height: 200, borderRadius: 100 }}
-              source={{
-                uri: props.profileData.image
-              }}
+              source={require('../assets/avatar.png')} 
             />
-          )}
-
-          {!props.profileLoading && (
-            <>
-              <Text style={{ fontWeight: "bold", fontSize: 25, marginTop: 20 }}>
-                {props.profileData.name}
-              </Text>
-              <Text style={{ fontSize: 15, marginTop: 5 }}> Artist</Text>
-            </>
-          )}
+          )}  
         </View>
 
         <View
           style={{
             width: "95%",
-            height: 250,
-            backgroundColor: "white",
+            heigh:700,
             marginTop: 15
           }}
         >
-          <Button onPress={logout} block danger>
-            <Text>Logout</Text>
+          <Button onPress={logout} block rounded style={{backgroundColor:'#EE5537'}}>
+            <Text style={{color:'white'}}>Logout</Text>
           </Button>
-          <Card>
+          <Card >
             <CardItem>
               <Body>
-                <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 20, color:'#EE5537' }}>
                   Balance
                 </Text>
                 {!props.profileLoading && (
                   <>
-                    <Text style={{ fontSize: 14 }}>
+                    <Text style={{ fontSize: 14, color:'#EE5537' }}>
                       {formatCash(Number(props.profileData.balance))}
                     </Text>
                   </>
@@ -128,10 +108,10 @@ function ProfilePage(props) {
           <Card>
             <CardItem>
               <Body>
-                <Text style={{ fontWeight: "bold", fontSize: 20 }}>Email</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 20, color:'#EE5537' }}>Email</Text>
                 {!props.profileLoading && (
                   <>
-                    <Text style={{ fontSize: 14 }}>
+                    <Text style={{ fontSize: 14, color:'#EE5537' }}>
                       {props.profileData.email}
                     </Text>
                   </>
@@ -143,12 +123,12 @@ function ProfilePage(props) {
           <Card>
             <CardItem>
               <Body>
-                <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 20, color:'#EE5537' }}>
                   Phone Number
                 </Text>
                 {!props.profileLoading && (
                   <>
-                    <Text style={{ fontSize: 14 }}>
+                    <Text style={{ fontSize: 14, color:'#EE5537' }}>
                       {props.profileData.phonenumber}
                     </Text>
                   </>
@@ -188,8 +168,8 @@ function ProfilePage(props) {
                   <Body
                     style={{ justifyContent: "center", alignItems: "center" }}
                   >
-                    <FontAwesome name="history" size={45} color="black" />
-                    <Text style={{ fontSize: 10 }}>Bid History</Text>
+                    <FontAwesome name="history" size={45} color="#EE5537" />
+                    <Text style={{ fontSize: 10, color:'#EE5537' }}>Bid History</Text>
                   </Body>
                 </CardItem>
               </TouchableHighlight>
@@ -217,8 +197,8 @@ function ProfilePage(props) {
                   <Body
                     style={{ justifyContent: "center", alignItems: "center" }}
                   >
-                    <FontAwesome name="money" size={45} color="black" />
-                    <Text style={{ fontSize: 10 }}>TopUp Balance</Text>
+                    <FontAwesome name="money" size={45} color="#EE5537" />
+                    <Text style={{ fontSize: 10, color:'#EE5537' }}>TopUp Balance</Text>
                   </Body>
                 </CardItem>
               </TouchableHighlight>
@@ -251,12 +231,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
-    backgroundColor: "white"
   },
   scrollContainer: {
     height: "34.5%",
     width: "100%",
-    backgroundColor: "red"
   },
   image: {
     width,
