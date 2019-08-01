@@ -9,11 +9,13 @@ import {
   ScrollView,
   TextInput,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   Dimensions,
   ActivityIndicator,
   Slider
 } from "react-native";
 import axios from "../axios";
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   Container,
   Toast,
@@ -283,6 +285,10 @@ function ProductDetail(props) {
   //     props.getProductDetail(props.token, props.navigation.state.params.id);
   //   }
   // }, [props.ProductDetailfunction]);
+
+  touchLogo = () => {
+    console.log('ererer')
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -779,6 +785,28 @@ function ProductDetail(props) {
           <Text>amsyonh</Text>
         )}
       </View>
+
+    
+      <View style={{
+        width: "100%",
+          height: 40,
+          marginTop : height * 0.4,
+          marginLeft : 30,
+          position: "absolute",
+          justifyContent: 'space-around',
+          textAlign : 'right',
+          flexDirection:'row'
+      }}>
+          <View style={{width:45, height:45, backgroundColor:'transparent'}}>
+          </View>
+          <View style={{width:45,marginLeft:270,marginTop:35, height:32}}>
+            <TouchableHighlight onPress={touchLogo}>
+                <MaterialIcons name="3d-rotation" size={32} color="#EE5537" />
+            </TouchableHighlight>
+          </View>
+      </View>
+          
+     
     </SafeAreaView>
   );
 }

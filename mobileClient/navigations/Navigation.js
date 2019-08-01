@@ -22,6 +22,16 @@ import Create from "../screens/CreateProduct";
 
 const MyProductNav = createStackNavigator({
   
+  
+  MyProduct: {
+    screen: MyProduct,
+    navigationOptions: { 
+      header: null,
+      headerStyle: {
+        backgroundColor: "white"
+      }
+    }
+  },
   Create: {
     screen: Create,
     navigationOptions: {
@@ -33,15 +43,6 @@ const MyProductNav = createStackNavigator({
       headerTitleStyle: {
         fontColor: '#EE5537',
         fontWeight: 'bold',
-      }
-    }
-  },
-  MyProduct: {
-    screen: MyProduct,
-    navigationOptions: { 
-      header: null,
-      headerStyle: {
-        backgroundColor: "white"
       }
     }
   },
