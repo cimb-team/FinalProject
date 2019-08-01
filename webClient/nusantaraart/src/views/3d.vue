@@ -1,12 +1,12 @@
 <template>
-          <div style="display:flex;flex-direction:column;">
-            <div style="display:flex;width:375px">
-              <button class="btn btn-dark" style="width:50%" @click="showShirt">SHIRT</button>
-              <button class="btn btn-dark" style="width:50%" @click="showMug">MUG</button>
-            </div>
+  <div style="display:flex;flex-direction:column;">
+    <div style="display:flex;width:375px">
+      <button class="btn btn-dark" style="width:50%" @click="showShirt">SHIRT</button>
+      <button class="btn btn-dark" style="width:50%" @click="showMug">MUG</button>
+    </div>
 
-            <canvas id="hasilthreejs"></canvas>
-          </div>
+    <canvas id="hasilthreejs"></canvas>
+  </div>
 </template>
 <script>
 // import THREE from 'three'
@@ -21,6 +21,9 @@ export default {
   props: ["islogin"],
   data() {
     return {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkNDFjMmNmNTNhNDZkMjU4MjhiY2VjNCIsImVtYWlsIjoib3J2aW5AbWFpbC5jb20iLCJpYXQiOjE1NjQ2Mzc0ODB9.U9dZdnFrAGPwH5IDOu9GQ-wN3Y3IWNTCBO1piYXxs30",
+      product: {},
       value: "",
       choosenImage:
         "http://cdn.shopify.com/s/files/1/0257/6087/products/Pikachu_Single_Front_dc998741-c845-43a8-91c9-c1c97bec17a4.png?v=1523938908"
@@ -30,12 +33,6 @@ export default {
   computed: {
     url() {
       return this.$store.state.url;
-    },
-    product() {
-      return this.$store.state.product;
-    },
-    token() {
-      return this.$store.state.token;
     },
     user() {
       return this.$store.state.user;
@@ -375,7 +372,19 @@ export default {
 
     console.log(this.$route.query);
     console.log(this.$router);
-    this.FETCHPRODUCT(this.$route.params.id);
+    // this.FETCHPRODUCT(this.$route.params.id);
+    axios({
+      method: "GET",
+      url: `${this.url}/product/${this.$route.params.id}`,
+      headers: {
+        token: this.token
+      }
+    })
+      .then(({ data }) => {
+        console.log(data, 'fetch')
+        this.product = data;
+      })
+      .catch(err => console.log(err));
   }
 };
 </script>

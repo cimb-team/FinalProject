@@ -4,15 +4,13 @@ const User = require("../models/user");
 const db = require('../FBConfig.js')
 
 class ProductController {
-  /**
-   * POST /products
-   * */
-
   static create(req, res, next) {
     let product;
-    // let event = new Date()
-    // event.setSeconds(event.getSeconds()+30);
+
     console.log(req.body)
+    if (!req.body.newImages){
+      req.body.newImages = 'test'
+    }
     Product.create({
       userId: req.decoded.id,
       title: req.body.title,
@@ -48,9 +46,6 @@ class ProductController {
       .catch(next);
   }
 
-  /**
-   * GET /product/user
-   **/
   static findByUserId(req, res, next) {
     Product.find({ userId: req.decoded.id })
       .populate("bid")
@@ -61,9 +56,6 @@ class ProductController {
       .catch(next);
   }
 
-  /**
-   * GET /product/:id
-   */
   static findById(req, res, next) {
     Product.findOne({
       _id: req.params.id
@@ -76,9 +68,7 @@ class ProductController {
       .catch(next);
   }
 
-  /**
-   * GET /product
-   */
+ 
   static findAll(req, res, next) {
     Product.find({ status: "open" })
       .populate("bid")
@@ -110,15 +100,12 @@ class ProductController {
             res.status(200).json(sorted);
           }
         } else {
-          res.status(200).json(result);
+          res.status(200).json([]);
         }
       })
       .catch(next);
   }
 
-  /**
-   * DELETE /product/:id
-   */
   static deleteOne(req, res, next) {
     let id = req.params.id;
     Product.deleteOne({
@@ -130,9 +117,6 @@ class ProductController {
       .catch(next);
   }
 
-  /**
-   * PATCH /product/:id/addbid
-   */
   static addBid(req, res, next) {
     Promise.all([
       User.findById(
@@ -149,8 +133,10 @@ class ProductController {
       if(bidData.productId.userId.equals(req.decoded.id))
         throw { code: 400, message: 'You cannot bid on your own product'}
       if(bidData.bids.length === 0){
-        if(req.body.price <= bidData.productId.initialPrice)
+        if(req.body.price <= bidData.productId.initialPrice){
+        console.log('+_+_+_+_+_+_+_+_+_+_+_+_+')
           throw { code: 400, message: 'Your bid cannot be less than initial price : ' + bidData.productId.initialPrice }
+        }
         adding = req.body.price
       }
       else {
@@ -161,6 +147,7 @@ class ProductController {
         if(lastBid.length > 0)
           adding = req.body.price - lastBid[lastBid.length - 1].price
         else
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@')
           adding = req.body.price
       }
       if(userData.balance - adding >= 0){
@@ -177,13 +164,12 @@ class ProductController {
     })
     .then(results2 => {
       res.status(201).json(results2[0]);
-      // let { _id, balance } = userData;
-      // res.status(200).json({ ...r, user: { _id, balance } });
+
     })
     .catch(next);
   }
 
-  // QUICK TIMER FOR PRESENTATION
+
   static quickcountdown(req, res, next){
     let event = new Date()
     event.setSeconds(event.getSeconds()+5);
@@ -197,11 +183,12 @@ class ProductController {
           
         }
         else{
-          throw {code: 400, message: 'Unauthorized product update'}
+          throw {code: 401, message: 'Unauthorized product update'}
         }
       })
       .then(row2 =>{
         returning = row2
+        if(process.env.NODE_ENV != 'test')
         return db.collection('bidding').doc(row2._id.toString())
         .update({
           updatedAt: row2.updatedAt

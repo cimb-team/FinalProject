@@ -345,6 +345,16 @@ class CreateProduct extends Component {
                       }
                   </TouchableHighlight>
                   </Item>
+<<<<<<< HEAD
+                
+        
+      
+                
+                  <Item>
+                    <Text>{this.state.dateText}</Text>
+                  </Item>
+=======
+>>>>>>> e0ed00a676dc9f45f7a2b2b824b859e398fc25aa
                   <Item>
                     <Textarea
                       onChangeText={text => this.setState({ details: text })}

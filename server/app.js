@@ -9,22 +9,17 @@ const BackgroundJob = require("./helpers/cronjob");
 const errorHandler = require("./helpers/error-handler.js");
 
 let DB_PATH;
-/* istanbul ignore if */
-if (process.env.NODE_ENV === "local" || process.env.NODE_ENV === "test") {
+DB_PATH =
+process.env.MONGODB_URL + process.env.NODE_ENV + "?retryWrites=true";
+
+if (process.env.NODE_ENV === "test") {
   DB_PATH = "mongodb://localhost/final-project-" + process.env.NODE_ENV;
-}
-else {
-  DB_PATH =
-    process.env.MONGODB_URL + process.env.NODE_ENV + "?retryWrites=true";
 }
 
 mongoose.connect(DB_PATH, { useNewUrlParser: true, useFindAndModify: false })
   .then(() => {
     console.log(`CONNECTED TO DB    : ${DB_PATH}`);
     BackgroundJob();
-  })
-  .catch(err => {
-    console.log(err)
   })
 console.log(new Date())
 app.use(express.json());

@@ -21,37 +21,15 @@ module.exports = {
         if (user) {
           req.decoded = decoded;
           next();
-        } else {
-          next({
-            code: 400
-          });
         }
       })
       .catch(next);
   },
   Authorization: function(req, res, next) {
+    console.log('AUTHORIZATIONNNN')
     Product.findById(req.params.id)
-      .then(result => {
-        if (result) {
-          next();
-        } else {
-          next({
-            code: 401
-          });
-        }
-      })
-      .catch(next);
-  },
-  BidAuthorization: function(req, res, next) {
-    Product.findById(req.params.id)
-      .then(result => {
-        if (result.status == "open") {
-          next();
-        } else {
-          next({
-            code: 400
-          });
-        }
+      .then(() => {
+        next();
       })
       .catch(next);
   }
