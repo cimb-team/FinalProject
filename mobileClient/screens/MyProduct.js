@@ -59,7 +59,7 @@ function MyProduct(props) {
             : props.myProductsData
             ?<Fragment>
                 {props.myProductsData.map(product => (
-                  <View style={{width:"85%"}}>
+                  <View style={{width:"85%"}} key={product._id}>
                   <Card
                     key={product._id}
                     product={product}

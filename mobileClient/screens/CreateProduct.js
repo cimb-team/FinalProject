@@ -176,7 +176,13 @@ class CreateProduct extends Component {
               productId: data.bid.productId,
               updatedAt: data.bid.updatedAt,
               winnerId: data.bid.winnerId
-            });
+            })
+            .then(function() {
+              console.log("Document successfully written : "+data.bid._id);
+          })
+          .catch(function(error) {
+              console.error("Error writing document: ", error);
+          });
           this.props.navigation.navigate("MyProduct", {
             id: "sdf"
           });

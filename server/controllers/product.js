@@ -24,7 +24,6 @@ class ProductController {
       closedDate: req.body.closedDate
     })
       .then(result => {
-        console.log(result)
         product = result;
         return Bid.create({
           bids: [],
@@ -32,13 +31,13 @@ class ProductController {
           productId: product._id
         })
           .then(bid => {
-            console.log(bid)
             Product.findByIdAndUpdate(
               product._id,
               { bid: bid._id },
               { new: true }
             )
               .then(final => {
+                console.log(final)
                 res.status(201).json({ ...product._doc, bid });
               })
               .catch(next);
