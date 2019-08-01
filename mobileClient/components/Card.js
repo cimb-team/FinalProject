@@ -20,11 +20,21 @@ import {
   Image,
   Platform,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions,
+  ActivityIndicator
 } from "react-native";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
+
+const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 export default function eachCard(props) {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <TouchableHighlight
@@ -34,44 +44,37 @@ export default function eachCard(props) {
         })
       }
     >
-      <Card>
-        <CardItem>
-          <Body style={{ flexDirection: "row", width: "100%" }}>
-            <View style={{ width: "45%" }}>
+      <Card style={{borderRadius:10, borderColor:'#EE5537'}}> 
+        <CardItem style={{borderTopLeftRadius:10,borderTopRightRadius:10,borderBottomLeftRadius:10,borderBottomRightRadius:10}} >
+          <Body style={{ flexDirection: "row", width: "100%", }}>
+            <View style={{ width: "35%",height:'100%',alignItems:'center' }}>
               <Image
                 source={{ uri: props.product.images[0] }}
-                style={{ height: 120, width: 150 }}
+                style={{ height: height*0.15, width: width*0.285}}
               />
             </View>
-            <View style={{ width: "55%", height: "100%", flex: 1 }}>
-              <View style={{ height: 90 }}>
+            <View style={{ width: "65%", height: "100%", flex: 1 }}>
+              <View style={{ height: height*0.12, paddingLeft:10 }}>
                 <Text
-                  style={{ fontSize: 18, fontWeight: "bold", marginTop: 3 }}
+                  style={{ fontSize: 22, fontWeight: "bold", marginTop: 3, color:'#EE5537' }}
                 >
                   {props.product.title}
                 </Text>
-                <Text style={{ fontSize: 13 }}>{props.product.details}</Text>
+                <Text style={{ fontSize: 13 }}>{`${props.product.details.substring(1, 80)}....`}</Text>
               </View>
               <View
                 style={{
                   width: "100%",
-                  height: 30,
-                  flexDirection: "row",
-                  alignItems: "flex-end"
+                  flexDirection: "column",
+                  paddingLeft:10
                 }}
               >
-                <View style={{ width: "22%" }}>
-                  <Text style={{ fontSize: 10 }}>
-                    {props.product.closedDate}
-                  </Text>
+                <View style={{  }}>
+                  <Text style={{ fontSize: 11 }}>Artist : <Text style={{ color: "#EE5537"}}> {props.product.userId.name}</Text></Text>
+                  
                 </View>
-                <View style={{ width: "38%" }}>
-                  <Text style={{ fontSize: 10 }}>{props.product.category}</Text>
-                </View>
-                <View style={{ width: "40%" }}>
-                  <Text style={{ fontSize: 10 }}>
-                    {props.product.initialPrice}
-                  </Text>
+                <View style={{ }}>
+                  <Text style={{ fontSize: 11 }}>Category :<Text style={{ color: "#EE5537"}}> {props.product.category}</Text></Text>
                 </View>
               </View>
             </View>

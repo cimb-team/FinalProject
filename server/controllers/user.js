@@ -9,6 +9,7 @@ class UserController {
    */
   static signup(req, res, next) {
     let { name, email, password, phonenumber } = req.body;
+    console.log(req.body, 'user sign up ====')
 
     User.create({
       name,
@@ -82,8 +83,8 @@ class UserController {
   static topup(req, res, next) {
     let { id } = req.decoded;
     let { balance } = req.body;
-    console.log(req.body)
-    console.log('======')
+    console.log(req.body);
+    console.log("======");
     balance = Number(balance);
     User.findByIdAndUpdate(id, { $inc: { balance } }, { new: true })
       .then(result => {
@@ -101,6 +102,7 @@ class UserController {
     Bid.find({
       "bids.bidderId": req.decoded.id
     })
+      .populate("productId")
       .then(rows => {
         res.json(rows);
       })

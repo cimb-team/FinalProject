@@ -4,3 +4,4 @@ keyfile.json
 package-lock.json
 coverage
 .nyc_output
+FBConfig.js

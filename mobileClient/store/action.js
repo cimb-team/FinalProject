@@ -3,14 +3,12 @@ import axios from "../axios";
 export function getHistory(token) {
   return (dispatch, state) => {
     dispatch(loadingHistory());
-    axios({
+    return axios({
       method: "GET",
       url: `/user/history`,
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log("@@@");
-        console.log(data, "history @@@@@ =====");
         dispatch({
           type: "SUCCESS_HISTORY",
           data
@@ -33,7 +31,7 @@ export function loadingHistory() {
 export function getAllProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingAllProducts());
-    axios({
+    return axios({
       method: "GET",
       url: `/product`,
       headers: { token: token }
@@ -60,7 +58,7 @@ export function loadingAllProducts() {
 export function getMyProducts(token) {
   return (dispatch, state) => {
     dispatch(loadingMyProducts());
-    axios({
+    return axios({
       method: "GET",
       url: `/product/user`,
       headers: { token: token }
@@ -84,19 +82,19 @@ export function loadingMyProducts() {
     type: "LOADING_MY_PRODUCTS"
   };
 }
-export function getProductDetail(token, id) {
+export function getProductDetail(token, id, cb) {
   return (dispatch, state) => {
     dispatch(loadingProductDetail());
-    axios({
+    return axios({
       method: "GET",
       url: `/product/${id}`,
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
         dispatch({
           type: "SUCCESS_PRODUCT_DETAIL",
-          data
+          data,
+          cb
         });
       })
       .catch(error => {
@@ -149,10 +147,30 @@ export function loadingProfile() {
 
 export function toppingUp(value, token) {
   return (dispatch, state) => {
-    axios({
+    return axios({
       method: "PATCH",
       url: `/user/topup`,
       data: { balance: value },
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        return dispatch(getProfile());
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}
+
+export function bidding(value, token, id) {
+  return (dispatch, state) => {
+    return axios({
+      method: "PATCH",
+      url: `/product/${id}/addbid`,
+      data: { price: value },
       headers: { token: token }
     })
       .then(({ data }) => {
@@ -167,18 +185,20 @@ export function toppingUp(value, token) {
   };
 }
 
-export function bidding(value, token, id) {
-  console.log(value, token, id);
+export function quickbid() {
   return (dispatch, state) => {
-    axios({
+    console.log("Masuk Quick Bit XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    
+    let { productDetail, token } = state()
+    return axios({
       method: "PATCH",
-      url: `/product/${id}/addbid`,
-      data: { price: value },
+      url: `/product/${productDetail.data._id}/quickcountdown`,
+      data: {},
       headers: { token: token }
     })
       .then(({ data }) => {
-        console.log(data);
-        dispatch(getProductDetail(token, id));
+        console.log("Masuk Then Quick Bit <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        dispatch(getProductDetail(token, productDetail.data._id));
       })
       .catch(error => {
         dispatch({

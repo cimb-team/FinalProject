@@ -2,121 +2,96 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  Button,
   Text,
   View,
   Image,
-  Platform,
+  Modal,
+  WebView,
   ScrollView,
-  TextInput,
   TouchableHighlight
 } from "react-native";
 import { connect } from "react-redux";
-import Title from "../components/Title";
-import { getHistory } from "../store/action"
+import { getHistory } from "../store/action";
+import formatCash from "../helpers";
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
   }, []);
+  const [modalVisible, setModalVisible] = useState(false);
+  const handleViewRef = ref => (this.view = ref);
+  const animation = () => this.view.fadeInUp(300);
   return (
     <SafeAreaView style={styles.container}>
-      <Title title="History" style={styles.text} />
-      {!props.allProductsLoading && (
-        <Fragment>
-          {props.historyData.map((history, index) => (
-            <View key={index} style={styles.card}>
-            <Text
-              style={{
-                textAlign: "center",
-                color: "black",
-                fontWeight: "600",
-                marginBottom: 10
-              }}
-            >
-              Status: {history.bids[history.bids.length-1].price}
-            </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              <View
+      {!props.historyLoading && (
+        <ScrollView>
+          {props.historyData.map((bid, index) => (
+            <View key={bid._id + "-bid"} style={styles.card}>
+                <Text
                 style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginRight: 10
+                  textAlign: "center",
+                  color: "black",
+                  fontWeight: "600",
+                  marginBottom: 10
                 }}
               >
-                <Image
+                Status: {" "}
+                {props.historyData.winnerId
+                  ? props.historyData.winnerId._id == props.profileData._id
+                    ? "You Win"
+                    : "You lose"
+                  : "Bid is still on going"}
+              </Text>
+           
+              <View style={{ flexWrap: "wrap" }}>
+                <View
                   style={{
-                    width: 150,
-                    height: 120,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderRadius: 10
-                  }}
-                  source={{
-                    uri: "https://i.ibb.co/CH4jrj5/illustrator4.jpg"
-                  }}
-                />
-              </View>
-              <View>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "600",
-                    marginBottom: 10
+                    marginRight: 10
                   }}
                 >
-                    {history._id}
+                  <TouchableHighlight onPress={()=> props.navigation.navigate('ProductDetail', {
+                    id: bid.productId._id
+                  })}>
+                  <Image
+                    style={{
+                      width: 150,
+                      height: 120,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 10
+                    }}
+                    source={{
+                      uri: bid.productId.images[0]
+                    }}
+                  />
+                  </TouchableHighlight>
+                </View>
+                <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text style={{margin: 5,fontWeight: '600'}}>{bid.productId.title}</Text>
+                <Text style={{margin: 5}}>Initial Price: {formatCash(Number(bid.productId.initialPrice))}</Text>
+                {bid.bids && (
+                  <Text style={{margin: 5}}>Last Price: {formatCash(Number(bid.bids[bid.bids.length - 1].price))}</Text>
+                )}
+                <Text style={{margin: 5}}>Status: {bid.productId.status}
                 </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.productId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.createdId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.winnerId}
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontWeight: "400",
-                    marginBottom: 10
-                  }}
-                >
-                {history.updatedAt}
-                </Text>
+                </View>
               </View>
             </View>
-          </View>
-    
-    
-      
           ))}
-        </Fragment>
+        </ScrollView>
       )}
-  </SafeAreaView>
+      {props.allProductsError && (
+        <ScrollView style>
+          <Text>Sorry, error occured. Please try again later.</Text>
+        </ScrollView>
+      )}
+    </SafeAreaView>
   );
 }
 const mapStateToProps = state => {
@@ -124,6 +99,7 @@ const mapStateToProps = state => {
     historyData: state.history.data,
     historyError: state.history.error,
     historyLoading: state.history.loading,
+    profileData: state.profile.data,
     token: state.token
   };
 };
@@ -134,11 +110,10 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(History);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "white"
   },
   text: {
     textAlign: "center",
@@ -161,6 +136,8 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "95%",
     borderRadius: 10,
-    padding: 10
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#EE5537"
   }
 });

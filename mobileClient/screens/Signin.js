@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import FormAuth from "../components/FormAuth.js";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage,Text,KeyboardAvoidingView } from "react-native";
 import axios from "../axios";
-import { Platform } from "react-native";
+import { Platform, ImageBackground, Dimensions, View } from "react-native";
 import Constants from "expo-constants";
-import { getProfile } from "../store/action";
+import { getProfile, setToken } from "../store/action";
 import { connect } from "react-redux";
 import {
   Container,
@@ -22,11 +22,17 @@ import {
   Body,
   Right,
   Title,
-  Label
-} from "native-base";
+  Label,
 
-function Signin({ navigation, getProfile }) {
+} from "native-base";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
+function Signin({ navigation, getProfile, setToken }) {
   const [loading, setloading] = useState(false);
+  const [opacity, setopacity] = useState(0.2)
+  const { width } = Dimensions.get("window");
+  const { height } = Dimensions.get("window");
 
   function submitForm(email, password) {
     setloading(true);
@@ -39,10 +45,12 @@ function Signin({ navigation, getProfile }) {
       }
     })
       .then(({ data }) => {
+        setToken(data.token)
         return AsyncStorage.setItem("@NusantaraArt:token", data.token);
       })
       .then(result => {
         setloading(false);
+        return getProfile()
         // Toast.show({
         //   text: "Sign in success",
         //   buttonText: "OK",
@@ -50,53 +58,75 @@ function Signin({ navigation, getProfile }) {
         //   type: 'success',
         //   buttonStyle: { backgroundColor: "green" }
         // })
+        
+      })
+      .then(data => {
         navigation.navigate("App");
       })
       .catch(({ response }) => {
         setloading(false);
         Toast.show({
           style: {
-            marginBottom: "11%",
+            marginBottom: "20%",
             marginHorizontal: "5%",
             borderRadius: 10,
-            backgroundColor: "rgba(236, 232, 232, 0.5)"
+            backgroundColor : 'transparent'
           },
           text: response.data.message,
-          buttonText: "OK",
           duration: 3000,
           type: "danger",
-          textStyle: { color: "black", marginBottom: 20 },
+          textStyle: { color: "white", marginBottom: 30, textAlign:'center' },
           // buttonTextStyle: { color: "black" },
-          buttonStyle: { backgroundColor: "red", marginBottom: 20 }
+          buttonStyle: { backgroundColor: "#EE5537", marginBottom: 20 }
         });
       });
   }
 
   return (
-    <Container
-      style={{
-        marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight
-      }}
-    >
+    <KeyboardAvoidingView style={{marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight}} 
+    behavior="position" enabled>
+
+    <ImageBackground blurRadius={0} source={require('../assets/2withlogo.png')} style={{width: width*1, height: height*1,}}>
+      <NavigationEvents
+        onWillBlur={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(0.2)
+        }}
+        onWillFocus={payload => {
+          // SignupRef.current.transitionTo({ opacity: 0.2 })
+          setopacity(1)
+        }}
+      />
+              
       <Header transparent noLeft>
-        <Body style={{ marginHorizontal: 20 }}>
-          <H3>Sign in</H3>
-        </Body>
+      <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
+      
+    </Animatable.View>
       </Header>
-      <Content contentContainerStyle={{ marginHorizontal: 20 }}>
+      <Content contentContainerStyle={{ marginHorizontal: height*0.05, marginTop:height*0.5,  }}>
+            <Animatable.View transition="opacity" style={{ opacity: opacity }} duration={1000}>
+        <View style={{width:width*0.8}}>
         <FormAuth
           loading={loading}
           submitForm={submitForm}
           navigation={navigation}
           title="Signin"
         />
+        </View>
+        <View style={{marginTop:height*0.04, justifyContent:"center", alignItems:'center'}}>
+          
+        <Text style={{fontWeight:'bold',color:'white'}}>Don't have an account ? <Text onPress={() => navigation.navigate("SignUp")} style={{fontWeight:'bold',color:'#F3411E'}}> Sign Up </Text> </Text>
+        </View>
+    </Animatable.View>
       </Content>
-    </Container>
+      </ImageBackground>
+      </KeyboardAvoidingView>
   );
 }
 
 const mapDispatchToProps = {
-  getProfile
+  getProfile,
+  setToken
 };
 
 export default connect(

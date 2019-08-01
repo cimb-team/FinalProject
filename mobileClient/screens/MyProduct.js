@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   TouchableHighlight,
+  ActivityIndicator,
   StatusBar
 } from "react-native";
 import Constants from "expo-constants";
@@ -18,55 +19,60 @@ import { getMyProducts } from "../store/action";
 import Card from "../components/Card";
 import { connect } from "react-redux";
 import Title from "../components/Title";
+import { NavigationEvents } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
+
 function MyProduct(props) {
-  useEffect(() => {
-    props.getMyProducts(props.token);
-  }, []);
+  // useEffect(() => {
+  //   props.getMyProducts(props.token);
+  // }, []);
+
+  const handleViewRef = ref => this.view = ref;
+  const animation = () => this.view.fadeInUp(300)
+
   return (
     <SafeAreaView style={styles.container}>
-      <TopBar navigation={props.navigation} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            marginVertical: 10,
-            borderRadius: 20,
-            margin: 10,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Text
+      <NavigationEvents
+        onWillBlur={animation}
+        onWillFocus={() => {
+          props.getMyProducts(props.token)
+          animation()
+          
+        }}
+      />
+      <Animatable.View ref={handleViewRef}>
+        <TopBar navigation={props.navigation} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
             style={{
-              textAlign: "center",
-              fontSize: 25,
-              fontWeight: "bold",
-              color: "black"
+              height: "100%",
+              width: "100%",
+              marginTop: 6,
+              marginBottom: "25%",
+              alignItems: 'center'
             }}
           >
-            My Products
-          </Text>
-        </View>
-        <View
-          style={{
-            height: "100%",
-            width: "90%",
-            marginTop: 6,
-            marginBottom: "25%"
-          }}
-        >
-          {!props.myProductsLoading && (
-            <Fragment>
-              {props.myProductsData.map(product => (
-                <Card
-                  key={product._id}
-                  product={product}
-                  navigation={props.navigation}
-                />
-              ))}
-            </Fragment>
-          )}
-        </View>
-      </ScrollView>
+            {props.myProductsLoading 
+            ? <View style={{marginTop:'10%',justifyContent:'center',alignItems:'center'}}><ActivityIndicator size="large" color="#EE5537" /></View> 
+            : props.myProductsData.length === 0
+            ? <Image style={{marginTop:'10%', width:250, height:250}} source={require('../assets/kosong.png')}></Image>
+            : props.myProductsData
+            ?<Fragment>
+                {props.myProductsData.map(product => (
+                  <View style={{width:"85%"}}>
+                  <Card
+                    key={product._id}
+                    product={product}
+                    navigation={props.navigation}
+                  />
+                  </View>
+                ))}
+              </Fragment>
+            : <Text>Error</Text>
+            }
+          </View>
+        </ScrollView>
+      </Animatable.View>
     </SafeAreaView>
   );
 }
@@ -89,7 +95,8 @@ export default connect(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    marginTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight
   },
   text: {
     textAlign: "center",
@@ -234,5 +241,5 @@ const styles = StyleSheet.create({
           </View>
         </View>
       </View>
-    
+
 */

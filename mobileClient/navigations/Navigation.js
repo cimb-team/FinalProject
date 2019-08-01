@@ -2,8 +2,9 @@ import {
   createSwitchNavigator,
   createStackNavigator,
   createAppContainer,
-  createBottomTabNavigator
+  createBottomTabNavigator,
 } from "react-navigation";
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Products from "../screens/Products";
@@ -16,20 +17,36 @@ import SplashScreen from "../screens/SplashScreen";
 import Signup from "../screens/Signup";
 import Signin from "../screens/Signin";
 import Filter from "../screens/Filter";
-import { fromTop, fadeIn } from "react-navigation-transitions";
 import Create from "../screens/CreateProduct";
-import { fromTop, fadeIn } from "react-navigation-transitions";
+// import { fromTop, fadeIn } from "react-navigation-transitions";
 
 const MyProductNav = createStackNavigator({
+  
+  
   MyProduct: {
     screen: MyProduct,
-    navigationOptions: {
+    navigationOptions: { 
       header: null,
       headerStyle: {
         backgroundColor: "white"
       }
     }
   },
+  Create: {
+    screen: Create,
+    navigationOptions: {
+      headerTitle: 'Create Product',
+      headerStyle: {
+        backgroundColor: "white",
+      },
+      headerTintColor: '#EE5537',
+      headerTitleStyle: {
+        fontColor: '#EE5537',
+        fontWeight: 'bold',
+      }
+    }
+  },
+  
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
@@ -56,19 +73,19 @@ const MyProductNav = createStackNavigator({
       }
     }
   },
-  Create: {
-    screen: Create,
-    navigationOptions: {
-      headerTitle: "Create Product",
-      headerStyle: {
-        backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
-      }
-    }
-  }
+  // Create: {
+  //   screen: Create,
+  //   navigationOptions: {
+  //     headerTitle: "Create Product",
+  //     headerStyle: {
+  //       backgroundColor: "white"
+  //     },
+  //     headerTintColor: "black",
+  //     headerTitleStyle: {
+  //       color: "black"
+  //     }
+  //   }
+  // }
 });
 
 const ProductsNav = createStackNavigator({
@@ -84,13 +101,9 @@ const ProductsNav = createStackNavigator({
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
-      headerTitle: "Product Detail",
+      header: null,
       headerStyle: {
         backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
       }
     }
   },
@@ -128,7 +141,7 @@ const ProfileNav = createStackNavigator({
       },
       headerTintColor: "black",
       headerTitleStyle: {
-        color: "black"
+        color: "#EE5537"
       }
     }
   },
@@ -172,7 +185,7 @@ const ProfileNav = createStackNavigator({
 //   // }
 // });
 
-const MainNavigator = createBottomTabNavigator(
+const MainNavigator = createMaterialBottomTabNavigator(
   {
     Products: {
       screen: ProductsNav,
@@ -203,21 +216,35 @@ const MainNavigator = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Profile",
-    tabBarOptions: {
-      activeTintColor: "lightblue",
-      inactiveTintColor: "white",
+    initialRouteName: "MyProduct",
+      activeTintColor: "#EE5537",
+      inactiveTintColor: "grey",
       labelStyle: {
         fontSize: 14
       },
-      style: {
-        backgroundColor: "#1F1F1F"
-      }
-    }
+      barStyle: { backgroundColor: "#FFFFFF" }
+    
   }
 );
 
-const Auth = createBottomTabNavigator(
+
+
+const auth2 = createStackNavigator({
+  SignIn: {
+    screen: Signin,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SignUp: {
+    screen: Signup,
+    navigationOptions: {
+      header: null,
+    }
+  }
+});
+
+const Auth = createMaterialBottomTabNavigator(
   {
     Signup: {
       screen: Signup,
@@ -239,11 +266,12 @@ const Auth = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Signup",
+    initialRouteName: "Signin",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
-    barStyle: { backgroundColor: "#694fad" },
-    transitionConfig: () => fromTop(1000)
+    
+    barStyle: { backgroundColor: "#F3411E" },
+    // transitionConfig: () => fromTop(1000)
   }
 );
 
@@ -251,12 +279,12 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Splash: SplashScreen,
-      Auth: Auth,
+      Auth: auth2,
       App: MainNavigator
     },
     {
       initialRouteName: "Splash",
-      transitionConfig: () => fadeIn(1000)
+      // transitionConfig: () => fadeIn(1000)
     }
   )
 );
