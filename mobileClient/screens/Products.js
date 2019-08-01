@@ -6,6 +6,7 @@ import {
   Dimensions,
   Platform,
   Text,
+  SafeAreaView,
   ActivityIndicator
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -61,6 +62,7 @@ function Product(props) {
 
 
   return (
+
     <View style={styles.container}>
       <NavigationEvents
         onWillFocus={() => props.getAllProducts(props.token)}

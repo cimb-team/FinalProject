@@ -6,8 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    url: `http://localhost:3000`,
-    // url: "http://35.187.231.14",
+    // url: `http://localhost:3000`,
+    url: "http://35.187.231.14",
     islogin: false,
     user: {},
     token: "",
@@ -173,6 +173,9 @@ export default new Vuex.Store({
               // setbidDariFirebase()
               if (doc.data()) {
                 data.bid.bids = doc.data().bids;
+                if (doc.data().closed){
+                  data.closed = true
+                }
        
                 data.bid.bids.forEach((x,i) => {
                   // let date = data.bid.bids[i].dateIssued.toDate().toString()

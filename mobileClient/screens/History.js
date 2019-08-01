@@ -25,39 +25,6 @@ function History(props) {
     <SafeAreaView style={styles.container}>
       {!props.historyLoading && (
         <ScrollView>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-            }}
-          >
-            <View style={{ marginTop: 22 }}>
-              <WebView
-                originWhitelist={["*"]}
-                source={{ html: "<h1>Hello world</h1>" }}
-              />
-              <View>
-                <TouchableHighlight
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "black",
-                      fontWeight: "600",
-                      marginBottom: 10
-                    }}
-                  >
-                    Hide Modal
-                  </Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </Modal>
           {props.historyData.map((history, index) => (
             <View key={history._id + "history"} style={styles.card}>
               <Text
@@ -65,23 +32,19 @@ function History(props) {
                   textAlign: "center",
                   color: "black",
                   fontWeight: "600",
-                  marginBottom: 10
+                  margin: 10,
+                  marginBottom: 15
+
                 }}
               >
                 Status:{" "}
                 {props.historyData.winnerId
                   ? props.historyData.winnerId._id == props.profileData._id
-                    ? "You Win"
+                    ? "You won the auction"
                     : "You lose"
-                  : "Bid is still on going"}
+                  : "Auction is still on going"}
               </Text>
-              <TouchableHighlight
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-              >
-                <Text>Show Modal</Text>
-              </TouchableHighlight>
+
               <View style={{ flexWrap: "wrap" }}>
                 <View
                   style={{
@@ -103,47 +66,19 @@ function History(props) {
                     }}
                   />
                 </View>
-                <View>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "black",
-                      fontWeight: "600",
-                      marginVertical: 10
-                    }}
-                  >
-                    {history.productId.title}
-                  </Text>
-                  <Text>
-                    {String(history.productId.details).substr(0, 200) + "..."}
-                  </Text>
-                  {history.bids.map((b, index) => {
-                    return (
-                      b.bidderId === props.profileData._id && (
-                        <View
-                          key={
-                            "biddetail" +
-                            props.bidderId +
-                            JSON.stringify(b.dateIssued) +
-                            index
-                          }
-                        >
-                          <View
-                            style={{ flexDirection: "row", marginVertical: 5 }}
-                          >
-                            <Text>Placed Bid</Text>
-                            <Text>{formatCash(b.price)}</Text>
-                          </View>
-                          <View
-                            style={{ flexDirection: "row", marginVertical: 5 }}
-                          >
-                            <Text>At</Text>
-                            <Text>{new Date(b.dateIssued).toDateString()}</Text>
-                          </View>
-                        </View>
-                      )
-                    );
-                  })}
+                <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text style={{margin: 5,fontWeight: 600}}>{history.productId.title}</Text>
+                <Text style={{margin: 5}}>Initial Price: {formatCash(Number(history.productId.initialPrice))}</Text>
+                {history.bids && (
+                  <Text style={{margin: 5}}>Last Price: {formatCash(Number(history.bids[history.bids.length - 1].price))}</Text>
+                )}
+                <Text style={{margin: 5}}>Status: {history.productId.status}
+                </Text>
                 </View>
               </View>
             </View>
@@ -177,7 +112,7 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "white"
   },
   text: {
     textAlign: "center",
@@ -200,6 +135,8 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "95%",
     borderRadius: 10,
-    padding: 10
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#EE5537"
   }
 });

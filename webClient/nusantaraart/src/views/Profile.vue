@@ -117,10 +117,6 @@
                   >Last Price: {{ format(Number(data.bids[data.bids.length-1].price)) }}</p>
                   <p class="card-text">Status: {{ data.productId.status }}</p>
                   <p
-                    v-if="data.bids"
-                    class="card-text"
-                  >Last Price: {{ format(Number(data.bids[data.bids.length-1].price)) }}</p>
-                  <p
                     v-if="data.productId.status == 'close' && data.winnerId != profile._id"
                     class="card-text"
                     style="color:red"
