@@ -22,6 +22,7 @@ import Create from "../screens/CreateProduct";
 
 const MyProductNav = createStackNavigator({
   
+  
   MyProduct: {
     screen: MyProduct,
     navigationOptions: { 
@@ -38,12 +39,14 @@ const MyProductNav = createStackNavigator({
       headerStyle: {
         backgroundColor: "white",
       },
-      headerTintColor: 'black',
+      headerTintColor: '#EE5537',
       headerTitleStyle: {
-        color: 'black'
+        fontColor: '#EE5537',
+        fontWeight: 'bold',
       }
     }
   },
+  
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
@@ -70,19 +73,19 @@ const MyProductNav = createStackNavigator({
       }
     }
   },
-  Create: {
-    screen: Create,
-    navigationOptions: {
-      headerTitle: "Create Product",
-      headerStyle: {
-        backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
-      }
-    }
-  }
+  // Create: {
+  //   screen: Create,
+  //   navigationOptions: {
+  //     headerTitle: "Create Product",
+  //     headerStyle: {
+  //       backgroundColor: "white"
+  //     },
+  //     headerTintColor: "black",
+  //     headerTitleStyle: {
+  //       color: "black"
+  //     }
+  //   }
+  // }
 });
 
 const ProductsNav = createStackNavigator({
@@ -213,7 +216,7 @@ const MainNavigator = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Products",
+    initialRouteName: "MyProduct",
       activeTintColor: "#EE5537",
       inactiveTintColor: "grey",
       labelStyle: {

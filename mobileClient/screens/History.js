@@ -25,25 +25,13 @@ function History(props) {
     <SafeAreaView style={styles.container}>
       {!props.historyLoading && (
         <ScrollView>
-          {props.historyData.map((history, index) => (
+          {/* {props.historyData.map((history, index) => (
             <View key={history._id + "history"} style={styles.card}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  fontWeight: "600",
-                  margin: 10,
-                  marginBottom: 15
-
-                }}
-              >
-                Status:{" "}
-                {props.historyData.winnerId
-                  ? props.historyData.winnerId._id == props.profileData._id
-                    ? "You won the auction"
-                    : "You lose"
-                  : "Auction is still on going"}
-              </Text>
+                {historya.status == 'close' &&(<> {if (history.winnerId == props.profileData._id){
+                  <Text>Status: You lose</Text>()
+                })} </>)}
+                {history.status == 'open' &&  (<Text>Status: Auction is still on going</Text>)}
+           
 
               <View style={{ flexWrap: "wrap" }}>
                 <View
@@ -82,7 +70,7 @@ function History(props) {
                 </View>
               </View>
             </View>
-          ))}
+          ))} */}
         </ScrollView>
       )}
       {props.allProductsError && (

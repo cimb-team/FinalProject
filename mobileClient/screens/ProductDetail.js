@@ -9,11 +9,13 @@ import {
   ScrollView,
   TextInput,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   Dimensions,
   ActivityIndicator,
   Slider
 } from "react-native";
 import axios from "../axios";
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   Container,
   Toast,
@@ -53,6 +55,7 @@ function ProductDetail(props) {
   const { height } = Dimensions.get("window");
   const [MinBid, setMinBid] = useState(0);
   const [MaxBid, setMaxBid] = useState(0);
+  const [addBid, setAddBid] = useState(0);
   const [countdownText, setcountdownText] = useState("");
   const [bidClosed, setbidClosed] = useState(true);
   const [orvinDetail, setOrvin] = useState({});
@@ -61,8 +64,35 @@ function ProductDetail(props) {
   mili.setSeconds(mili.getSeconds() + 30);
 
   handleChange = e => {
-    setbid(e);
+    setbid(bid + e)
+    
   };
+
+  add10k = () => {
+    setbid(bid + 10000)
+    console.log(bid);
+    
+  }
+
+  add50k = () => {
+    setbid(bid + 50000)
+    console.log(bid);
+  }
+
+  add100k = () => {
+    setbid(bid + 100000)
+    console.log(bid);
+  }
+
+  add500k = () => {
+    setbid(bid + 500000)
+    console.log(bid);
+  }
+
+  add1000k = () => {
+    setbid(bid + 1000000)
+    console.log(bid);
+  }
 
   postbid = () => {
     // console.log(bid, "<<<<<<<<<<<Bid")
@@ -256,6 +286,10 @@ function ProductDetail(props) {
   //   }
   // }, [props.ProductDetailfunction]);
 
+  touchLogo = () => {
+    console.log('ererer')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <NavigationEvents
@@ -388,21 +422,25 @@ function ProductDetail(props) {
             </View>
           </View>
 
-          {props.productDetailData.userId &&
-          props.productDetailData.userId._id !== props.bidderId ? (
-            <View
-              style={{ width: width * 1, height: 225, alignItems: "center" }}
+          {
+            props.productDetailData.userId && (
+              bidDariFirebase && (
+                !bidDariFirebase.closed && (
+                  props.productDetailData.userId._id !== props.bidderId
+                  ? (
+
+                    <View
+              style={{ width: width * 1, height: 325, alignItems: "center" }}
             >
               <View
-                style={{ width: "85%", height: "100%", alignItems: "center" }}
+                style={{ width: "85%", alignItems: "center" }}
               >
-                <Card style={{ width: "100%", height: "100%" }}>
+                <Card style={{ width: "100%",  }}>
                   <CardItem>
                     <Body>
                       <View
                         style={{
                           width: "100%",
-                          height: "100%",
                           alignItems: "center"
                         }}
                       >
@@ -416,7 +454,7 @@ function ProductDetail(props) {
                                   style={{
                                     fontSize: 30,
                                     fontWeight: "bold",
-                                    color: "#EE5537"
+                                    color: "#EE5537",
                                   }}
                                 >
                                   PLACE YOUR BID
@@ -433,17 +471,15 @@ function ProductDetail(props) {
                                 <View
                                   style={{ width: "50%", alignItems: "center" }}
                                 >
-                                  <Text>{`Current Price`}</Text>
+                                  <Text style={{color:'#EE5537', fontWeight : 'bold'}}>{`Current Price`}</Text>
                                   {bidDariFirebase.bids.length !== 0 ? (
-                                    <Text>
-                                      {" "}
+                                    <Text  style={{color:'grey', fontWeight : 'bold'}}>
                                       {formatCash(
                                         Number(bidDariFirebase.bids[0].price)
                                       )}
                                     </Text>
                                   ) : (
-                                    <Text>
-                                      {" "}
+                                    <Text  style={{color:'grey', fontWeight : 'bold'}}>
                                       {formatCash(
                                         props.productDetailData.initialPrice
                                       )}
@@ -453,9 +489,51 @@ function ProductDetail(props) {
                                 <View
                                   style={{ width: "50%", alignItems: "center" }}
                                 >
-                                  <Text>{`Your Bid`}</Text>
-                                  <Text> {formatCash(Number(bid))}</Text>
+                                  <Text style={{color:'#EE5537', fontWeight : 'bold'}}>{`Your Bid`}</Text>
+                                  <Text style={{color:'grey', fontWeight : 'bold'}}> {formatCash(Number(bid))}</Text>
                                 </View>
+                              </View>
+                              <View
+                                style={{
+                                  width: "100%",
+                                  marginTop: 10,
+                                  height: 50,
+                                  alignItems: "center",
+                                  flexDirection : 'row',
+                                  justifyContent : "space-around",
+
+                                }}
+                              >
+                              <View style={{width:'15%', height:'90%', backgroundColor:'#EE5537',borderRadius:10, justifyContent: 'center', alignItems:'center'}}>
+                                  <TouchableHighlight onPress={add10k}>
+                                  <Text style={{fontSize:17, fontWeight:'bold', color:'white'}}>10K</Text>
+                                  </TouchableHighlight>
+                              </View>
+
+                              <View style={{width:'15%', height:'90%', backgroundColor:'#EE5537',borderRadius:10, justifyContent: 'center', alignItems:'center'}}>
+                              <TouchableHighlight onPress={add50k}>
+                                  <Text style={{fontSize:17, fontWeight:'bold', color:'white'}}>50K</Text>
+                                  </TouchableHighlight>
+                              </View>
+
+                              <View style={{width:'15%', height:'90%', backgroundColor:'#EE5537',borderRadius:10, justifyContent: 'center', alignItems:'center'}}>
+                              <TouchableHighlight onPress={add100k}>
+                                  <Text style={{fontSize:17, fontWeight:'bold', color:'white'}}>100K</Text>
+                                  </TouchableHighlight>
+                              </View>
+
+                              <View style={{width:'15%', height:'90%', backgroundColor:'#EE5537',borderRadius:10, justifyContent: 'center', alignItems:'center'}}>
+                              <TouchableHighlight onPress={add500k}>
+                                  <Text style={{fontSize:17, fontWeight:'bold', color:'white'}}>500K</Text>
+                                  </TouchableHighlight>
+                              </View>
+
+                              <View style={{width:'15%', height:'90%', backgroundColor:'#EE5537',borderRadius:10, justifyContent: 'center', alignItems:'center'}}>
+                              <TouchableHighlight onPress={add1000k}>
+                                  <Text style={{fontSize:14, fontWeight:'bold', color:'white'}}>1000K</Text>
+                                  </TouchableHighlight>
+                              </View>
+                                
                               </View>
                               <View
                                 style={{
@@ -465,13 +543,13 @@ function ProductDetail(props) {
                                 }}
                               >
                                 <Slider
-                                  minimumValue={MinBid}
-                                  maximumValue={MaxBid}
-                                  minimumTrackTintColor="#FF0000"
-                                  maximumTractTintColor="#F62020"
-                                  step={3}
-                                  value={bid * 0.05}
-                                  onValueChange={value => handleChange(value)}
+                                minimumValue={100000}
+          maximumValue={1000000}
+          minimumTrackTintColor="#1EB1FC"
+          maximumTractTintColor="#1EB1FC"
+          step={10000}
+          value={4}
+          onSlidingComplete={value => handleChange(value)}
                                   style={styles.slider}
                                   thumbTintColor="#EE5537"
                                 />
@@ -482,19 +560,15 @@ function ProductDetail(props) {
                                   rounded
                                   style={{
                                     backgroundColor: "#EE5537",
-                                    padding: 20
+                                    padding: 20,
+                                    marginTop:20
                                   }}
                                   onPress={postbid}
                                 >
-                                  <Text style={{ color: "white" }}>
+                                  <Text style={{ color: "white", textAlign:'center', width:'85%', marginLeft:'10%' }}>
                                     Place Bid
                                   </Text>
                                 </Button>
-                              </View>
-                              <View>
-                                <Text style={{ color: "#EE5537" }}>
-                                  {warningMessage}
-                                </Text>
                               </View>
                             </React.Fragment>
                           ) : (
@@ -514,18 +588,15 @@ function ProductDetail(props) {
                 </Card>
               </View>
             </View>
-          ) : (
-            // button quick bit
-
-            <View
+                  )
+                  : (
+                    <View
               style={{ width: width * 1, height: 125, alignItems: "center" }}
             >
               <View
                 style={{ width: "85%", height: "100%", alignItems: "center" }}
               >
-                <Card style={{ width: "100%", height: "100%" }}>
-                  <CardItem>
-                    <Body>
+               
                       <View
                         style={{
                           width: "100%",
@@ -537,17 +608,8 @@ function ProductDetail(props) {
                           (bidDariFirebase.bids ? (
                             <React.Fragment>
                               <View
-                                style={{ width: "100%", alignItems: "center" }}
+                                style={{ width: "100%", alignItems: "center", marginTop:10 }}
                               >
-                                <Text
-                                  style={{
-                                    fontSize: 30,
-                                    fontWeight: "bold",
-                                    color: "#EE5537"
-                                  }}
-                                >
-                                  Quick BID
-                                </Text>
                               </View>
 
                               <View>
@@ -555,12 +617,12 @@ function ProductDetail(props) {
                                   rounded
                                   style={{
                                     backgroundColor: "#EE5537",
-                                    padding: 20
+                                    
                                   }}
                                   onPress={props.quickbid}
                                 >
-                                  <Text style={{ color: "white" }}>
-                                    Place Bid
+                                  <Text style={{ color: "white", width:'85%',textAlign : 'center' , marginLeft:'10%' }}>
+                                    Close Bid
                                   </Text>
                                 </Button>
                               </View>
@@ -577,12 +639,17 @@ function ProductDetail(props) {
                             </View>
                           ))}
                       </View>
-                    </Body>
-                  </CardItem>
-                </Card>
+                  
               </View>
             </View>
-          )}
+                  )
+
+                )
+              )
+              
+              
+            )
+          }
 
           <View
             style={{
@@ -718,6 +785,28 @@ function ProductDetail(props) {
           <Text>amsyonh</Text>
         )}
       </View>
+
+    
+      <View style={{
+        width: "100%",
+          height: 40,
+          marginTop : height * 0.4,
+          marginLeft : 30,
+          position: "absolute",
+          justifyContent: 'space-around',
+          textAlign : 'right',
+          flexDirection:'row'
+      }}>
+          <View style={{width:45, height:45, backgroundColor:'transparent'}}>
+          </View>
+          <View style={{width:45,marginLeft:270,marginTop:35, height:32}}>
+            <TouchableHighlight onPress={touchLogo}>
+                <MaterialIcons name="3d-rotation" size={32} color="#EE5537" />
+            </TouchableHighlight>
+          </View>
+      </View>
+          
+     
     </SafeAreaView>
   );
 }
@@ -751,21 +840,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   slider: {
-    marginTop: 10,
-    width: 200
-  },
-  text: {
-    textAlign: "center",
-    margin: 5,
-    fontSize: 25,
-    fontWeight: "bold"
-  },
-  card: {
-    marginVertical: 10,
-    backgroundColor: "#f5f5f5",
-    margin: 10,
-    width: "95%",
-    borderRadius: 10
+    marginTop: 30,
+    width: "80%",
   },
   search: {
     height: 35,
