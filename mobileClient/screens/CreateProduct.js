@@ -295,12 +295,12 @@ class CreateProduct extends Component {
           <View style={{ width: "100%", height: "100%" }}>
             <Container>
               <Content>
-                <Form>
+                <Form style={{width:'100%'}}>
                   <Item>
                     <Input
                       placeholder="Title"
-                      placeholderTextColor={'#EE5537'}
-                      selectionColor={'#EE5537'}
+                      placeholderTextColor={'#B9B9B9'}
+                      selectionColor={'#B9B9B9'}
                       onChangeText={text => this.setState({ title: text })}
                     />
                   </Item>
@@ -308,17 +308,17 @@ class CreateProduct extends Component {
                     <Input
                       placeholder="Category"
                       onChangeText={text => this.setState({ category: text })}
-                      placeholderTextColor={'#EE5537'}
-                      selectionColor={'#EE5537'}
+                      placeholderTextColor={'#B9B9B9'}
+                      selectionColor={'#B9B9B9'}
                     />
                   </Item>
                   <Item>
                     <Input
                       placeholder="Initial Prize"
                       keyboardType="numeric"
-                      placeholderTextColor={'#EE5537'}
-                      selectionColor={'#EE5537'}
-                      style={{color:'#EE5537'}}
+                      placeholderTextColor={'#B9B9B9'}
+                      selectionColor={'#B9B9B9'}
+                      style={{color:'#B9B9B9'}}
                       onChangeText={text =>
                         this.setState({ initialPrize: String(Number(text.replace(/[^0-9]+/g, ''))) })
                       }
@@ -339,24 +339,19 @@ class CreateProduct extends Component {
                         </>
                         :
                         <>
-                        <Ionicons name="md-calendar" size={32} color="#EE5537" style={{marginVertical : 10}}/>
-                        <Text style={{marginTop:12, color: '#EE5537', marginLeft:12}}>Set Close Bid Date</Text>
+                        <Ionicons name="md-calendar" size={32} color="#B9B9B9" style={{marginVertical : 10}}/>
+                        <Text style={{marginTop:12, color: '#B9B9B9', marginLeft:12}}>Set Close Bid Date</Text>
                         </>
                       }
                   </TouchableHighlight>
                   </Item>
-                
-        
-      
-                
-      
                   <Item>
                     <Textarea
                       onChangeText={text => this.setState({ details: text })}
                       style={{ width: "100%", marginTop: 10 }}
                       rowSpan={5}
-                      placeholderTextColor={'#EE5537'}
-                      selectionColor={'#EE5537'}
+                      placeholderTextColor={'#B9B9B9'}
+                      selectionColor={'#B9B9B9'}
                       bordered
                       placeholder="Description"
                       onFocus={() => this.setState({ KeyboardView: true })}
@@ -367,7 +362,7 @@ class CreateProduct extends Component {
                     <Button
                     rounded
                       onPress={this.submitCreate}
-                      style={{ width: "100%", marginTop: 10,color:'white', backgroundColor:'#EE5537' }}
+                      style={{ width: "90%", marginTop: 10,color:'white', backgroundColor:'#EE5537' }}
                       block
                       disabled={this.state.loading}
                     >

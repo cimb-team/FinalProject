@@ -16,7 +16,6 @@ import formatCash from "../helpers";
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
-    console.log(props.historyData.bids);
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const handleViewRef = ref => (this.view = ref);
@@ -25,14 +24,24 @@ function History(props) {
     <SafeAreaView style={styles.container}>
       {!props.historyLoading && (
         <ScrollView>
-          {/* {props.historyData.map((history, index) => (
-            <View key={history._id + "history"} style={styles.card}>
-                {historya.status == 'close' &&(<> {if (history.winnerId == props.profileData._id){
-                  <Text>Status: You lose</Text>()
-                })} </>)}
-                {history.status == 'open' &&  (<Text>Status: Auction is still on going</Text>)}
+          {props.historyData.map((bid, index) => (
+            <View key={bid._id + "-bid"} style={styles.card}>
+                <Text
+                style={{
+                  textAlign: "center",
+                  color: "black",
+                  fontWeight: "600",
+                  marginBottom: 10
+                }}
+              >
+                Status: {" "}
+                {props.historyData.winnerId
+                  ? props.historyData.winnerId._id == props.profileData._id
+                    ? "You Win"
+                    : "You lose"
+                  : "Bid is still on going"}
+              </Text>
            
-
               <View style={{ flexWrap: "wrap" }}>
                 <View
                   style={{
@@ -41,6 +50,9 @@ function History(props) {
                     marginRight: 10
                   }}
                 >
+                  <TouchableHighlight onPress={()=> props.navigation.navigate('ProductDetail', {
+                    id: bid.productId._id
+                  })}>
                   <Image
                     style={{
                       width: 150,
@@ -50,9 +62,10 @@ function History(props) {
                       borderRadius: 10
                     }}
                     source={{
-                      uri: history.productId.images[0]
+                      uri: bid.productId.images[0]
                     }}
                   />
+                  </TouchableHighlight>
                 </View>
                 <View
                 style={{
@@ -60,17 +73,17 @@ function History(props) {
                   alignItems: "center"
                 }}
               >
-                <Text style={{margin: 5,fontWeight: 600}}>{history.productId.title}</Text>
-                <Text style={{margin: 5}}>Initial Price: {formatCash(Number(history.productId.initialPrice))}</Text>
-                {history.bids && (
-                  <Text style={{margin: 5}}>Last Price: {formatCash(Number(history.bids[history.bids.length - 1].price))}</Text>
+                <Text style={{margin: 5,fontWeight: '600'}}>{bid.productId.title}</Text>
+                <Text style={{margin: 5}}>Initial Price: {formatCash(Number(bid.productId.initialPrice))}</Text>
+                {bid.bids && (
+                  <Text style={{margin: 5}}>Last Price: {formatCash(Number(bid.bids[bid.bids.length - 1].price))}</Text>
                 )}
-                <Text style={{margin: 5}}>Status: {history.productId.status}
+                <Text style={{margin: 5}}>Status: {bid.productId.status}
                 </Text>
                 </View>
               </View>
             </View>
-          ))} */}
+          ))}
         </ScrollView>
       )}
       {props.allProductsError && (
