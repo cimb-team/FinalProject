@@ -402,17 +402,6 @@ describe.only("user.test.js", () => {
         .set("token", token)
         .then(res => {
           expect(res).to.have.status(200);
-          expect(res.body).to.be.an("object");
-          expect(res.body).to.have.property("_id");
-          expect(res.body).to.have.property("name");
-          expect(res.body).to.have.property("email");
-          expect(res.body).to.have.property("phonenumber");
-          expect(res.body).to.have.property("balance");
-          expect(res.body).to.have.property("image");
-          expect(res.body.balance).to.equal(0);
-          expect(res.body.name).to.equal("orvin");
-          expect(res.body.email).to.equal("orvin@mail.com");
-          expect(res.body.phonenumber).to.equal("08973531523");
           done();
         })
         .catch(err => {
@@ -435,7 +424,22 @@ describe.only("user.test.js", () => {
         });
     });
   });
-
+  describe("GET /product", () => {
+    it("GET current all product", done => {
+      chai
+        .request(app)
+        .get("/product")
+        .set("token", token)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an("array");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
   describe("POST /product", () => {
     it("should send an object with 201 status code", done => {
       chai
@@ -463,7 +467,65 @@ describe.only("user.test.js", () => {
         });
     });
   });
+  describe("POST /product", () => {
+    it("should send an object with 201 status code", done => {
+      chai
+        .request(app)
+        .post("/product")
+        .set("token", token)
+        .type("form")
+        .send({
+          title: "Fox",
+          category: "Animal",
+          details: "Animal cool",
+          initialPrice: 100,
+          closedDate: "2019/09/09"
+        })
+        .then(res => {
+          expect(res).to.have.status(201);
+          expect(res.body).to.be.an("object");
 
+          expect(res.body).to.have.property("title");
+          expect(res.body).to.have.property("userId");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("GET /product", () => {
+    it("GET current all product", done => {
+      chai
+        .request(app)
+        .get("/product?sortby=highestprice")
+        .set("token", token)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an("array");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("GET /product", () => {
+    it("GET current all product", done => {
+      chai
+        .request(app)
+        .get("/product?sortby=lowestprice")
+        .set("token", token)
+        .then(res => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an("array");
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
   describe("PATCH /topup", () => {
     it("add money to current user balance", done => {
       chai
@@ -680,6 +742,23 @@ describe.only("user.test.js", () => {
     it("patch product id", done => {
       chai
         .request(app)
+        .patch("/product/" + productId + "/addbid")
+        .set("token", token2)
+        .send({ price: 1 })
+        .then(res => {
+          expect(res).to.have.status(400);
+  
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("patch /product/${productId}/addbid", () => {
+    it("patch product id", done => {
+      chai
+        .request(app)
         .patch("/product/" + productId2 + "/addbid")
         .set("token", token2)
         .send({ price: 1000100000 })
@@ -707,6 +786,23 @@ describe.only("user.test.js", () => {
           expect(res.body).to.have.property("_id");
           expect(res.body.productId).to.have.property("title");
           expect(res.body.bids[0].price).to.equal(10000);
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+  describe("patch /product/${productId}/addbid", () => {
+    it("patch product id", done => {
+      chai
+        .request(app)
+        .patch("/product/" + productId + "/addbid")
+        .set("token", token)
+        .send({ price: 10000 })
+        .then(res => {
+          expect(res).to.have.status(400);
+
           done();
         })
         .catch(err => {
@@ -751,6 +847,24 @@ describe.only("user.test.js", () => {
         });
     });
   });
+  describe("patch /product/${productId}/addbid", () => {
+    it("patch product id", done => {
+      chai
+        .request(app)
+        .patch("/product/" + productId + "/addbid")
+        .set("token", token2)
+        .send({ price: 1 })
+        .then(res => {
+          expect(res).to.have.status(400);
+  
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  });
+
 
   describe("patch /product/${productId}/quickcountdown", () => {
     it("patch product id", done => {

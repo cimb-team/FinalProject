@@ -100,7 +100,7 @@ class ProductController {
             res.status(200).json(sorted);
           }
         } else {
-          res.status(200).json(result);
+          res.status(200).json([]);
         }
       })
       .catch(next);
@@ -133,8 +133,10 @@ class ProductController {
       if(bidData.productId.userId.equals(req.decoded.id))
         throw { code: 400, message: 'You cannot bid on your own product'}
       if(bidData.bids.length === 0){
-        if(req.body.price <= bidData.productId.initialPrice)
+        if(req.body.price <= bidData.productId.initialPrice){
+        console.log('+_+_+_+_+_+_+_+_+_+_+_+_+')
           throw { code: 400, message: 'Your bid cannot be less than initial price : ' + bidData.productId.initialPrice }
+        }
         adding = req.body.price
       }
       else {

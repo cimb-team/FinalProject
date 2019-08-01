@@ -343,23 +343,6 @@ class CreateProduct extends Component {
       
                 
                   <Item>
-                    <Content>
-                      <DatePicker
-                        defaultDate={tomorrow}
-                        minimumDate={tomorrow}
-                        maximumDate={maxDate}
-                        locale={"en"}
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode={"default"}
-                        placeHolderText="Select Closed Date"
-                        textStyle={{ color: "green" }}
-                        placeHolderTextStyle={{ color: "grey", fontSize: 14 }}
-                        onDateChange={this.setDate}
-                        disabled={false}
-                      />
-                    </Content>
                     <Text>{this.state.dateText}</Text>
                   </Item>
                   <Item>
