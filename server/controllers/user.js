@@ -9,6 +9,7 @@ class UserController {
    */
   static signup(req, res, next) {
     let { name, email, password, phonenumber } = req.body;
+    console.log(req.body, 'user sign up ====')
 
     User.create({
       name,

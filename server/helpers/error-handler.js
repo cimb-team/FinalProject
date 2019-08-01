@@ -2,6 +2,10 @@ module.exports = function(err, req, res, next) {
   /* istanbul ignore else if */
   /* istanbul ignore else */
   console.log(err)
+  if (err.name == 'CastError'){
+    err.code = 404
+    console.log('lk#######lkl')
+  }
   if (err.code === 400) {
     res.status(400).json({
       message: `Error 400: Bad Request`
@@ -11,6 +15,7 @@ module.exports = function(err, req, res, next) {
       message: `Error 401: Not Authorized`
     });
   } else if (err.code === 404) {
+    console.log(err)
     res.status(404).json({
       message: `Error 404: Not Found`
     });
