@@ -15,7 +15,7 @@
           v-if="product.userId != undefined"
         >
           <div class="card-header" style="height:47px;color:black;text-align:center;font-size:17px">
-            <strong>{{ product.title }} </strong>
+            <strong>{{ product.title }}</strong>
           </div>
           <div style="margin:20px;display:flex;align-items:center;justify-content:center">
             <img
@@ -79,19 +79,23 @@
     >
       <div class style="padding:35px;max-width:600px;">
         <div class="card" style="background-color:#FFFFFF;padding:30px">
-
           <h4
             style="color:black;text-align:center;margin-bottom:0px"
           >Initial Price: {{ format(Number(product.initialPrice)) }}</h4>
-                                     <br>             <div
-            style="color:blue;text-align:center;"
-          ><strong>Bid closed: {{countdownText}}</strong></div>
+          <br />
+          <div v-if=" product.closed !== true" style="color:blue;text-align:center;">
+            <strong>Bid closed: {{countdownText}}</strong>
+          </div>
+                  <div v-if=" product.closed == true" style="color:red;text-align:center;">
+            <strong>Bid closed!</strong>
+          </div>
+
         </div>
 
         <div
           class="card"
           style="background-color:#FFFFFF;padding:30px"
-          v-if="user._id != product.userId._id && bidClosed == true"
+          v-if="user._id != product.userId._id && product.closed !== true"
         >
           <div v-if="user._id != product.userId._id ">
             <h4 style="color:black;text-align:center;margin-bottom:30px">Start Bidding!</h4>
@@ -112,10 +116,10 @@
             </div>
           </div>
         </div>
-                <div
+        <div
           class="card"
           style="background-color:#FFFFFF;padding:30px"
-          v-if="user._id == product.userId._id && bidClosed == true"
+          v-if="user._id == product.userId._id && product.closed !== true "
         >
           <div v-if="user._id == product.userId._id ">
             <h4 style="color:black;text-align:center;margin-bottom:30px">Close Bid</h4>
@@ -172,8 +176,8 @@ import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 
 momentDurationFormatSetup(moment);
-      var mili = new Date();
-        mili.setSeconds(mili.getSeconds() + 10);
+var mili = new Date();
+mili.setSeconds(mili.getSeconds() + 10);
 
 export default {
   name: "product-detail",
@@ -220,7 +224,7 @@ export default {
         console.log(this.product.images[0]);
         console.log("ALVINNN");
         this.showShirt();
-  
+
         const interval = setInterval(() => {
           let closedDate = moment(this.product.closedDate);
           let now = moment();
@@ -231,17 +235,16 @@ export default {
               sameDay: () => "[" + now.to(closedDate) + "]",
               sameElse: () => "[" + now.to(closedDate) + "]"
             });
-               
-                   console.log(this.bidClosed)
-                   if (this.bidClosed == true){
-             Swal.fire({
+
+            console.log(this.bidClosed);
+            if (this.bidClosed == true) {
+              Swal.fire({
                 title: "Time's up!",
                 text: `Bid Closed!`
               });
-                   }
-     this.bidClosed = false;
+            }
+            this.bidClosed = false;
             clearInterval(interval);
-     
           } else {
             this.countdownText = closedDate.calendar(null, {
               sameDay: () => "[" + countdown.format() + "]",
@@ -249,13 +252,16 @@ export default {
               sameElse: () => "[" + now.to(closedDate) + "]"
             });
           }
-
         }, 1000);
+
+        if (this.product.closed) {
+          clearInterval(interval);
+          this.FETCHPRODUCT();
+        }
       }
     }
   },
   methods: {
-
     format(num) {
       var p = num.toFixed(2).split(".");
       return (
@@ -274,27 +280,27 @@ export default {
       this.choosenImage = params;
     },
     ...mapActions(["FETCHPRODUCT"]),
-    quick(){
-      console.log()
+    quick() {
+      console.log();
       axios({
         method: "PATCH",
         url: `${this.url}/product/${this.product._id}/quickcountdown`,
         headers: { token: this.token }
       })
-      .then(({data}) => {
-              // Swal.fire({
-              //   title: "Done",
-              //   text: `Bid Closed!`
-              // });
-                  // this.FETCHPRODUCT(this.$route.params.id);
-      })
-      .catch(err => {
-              //         Swal.fire({
-              //   title: "Done",
-              //   text: `Bid Closed!`
-              // });
-                  this.FETCHPRODUCT(this.$route.params.id);
-      })
+        .then(({ data }) => {
+          // Swal.fire({
+          //   title: "Done",
+          //   text: `Bid Closed!`
+          // });
+          // this.FETCHPRODUCT(this.$route.params.id);
+        })
+        .catch(err => {
+          //         Swal.fire({
+          //   title: "Done",
+          //   text: `Bid Closed!`
+          // });
+          this.FETCHPRODUCT(this.$route.params.id);
+        });
     },
     addBid() {
       axios({
