@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { NavigationEvents } from "react-navigation";
 import * as Animatable from 'react-native-animatable';
+import { Container, Header, Content, Item, Input, Icon } from 'native-base';
 
 function TopBar(props) {
   const [filter, setFilter] = useState("");
@@ -22,34 +23,37 @@ function TopBar(props) {
   }, []);
   return (
     <View style={styles.flex} opacity={1}>
-      <TextInput
-        style={styles.search}
-        onChangeText={e => {
-          setFilter(e);
-        }}
-        onSubmitEditing={e => {
-          if (
-            props.navigation.state.routeName == "MyProduct" &&
-            filter !== ""
-          ) {
-            props.navigation.navigate("FilterMyproduct", {
-              search: filter
-            });
-          }
-          if (props.navigation.state.routeName == "Products" && filter !== "") {
-            props.navigation.navigate("FilterProduct", {
-              search: filter
-            });
-          }
-        }}
-      />
+    
+    <View style={styles.searchSection}>
+    <Icon style={styles.searchIcon} name="ios-search" size={20} color="red"/>
+        <TextInput
+            style={styles.input}
+            placeholder="Search"
+            onChangeText={e => {setFilter(e)}}
+          onSubmitEditing={e => {
+            if (
+              props.navigation.state.routeName == "MyProduct" &&
+              filter !== ""
+            ) {
+              props.navigation.navigate("FilterMyproduct", {
+                search: filter
+              });
+            }
+            if (props.navigation.state.routeName == "Products" && filter !== "") {
+              props.navigation.navigate("FilterProduct", {
+                search: filter
+              });
+            }
+          }}
+        />
+    </View>
       {props.navigation.state.routeName === "MyProduct" && 
       <TouchableHighlight
         onPress={() => {
           props.navigation.navigate("Create");
         }}
       >
-        <Ionicons name="ios-add-circle" color="black" size={28} />
+        <Ionicons name="ios-add-circle" color="#EE5537" size={28} />
       </TouchableHighlight>
       }
       <TouchableHighlight
@@ -59,7 +63,8 @@ function TopBar(props) {
           })
         }
       >
-      <Ionicons name="ios-albums" color="black" size={28} /></TouchableHighlight>
+      <Ionicons name="ios-albums" color="#EE5537" size={28} /></TouchableHighlight>
+      
     </View>
   );
 }
@@ -84,6 +89,25 @@ const styles = StyleSheet.create({
     margin: 5,
     fontSize: 25,
     fontWeight: "bold"
+  },
+  searchSection: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    width:'80%'
+  },
+  searchIcon: {
+    paddingRight: 10,
+    paddingLeft: 10,
+      color : '#EE5537'
+  },
+  input: {
+      flex: 1,
+      paddingRight: 10,
+      paddingLeft: 0,
+      backgroundColor: '#FFF',
+      color: '#424242',
   },
   card: {
     marginVertical: 10,
@@ -112,3 +136,12 @@ const styles = StyleSheet.create({
     margin: 5
   }
 });
+
+
+
+
+
+
+
+
+

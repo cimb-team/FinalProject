@@ -5,42 +5,34 @@ import {
   Text,
   View,
   Image,
-  ScrollView
+  Modal,
+  WebView,
+  ScrollView,
+  TouchableHighlight
 } from "react-native";
 import { connect } from "react-redux";
 import { getHistory } from "../store/action";
 import formatCash from "../helpers";
-
 function History(props) {
   useEffect(() => {
     props.getHistory(props.token);
     console.log(props.historyData.bids);
   }, []);
-
+  const [modalVisible, setModalVisible] = useState(false);
   const handleViewRef = ref => (this.view = ref);
   const animation = () => this.view.fadeInUp(300);
-
   return (
     <SafeAreaView style={styles.container}>
       {!props.historyLoading && (
         <ScrollView>
-          {props.historyData.map((history, index) => (
+          {/* {props.historyData.map((history, index) => (
             <View key={history._id + "history"} style={styles.card}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  fontWeight: "600",
-                  marginBottom: 10
-                }}
-              >
-                Status:{" "}
-                {props.historyData.winnerId
-                  ? props.historyData.winnerId._id == props.profileData._id
-                    ? "You Win"
-                    : "You lose"
-                  : "Bid is still on going"}
-              </Text>
+                {historya.status == 'close' &&(<> {if (history.winnerId == props.profileData._id){
+                  <Text>Status: You lose</Text>()
+                })} </>)}
+                {history.status == 'open' &&  (<Text>Status: Auction is still on going</Text>)}
+           
+
               <View style={{ flexWrap: "wrap" }}>
                 <View
                   style={{
@@ -62,54 +54,25 @@ function History(props) {
                     }}
                   />
                 </View>
-                <View>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "black",
-                      fontWeight: "600",
-                      marginVertical: 10
-                    }}
-                  >
-                    {history.productId.title}
-                  </Text>
-                  <Text>
-                    {String(history.productId.details).substr(0, 200) + "..."}
-                  </Text>
-                  {history.bids.map((b, index) => {
-                    return (
-                      b.bidderId === props.profileData._id && (
-                        <View
-                          key={
-                            "biddetail" +
-                            props.bidderId +
-                            JSON.stringify(b.dateIssued) +
-                            index
-                          }
-                        >
-                          <View
-                            style={{ flexDirection: "row", marginVertical: 5 }}
-                          >
-                            <Text>Placed Bid</Text>
-                            <Text>{formatCash(b.price)}</Text>
-                          </View>
-                          <View
-                            style={{ flexDirection: "row", marginVertical: 5 }}
-                          >
-                            <Text>At</Text>
-                            <Text>{new Date(b.dateIssued).toDateString()}</Text>
-                          </View>
-                        </View>
-                      )
-                    );
-                  })}
+                <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text style={{margin: 5,fontWeight: 600}}>{history.productId.title}</Text>
+                <Text style={{margin: 5}}>Initial Price: {formatCash(Number(history.productId.initialPrice))}</Text>
+                {history.bids && (
+                  <Text style={{margin: 5}}>Last Price: {formatCash(Number(history.bids[history.bids.length - 1].price))}</Text>
+                )}
+                <Text style={{margin: 5}}>Status: {history.productId.status}
+                </Text>
                 </View>
               </View>
             </View>
-          ))}
+          ))} */}
         </ScrollView>
       )}
-
       {props.allProductsError && (
         <ScrollView style>
           <Text>Sorry, error occured. Please try again later.</Text>
@@ -134,11 +97,10 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(History);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "white"
   },
   text: {
     textAlign: "center",
@@ -161,6 +123,8 @@ const styles = StyleSheet.create({
     margin: 10,
     width: "95%",
     borderRadius: 10,
-    padding: 10
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#EE5537"
   }
 });

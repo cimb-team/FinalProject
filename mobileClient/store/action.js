@@ -184,3 +184,27 @@ export function bidding(value, token, id) {
       });
   };
 }
+
+export function quickbid() {
+  return (dispatch, state) => {
+    console.log("Masuk Quick Bit XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    
+    let { productDetail, token } = state()
+    return axios({
+      method: "PATCH",
+      url: `/product/${productDetail.data._id}/quickcountdown`,
+      data: {},
+      headers: { token: token }
+    })
+      .then(({ data }) => {
+        console.log("Masuk Then Quick Bit <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        dispatch(getProductDetail(token, productDetail.data._id));
+      })
+      .catch(error => {
+        dispatch({
+          type: "ERROR_TOPUP",
+          error
+        });
+      });
+  };
+}

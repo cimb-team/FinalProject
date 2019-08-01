@@ -34,6 +34,7 @@ import {
   Spinner
 } from "native-base";
 import { ImagePicker, Permissions } from "expo";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import axios from "../axios";
 // import * as firebase from 'firebase';
 import { connect } from "react-redux";
@@ -55,6 +56,8 @@ const AnimatedKeyboardAvoiding = Animatable.createAnimatableComponent(
   KeyboardAvoidingView
 );
 
+
+
 class CreateProduct extends Component {
   constructor(props) {
     super(props);
@@ -68,10 +71,29 @@ class CreateProduct extends Component {
       imageMentah: "",
       dateText: moment(tomorrow).format("dddd, MMMM Do YYYY"),
       loading: false,
-      KeyboardView: false
+      KeyboardView: false,
+      isDateTimePickerVisible: false,
+      dateAnddTime : null,
     };
     this.setDate = this.setDate.bind(this);
+
   }
+
+  showDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: true });
+  };
+ 
+  hideDateTimePicker = () => {
+    this.setState({ isDateTimePickerVisible: false });
+  };
+ 
+  handleDatePicked = date => {
+    
+    this.setState({
+      dateAnddTime : moment(date).format()
+    })
+    this.hideDateTimePicker();
+  };
 
   setDate(newDate) {
     // let day = newDate.getDate();
@@ -85,6 +107,8 @@ class CreateProduct extends Component {
   componentDidMount() {
     this.getPermissionAsync();
   }
+
+
 
   submitCreate = () => {
     this.setState({ loading: true });
@@ -146,12 +170,16 @@ class CreateProduct extends Component {
         type: "image/jpeg",
         name: imageFilename
       });
+      console.log(this.state.dateAnddTime, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<RRRRRRRRRRRRTTTT");
+      console.log(this.state.chosenDate, "<<<<<<<<<<<<<<<<<EREREREERER");
+      
+      
       data.append("title", this.state.title);
       data.append("category", this.state.category);
       data.append("details", this.state.details);
       data.append("initialPrice", this.state.initialPrize);
-      data.append("closedDate", this.state.chosenDate);
-      // console.log(data, '@@@@')
+      data.append("closedDate", this.state.dateAnddTime.toString());
+      console.log(data, '@@@@')
       axios({
         method: "post",
         url: "/product",
@@ -162,6 +190,10 @@ class CreateProduct extends Component {
         }
       })
         .then(({ data }) => {
+          console.log(data);
+          
+          console.log("Masuk axios create Product");
+          
           this.setState({ loading: false });
           this.props.getAllProducts(this.props.token);
           this.props.getMyProducts(this.props.token);
@@ -252,10 +284,10 @@ class CreateProduct extends Component {
                   style={{ width: 150, height: 150,  }}
                 />
               ) : (
-                <Ionicons name="ios-image" size={32} color="black" />
+                <Ionicons name="ios-image" size={32} color="#EE5537" />
               )}
             </TouchableHighlight>
-            {!image && <Text style={{ fontSize: 10 }}>Upload Design</Text>}
+            {!image && <Text style={{ fontSize: 10, color : 'grey' }}>Upload Design</Text>}
           </View>
         </View>
 
@@ -267,6 +299,8 @@ class CreateProduct extends Component {
                   <Item>
                     <Input
                       placeholder="Title"
+                      placeholderTextColor={'#EE5537'}
+                      selectionColor={'#EE5537'}
                       onChangeText={text => this.setState({ title: text })}
                     />
                   </Item>
@@ -274,43 +308,55 @@ class CreateProduct extends Component {
                     <Input
                       placeholder="Category"
                       onChangeText={text => this.setState({ category: text })}
+                      placeholderTextColor={'#EE5537'}
+                      selectionColor={'#EE5537'}
                     />
                   </Item>
                   <Item>
                     <Input
                       placeholder="Initial Prize"
                       keyboardType="numeric"
+                      placeholderTextColor={'#EE5537'}
+                      selectionColor={'#EE5537'}
+                      style={{color:'#EE5537'}}
                       onChangeText={text =>
                         this.setState({ initialPrize: String(Number(text.replace(/[^0-9]+/g, ''))) })
                       }
                       value={this.state.initialPrize}
                     />
                   </Item>
+
                   <Item>
-                    <Content>
-                      <DatePicker
-                        defaultDate={tomorrow}
-                        minimumDate={tomorrow}
-                        maximumDate={maxDate}
-                        locale={"en"}
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode={"default"}
-                        placeHolderText="Select Closed Date"
-                        textStyle={{ color: "green" }}
-                        placeHolderTextStyle={{ color: "grey", fontSize: 14 }}
-                        onDateChange={this.setDate}
-                        disabled={false}
-                      />
-                    </Content>
-                    <Text>{this.state.dateText}</Text>
+
+
+                  <TouchableHighlight style={{flexDirection:'row'}} onPress={this.showDateTimePicker}>
+                      {
+                        this.state.dateAnddTime
+                        ? 
+                        <>
+                          
+                          <Text style={{marginTop:10, marginBottom : 10, marginLeft:12}}>{this.state.dateAnddTime}</Text>
+                        </>
+                        :
+                        <>
+                        <Ionicons name="md-calendar" size={32} color="#EE5537" style={{marginVertical : 10}}/>
+                        <Text style={{marginTop:12, color: '#EE5537', marginLeft:12}}>Set Close Bid Date</Text>
+                        </>
+                      }
+                  </TouchableHighlight>
                   </Item>
+                
+        
+      
+                
+      
                   <Item>
                     <Textarea
                       onChangeText={text => this.setState({ details: text })}
                       style={{ width: "100%", marginTop: 10 }}
                       rowSpan={5}
+                      placeholderTextColor={'#EE5537'}
+                      selectionColor={'#EE5537'}
                       bordered
                       placeholder="Description"
                       onFocus={() => this.setState({ KeyboardView: true })}
@@ -319,8 +365,9 @@ class CreateProduct extends Component {
                   </Item>
                   <Item style={{ width: "100%", marginTop: 10 }}>
                     <Button
+                    rounded
                       onPress={this.submitCreate}
-                      style={{ width: "100%", marginTop: 10 }}
+                      style={{ width: "100%", marginTop: 10,color:'white', backgroundColor:'#EE5537' }}
                       block
                       disabled={this.state.loading}
                     >
@@ -331,6 +378,12 @@ class CreateProduct extends Component {
                       )}
                     </Button>
                   </Item>
+                  <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          onConfirm={this.handleDatePicked}
+          onCancel={this.hideDateTimePicker}
+          mode={'datetime'}
+        />
                 </Form>
               </Content>
             </Container>

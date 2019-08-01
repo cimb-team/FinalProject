@@ -22,6 +22,7 @@ import Create from "../screens/CreateProduct";
 
 const MyProductNav = createStackNavigator({
   
+  
   MyProduct: {
     screen: MyProduct,
     navigationOptions: { 
@@ -38,12 +39,14 @@ const MyProductNav = createStackNavigator({
       headerStyle: {
         backgroundColor: "white",
       },
-      headerTintColor: 'black',
+      headerTintColor: '#EE5537',
       headerTitleStyle: {
-        color: 'black'
+        fontColor: '#EE5537',
+        fontWeight: 'bold',
       }
     }
   },
+  
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
@@ -70,19 +73,19 @@ const MyProductNav = createStackNavigator({
       }
     }
   },
-  Create: {
-    screen: Create,
-    navigationOptions: {
-      headerTitle: "Create Product",
-      headerStyle: {
-        backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
-      }
-    }
-  }
+  // Create: {
+  //   screen: Create,
+  //   navigationOptions: {
+  //     headerTitle: "Create Product",
+  //     headerStyle: {
+  //       backgroundColor: "white"
+  //     },
+  //     headerTintColor: "black",
+  //     headerTitleStyle: {
+  //       color: "black"
+  //     }
+  //   }
+  // }
 });
 
 const ProductsNav = createStackNavigator({
@@ -98,13 +101,9 @@ const ProductsNav = createStackNavigator({
   ProductDetail: {
     screen: ProductDetail,
     navigationOptions: {
-      headerTitle: "Product Detail",
+      header: null,
       headerStyle: {
         backgroundColor: "white"
-      },
-      headerTintColor: "black",
-      headerTitleStyle: {
-        color: "black"
       }
     }
   },
@@ -217,19 +216,33 @@ const MainNavigator = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Products",
-    tabBarOptions: {
-      activeTintColor: "lightblue",
-      inactiveTintColor: "white",
+    initialRouteName: "MyProduct",
+      activeTintColor: "#EE5537",
+      inactiveTintColor: "grey",
       labelStyle: {
         fontSize: 14
       },
-      style: {
-        backgroundColor: "#1F1F1F"
-      }
-    }
+      barStyle: { backgroundColor: "#FFFFFF" }
+    
   }
 );
+
+
+
+const auth2 = createStackNavigator({
+  SignIn: {
+    screen: Signin,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SignUp: {
+    screen: Signup,
+    navigationOptions: {
+      header: null,
+    }
+  }
+});
 
 const Auth = createMaterialBottomTabNavigator(
   {
@@ -253,10 +266,11 @@ const Auth = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Signup",
+    initialRouteName: "Signin",
     activeColor: "#f0edf6",
     inactiveColor: "#3e2465",
-    barStyle: { backgroundColor: "#FF943C" },
+    
+    barStyle: { backgroundColor: "#F3411E" },
     // transitionConfig: () => fromTop(1000)
   }
 );
@@ -265,7 +279,7 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Splash: SplashScreen,
-      Auth: Auth,
+      Auth: auth2,
       App: MainNavigator
     },
     {
