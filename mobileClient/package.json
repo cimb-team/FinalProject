@@ -17,7 +17,7 @@
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "moment-round": "^1.0.1",
-    "moment-timezone": "^0.5.26",
+    "moment-timezone": "^0.5.35",
     "native-base": "^2.13.1",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
